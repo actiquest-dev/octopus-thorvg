@@ -729,6 +729,16 @@ class OctobussAvatar {
         }
         this.root = svg.getElementById("octobuss");
         this.bodyEl = svg.getElementById("body");
+        // слои для псевдо-3D разворота (паралакс по «глубине»)
+        this._turnLayers = {
+            back: svg.getElementById("tentacles_back"),
+            front: svg.getElementById("tentacles_front"),
+            collarB: svg.getElementById("collar_back"),
+            collarF: svg.getElementById("collar_front"),
+            helmet: svg.getElementById("helmet"),
+            face: svg.getElementById("face"),
+        };
+        this._turnHeadDx = 0;
         this.fx = new FxSystem(svg);
         this._poseFxTgt = { squash: 0, squint: 0 };
         this._poseFxCur = { squash: 0, squint: 0 };
@@ -1105,13 +1115,37 @@ class OctobussAvatar {
                     rootT += `rotate(${(e * 360).toFixed(1)}deg) `;
                 }
             }
-            // --- разворот вокруг своей оси (scaleX по косинусу = 3D-иллюзия)
+            // --- псевдо-3D разворот вокруг своей оси: паралакс слоёв по глубине,
+            // лицо уезжает к краю головы и прячется на «затылке», спина темнее
             if (this.motion.turnStart >= 0) {
                 const t = (ts - this.motion.turnStart) / this.motion.turnDur;
-                if (t >= 1) this.motion.turnStart = -1;
-                else {
+                const L = this._turnLayers;
+                if (t >= 1) {
+                    this.motion.turnStart = -1;
+                    this._turnHeadDx = 0;
+                    for (const g of Object.values(L)) if (g) g.style.transform = "";
+                    if (L.face) L.face.style.opacity = "";
+                    this.root.style.filter = "";
+                } else {
                     const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-                    rootT += `scaleX(${Math.cos(e * Math.PI * 2).toFixed(3)}) `;
+                    const th = e * Math.PI * 2;              // 0..2π = полный оборот
+                    const ax = Math.sin(th);                 // боковой сдвиг слоёв
+                    const cz = Math.cos(th);                 // «куда смотрит»: + лицо, − спина
+                    rootT += `scaleX(${Math.max(0.10, Math.abs(cz)).toFixed(3)}) `;
+                    // сдвиг слоёв пропорционален их глубине (лицо ближе всех к зрителю)
+                    if (L.face) {
+                        L.face.style.transform = `translateX(${(ax * 90).toFixed(1)}px)`;
+                        L.face.style.opacity = Math.max(0, Math.min(1, (cz + 0.18) / 0.36)).toFixed(2);
+                    }
+                    if (L.front)   L.front.style.transform   = `translateX(${(ax * 70).toFixed(1)}px)`;
+                    if (L.collarF) L.collarF.style.transform = `translateX(${(ax * 45).toFixed(1)}px)`;
+                    if (L.helmet)  L.helmet.style.transform  = `translateX(${(ax * 28).toFixed(1)}px)`;
+                    if (L.back)    L.back.style.transform    = `translateX(${(-ax * 70).toFixed(1)}px)`;
+                    if (L.collarB) L.collarB.style.transform = `translateX(${(-ax * 40).toFixed(1)}px)`;
+                    this._turnHeadDx = ax * 22;
+                    const backness = Math.max(0, -cz);
+                    this.root.style.filter = backness > 0.02
+                        ? `brightness(${(1 - 0.13 * backness).toFixed(3)})` : "";
                 }
             }
             let by = 0, brot = 0;
@@ -1145,6 +1179,7 @@ class OctobussAvatar {
                 else squash = 1 - 0.09 * Math.sin(p * Math.PI);
             }
             this.headGroup.style.transform =
+                `translateX(${(this._turnHeadDx || 0).toFixed(1)}px) ` +
                 `translateY(${bob.toFixed(1)}px) rotate(${tilt.toFixed(2)}deg) scale(1, ${squash.toFixed(3)})`;
         }
 
@@ -1196,7 +1231,7 @@ class OctobussAvatar {
             this.blink();
             return;
         }
-        this.activateAction(name, name === "turn_around" ? 1600 : 2400);
+        this.activateAction(name, name === "turn_around" ? 1900 : 2400);
     }
 
     /** комбо: прошёлся влево → почесал под носом → вернулся */
