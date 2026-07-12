@@ -134,7 +134,9 @@ class Tentacle {
 
         this.cur = { ...PARAM_DEFAULTS };
         this.tgt = { ...PARAM_DEFAULTS };
-        this.tau = 0.25; // сек, скорость перехода
+        // критически демпфированная пружина: ω — жёсткость (рад/с)
+        this.vel = {}; for (const k of PARAM_KEYS) this.vel[k] = 0;
+        this.omega = 10;
         this._dirty = true;
     }
 
@@ -146,7 +148,7 @@ class Tentacle {
         if (params.__absolute) {
             for (const k of PARAM_KEYS) this.tgt[k] = (params[k] !== undefined) ? params[k] : PARAM_DEFAULTS[k];
         }
-        if (durationMs) this.tau = Math.max(0.05, durationMs / 4000);
+        if (durationMs) this.omega = Math.min(26, Math.max(3, 5200 / durationMs));
         this._clampVisibility();
     }
 
@@ -236,12 +238,18 @@ class Tentacle {
     }
 
     update(dt, clock) {
-        // сглаживание параметров
-        const k = 1 - Math.exp(-dt / this.tau);
+        // критически демпфированная пружина (точное решение): плавный разгон
+        // и торможение без рывков, скорость сохраняется при смене цели на лету
+        const w = this.omega, ew = Math.exp(-w * dt);
         let moving = false;
         for (const key of PARAM_KEYS) {
-            const d = this.tgt[key] - this.cur[key];
-            if (Math.abs(d) > 1e-4) { this.cur[key] = this.cur[key] + d * k; moving = true; }
+            const x = this.cur[key] - this.tgt[key];
+            const v = this.vel[key];
+            const a = (v + w * x) * dt;
+            const nx = (x + a) * ew;
+            this.vel[key] = (v - w * a) * ew;
+            this.cur[key] = this.tgt[key] + nx;
+            if (Math.abs(nx) > 1e-4 || Math.abs(this.vel[key]) > 1e-3) moving = true;
         }
         // волна/мах активны всегда при waveMul>0
         const animated = moving || this.cur.waveMul > 0.01 || Math.abs(this.cur.swingAmp) > 0.01;
@@ -729,16 +737,26 @@ class OctobussAvatar {
         }
         this.root = svg.getElementById("octobuss");
         this.bodyEl = svg.getElementById("body");
-        // слои для псевдо-3D разворота (паралакс по «глубине»)
+        // псевдо-3D разворот: щупальца — «карусель» вокруг вертикальной оси.
+        // az — азимут покоя (0 = к зрителю), R — радиус орбиты корня,
+        // выведен из фактического X корня: R = (rootX - 1024) / sin(az)
         this._turnLayers = {
             back: svg.getElementById("tentacles_back"),
             front: svg.getElementById("tentacles_front"),
-            collarB: svg.getElementById("collar_back"),
-            collarF: svg.getElementById("collar_front"),
-            helmet: svg.getElementById("helmet"),
             face: svg.getElementById("face"),
         };
-        this._turnHeadDx = 0;
+        const ORBIT_AZ = {
+            tentacle_front_c: 0.0,  tentacle_front_l: -0.61, tentacle_front_r: 0.61,
+            tentacle_band_l: -1.13, tentacle_far_r: 2.01,
+            tentacle_up_l: -2.18,   tentacle_up_r: 2.27,
+        };
+        this._orbit = {}; this._tentHome = {};
+        for (const [id, t] of Object.entries(this.tentacles)) {
+            const az = ORBIT_AZ[id] !== undefined ? ORBIT_AZ[id] : 0;
+            const s = Math.sin(az);
+            this._orbit[id] = { az, R: Math.abs(s) > 0.05 ? (t.basePts[0][0] - 1024) / s : 60 };
+            this._tentHome[id] = { parent: t.g.parentNode, next: t.g.nextSibling };
+        }
         this.fx = new FxSystem(svg);
         this._poseFxTgt = { squash: 0, squint: 0 };
         this._poseFxCur = { squash: 0, squint: 0 };
@@ -1116,37 +1134,49 @@ class OctobussAvatar {
                     rootT += `rotate(${(e * 360).toFixed(1)}deg) `;
                 }
             }
-            // --- псевдо-3D разворот вокруг своей оси: паралакс слоёв по глубине,
-            // лицо уезжает к краю головы и прячется на «затылке», спина темнее
+            // --- псевдо-3D разворот: щупальца орбитально облетают тело («карусель»
+            // вокруг вертикальной оси) — сдвиг, масштаб и яркость по глубине,
+            // смена слоя (перед/за телом) при пересечении оси; лицо скользит по
+            // сфере головы с ракурсным сжатием и прячется на затылке. Шлем, блики
+            // и тело неподвижны — стекло не вращается вместе с осьминогом.
             if (this.motion.turnStart >= 0) {
                 const t = (ts - this.motion.turnStart) / this.motion.turnDur;
                 const L = this._turnLayers;
                 if (t >= 1) {
                     this.motion.turnStart = -1;
-                    this._turnHeadDx = 0;
-                    for (const g of Object.values(L)) if (g) g.style.transform = "";
-                    if (L.face) L.face.style.opacity = "";
-                    this.root.style.filter = "";
+                    for (const [id, tn] of Object.entries(this.tentacles)) {
+                        tn.g.style.transform = ""; tn.g.style.filter = "";
+                        const home = this._tentHome[id];
+                        if (home && tn.g.parentNode !== home.parent) home.parent.insertBefore(tn.g, home.next);
+                    }
+                    if (L.face) { L.face.style.transform = ""; L.face.style.opacity = ""; }
                 } else {
                     const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
                     const th = e * Math.PI * 2;              // 0..2π = полный оборот
-                    const ax = Math.sin(th);                 // боковой сдвиг слоёв
-                    const cz = Math.cos(th);                 // «куда смотрит»: + лицо, − спина
-                    rootT += `scaleX(${Math.max(0.10, Math.abs(cz)).toFixed(3)}) `;
-                    // сдвиг слоёв пропорционален их глубине (лицо ближе всех к зрителю)
-                    if (L.face) {
-                        L.face.style.transform = `translateX(${(ax * 90).toFixed(1)}px)`;
-                        L.face.style.opacity = Math.max(0, Math.min(1, (cz + 0.18) / 0.36)).toFixed(2);
+                    for (const [id, tn] of Object.entries(this.tentacles)) {
+                        const o = this._orbit[id]; if (!o) continue;
+                        const cosR = Math.cos(o.az);
+                        const sinN = Math.sin(o.az + th), cosN = Math.cos(o.az + th);
+                        const dd = cosN - cosR;              // изменение глубины от покоя
+                        const dx = o.R * (sinN - Math.sin(o.az));
+                        const dy = -40 * dd;                 // дальние чуть выше, ближние ниже
+                        const sc = 1 + 0.14 * dd;            // перспектива: ближе = крупнее
+                        tn.g.style.transform =
+                            `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${sc.toFixed(3)})`;
+                        tn.g.style.filter = Math.abs(dd) > 0.15
+                            ? `brightness(${(1 + 0.13 * dd).toFixed(3)})` : "";
+                        // смена слоя: перед телом ↔ за телом
+                        const target = cosN >= 0 ? L.front : L.back;
+                        if (target && tn.g.parentNode !== target) target.appendChild(tn.g);
                     }
-                    if (L.front)   L.front.style.transform   = `translateX(${(ax * 70).toFixed(1)}px)`;
-                    if (L.collarF) L.collarF.style.transform = `translateX(${(ax * 45).toFixed(1)}px)`;
-                    if (L.helmet)  L.helmet.style.transform  = `translateX(${(ax * 28).toFixed(1)}px)`;
-                    if (L.back)    L.back.style.transform    = `translateX(${(-ax * 70).toFixed(1)}px)`;
-                    if (L.collarB) L.collarB.style.transform = `translateX(${(-ax * 40).toFixed(1)}px)`;
-                    this._turnHeadDx = ax * 22;
-                    const backness = Math.max(0, -cz);
-                    this.root.style.filter = backness > 0.02
-                        ? `brightness(${(1 - 0.13 * backness).toFixed(3)})` : "";
+                    if (L.face) {
+                        const fcos = Math.cos(th);
+                        L.face.style.transform =
+                            `translateX(${(170 * Math.sin(th)).toFixed(1)}px) ` +
+                            `scaleX(${Math.max(0.08, Math.abs(fcos)).toFixed(3)})`;
+                        L.face.style.opacity =
+                            Math.max(0, Math.min(1, (fcos + 0.12) / 0.24)).toFixed(2);
+                    }
                 }
             }
             let by = 0, brot = 0;
@@ -1180,7 +1210,6 @@ class OctobussAvatar {
                 else squash = 1 - 0.09 * Math.sin(p * Math.PI);
             }
             this.headGroup.style.transform =
-                `translateX(${(this._turnHeadDx || 0).toFixed(1)}px) ` +
                 `translateY(${bob.toFixed(1)}px) rotate(${tilt.toFixed(2)}deg) scale(1, ${squash.toFixed(3)})`;
         }
 
@@ -1232,7 +1261,7 @@ class OctobussAvatar {
             this.blink();
             return;
         }
-        this.activateAction(name, name === "turn_around" ? 1900 : 2400);
+        this.activateAction(name, name === "turn_around" ? 2300 : 2400);
     }
 
     /** комбо: прошёлся влево → почесал под носом → вернулся */
