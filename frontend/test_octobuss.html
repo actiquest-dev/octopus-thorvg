@@ -57,7 +57,8 @@ mk('poses', ['rest','wave_right','wave_left','point_right','reach_up','curl_shy'
    p => avatar.setPose(p, {durationMs: 700}));
 mk('emotions', ['calm','happy','excited','sad','angry','curious','surprised','nervous','tender','playful'],
    e => avatar.setEmotion(e));
-mk('actions', ['wave','point','hug','shrug','clap','sing','dance','laugh','whisper','shout','walk_left','walk_right'],
+mk('actions', ['wave','point','hug','shrug','clap','sing','dance','laugh','whisper','shout',
+               'walk_left','walk_right','scratch_nose','turn_around','stroll_scratch'],
    a => avatar.activateAction(a, 2500));
 mk('actions', ['sfx_spin','sfx_heart','sfx_sparkle','sfx_pop','sfx_boop','sfx_bubble','sfx_tear','sfx_sweat','photobooth'],
    a => avatar.activateAction(a, 1400));

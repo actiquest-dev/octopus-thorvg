@@ -382,6 +382,15 @@ const POSES = {
         tentacle_up_l: { rot:  0.22, straighten: 0.28, curl:  0.15 },
         tentacle_up_r: { rot: -0.18, straighten: 0.20 },
     },
+    // почесать «под носом»: правая рука тянется к лицу (кончик ляжет на стекло
+    // у подбородка — ограничитель прижмёт), мелкий быстрый мах = почёсывание
+    scratch_nose: {
+        __brows: [{ op: 1, rot: -6, dy: -10 }, { op: 1, rot: 8, dy: -2 }],
+        tentacle_up_r: { rot: -0.35, straighten: 0.6, curl: 1.9,
+                         swingAmp: 0.1, swingSpeed: 10, waveMul: 0.3 },
+        tentacle_up_l: { rot: 0.15, curl: 0.3, waveMul: 0.6 },
+        tentacle_front_c: { waveMul: 0.5 },
+    },
     wave_right: {
         __brows: [{ op: 1, rot: -4, dy: -12 }, { op: 1, rot: 4, dy: -12 }],
         tentacle_up_r: { rot: -0.32, straighten: 0.7, curl: -0.4, swingAmp: 0.26, swingSpeed: 5.5 },
@@ -725,7 +734,11 @@ class OctobussAvatar {
         this._poseFxCur = { squash: 0, squint: 0 };
         this.motion = { spinStart: -1, spinDur: 1400, bounceUntil: 0, bounceAmp: 0,
                         bounceFreq: 5, swayUntil: 0, swayAmp: 0, boopT: -1,
-                        slideX: 0, slideTargetX: 0, slideAmt: 0, slideReturnAt: 0 };
+                        slideX: 0, slideTargetX: 0, slideAmt: 0, slideReturnAt: 0,
+                        turnStart: -1, turnDur: 1400 };
+        // случайные idle-сценки; отключение: avatar.idleEnabled = false
+        this.idleEnabled = this.opts.idle !== false;
+        this._idleNext = performance.now() + 6000;
 
         this._last = performance.now();
         this._clock = 0;
@@ -795,6 +808,7 @@ class OctobussAvatar {
     blink() { this.state.blinkT = 0; }
 
     activateAction(name, durationMs = 1400) {
+        if (name === "stroll_scratch") { this._strollScratch(); return; }
         const map = {
             wave: "wave_right", point: "point_right", hug: "hug_front",
             shrug: "shrug", clap: "clap", heart: "excited",
@@ -834,6 +848,9 @@ class OctobussAvatar {
             this.motion.slideReturnAt = now + Math.max(500, durationMs - 500);
             this.motion.bounceUntil = now + durationMs;
             this.motion.bounceAmp = 12; this.motion.bounceFreq = 3.2;
+        } else if (name === "turn_around") {
+            this.motion.turnStart = now;
+            this.motion.turnDur = Math.max(1200, durationMs);
         }
         this.triggerFxFromAction(name);
         // брови для эффектов без позы
@@ -1088,6 +1105,15 @@ class OctobussAvatar {
                     rootT += `rotate(${(e * 360).toFixed(1)}deg) `;
                 }
             }
+            // --- разворот вокруг своей оси (scaleX по косинусу = 3D-иллюзия)
+            if (this.motion.turnStart >= 0) {
+                const t = (ts - this.motion.turnStart) / this.motion.turnDur;
+                if (t >= 1) this.motion.turnStart = -1;
+                else {
+                    const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                    rootT += `scaleX(${Math.cos(e * Math.PI * 2).toFixed(3)}) `;
+                }
+            }
             let by = 0, brot = 0;
             if (ts < this.motion.bounceUntil) {
                 by = -Math.abs(Math.sin(this._clock * Math.PI * this.motion.bounceFreq)) * this.motion.bounceAmp;
@@ -1150,6 +1176,43 @@ class OctobussAvatar {
         // --- щёки
         const cheekOp = emo.cheek !== undefined ? Math.min(1, emo.cheek) : 1;
         for (const c of this.cheeks) if (c) c.setAttribute("opacity", cheekOp.toFixed(2));
+
+        // --- случайные idle-сценки (когда персонаж «скучает»)
+        if (this.idleEnabled && !st.speaking && !st.jawActive && !st.visActive
+            && ts > st.actionUntil + 2500 && ts > this._idleNext) {
+            this._idleNext = ts + 9000 + Math.random() * 9000;
+            this._playIdle();
+        }
+    }
+
+    /** случайная idle-сценка: прогулка, почесать нос, разворот, осмотреться */
+    _playIdle() {
+        const acts = ["walk_left", "walk_right", "scratch_nose", "turn_around",
+                      "look_around", "stroll_scratch"];
+        const name = acts[Math.floor(Math.random() * acts.length)];
+        if (name === "look_around") {
+            const g = (x, y, d) => setTimeout(() => this.setGaze(x, y), d);
+            g(-0.9, -0.2, 0); g(0.9, -0.1, 800); g(0.2, 0.5, 1600); g(0, 0, 2400);
+            this.blink();
+            return;
+        }
+        this.activateAction(name, name === "turn_around" ? 1600 : 2400);
+    }
+
+    /** комбо: прошёлся влево → почесал под носом → вернулся */
+    _strollScratch() {
+        const now = performance.now();
+        this.motion.slideAmt = -120;
+        this.motion.slideReturnAt = now + 4800;
+        this.motion.bounceUntil = now + 1800;
+        this.motion.bounceAmp = 12; this.motion.bounceFreq = 3.2;
+        this.setPose("walk_left", { durationMs: 450 });
+        this.state.actionUntil = now + 5800;
+        setTimeout(() => this.setPose("scratch_nose", { durationMs: 500 }), 1900);
+        setTimeout(() => {
+            this.state.actionUntil = 0;
+            this.setEmotion(this.state.emotion); // осанка и брови эмоции
+        }, 5800);
     }
 }
 
