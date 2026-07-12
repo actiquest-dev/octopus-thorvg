@@ -861,6 +861,7 @@ class OctobussAvatar {
         } else if (name === "turn_around") {
             this.motion.turnStart = now;
             this.motion.turnDur = Math.max(1200, durationMs);
+            this.state.actionUntil = now + this.motion.turnDur; // idle не прерывает оборот
         }
         this.triggerFxFromAction(name);
         // брови для эффектов без позы
