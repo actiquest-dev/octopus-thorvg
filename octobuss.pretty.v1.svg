@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="Cute octopus, clean redraw">
+  <defs>
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b57ae4"/>
+      <stop offset="100%" stop-color="#9f62db"/>
+    </linearGradient>
+    <linearGradient id="tentacleGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#bb83e8"/>
+      <stop offset="100%" stop-color="#9558d2"/>
+    </linearGradient>
+    <linearGradient id="helmetGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4f4ff" stop-opacity="0.82"/>
+      <stop offset="100%" stop-color="#b5e6f6" stop-opacity="0.82"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#63606b"/>
+      <stop offset="100%" stop-color="#45414e"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#5f3a8a" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="800" fill="#e1e3e6"/>
+
+  <g id="octopus" filter="url(#softShadow)">
+    <!-- back tentacles -->
+    <g id="tentacle_back_left_top">
+      <path d="M150 410 C110 380 95 330 130 305 C170 275 245 300 280 350 C296 374 298 398 286 419 C271 446 227 458 197 440 C177 428 175 404 190 395 C204 387 220 392 228 404" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="205" cy="352" rx="10" ry="6" fill="#f8a1be"/>
+      <ellipse cx="224" cy="372" rx="10" ry="6" fill="#f8a1be"/>
+      <ellipse cx="240" cy="392" rx="10" ry="6" fill="#f8a1be"/>
+      <ellipse cx="254" cy="410" rx="10" ry="6" fill="#f8a1be"/>
+    </g>
+
+    <g id="tentacle_back_right_top">
+      <path d="M650 410 C690 380 705 330 670 305 C630 275 555 300 520 350 C504 374 502 398 514 419 C529 446 573 458 603 440 C623 428 625 404 610 395 C596 387 580 392 572 404" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="595" cy="352" rx="10" ry="6" fill="#f8a1be"/>
+      <ellipse cx="576" cy="372" rx="10" ry="6" fill="#f8a1be"/>
+      <ellipse cx="560" cy="392" rx="10" ry="6" fill="#f8a1be"/>
+      <ellipse cx="546" cy="410" rx="10" ry="6" fill="#f8a1be"/>
+    </g>
+
+    <!-- body -->
+    <circle cx="400" cy="300" r="170" fill="url(#bodyGrad)" stroke="#6b3ea0" stroke-width="6"/>
+
+    <!-- side/front tentacles -->
+    <g id="tentacle_left_mid">
+      <path d="M300 430 C248 388 170 398 145 450 C122 499 154 545 214 543 C250 542 279 524 300 500" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="185" cy="468" rx="11" ry="7" fill="#f8a1be"/>
+      <ellipse cx="200" cy="488" rx="11" ry="7" fill="#f8a1be"/>
+      <ellipse cx="218" cy="507" rx="11" ry="7" fill="#f8a1be"/>
+    </g>
+
+    <g id="tentacle_left_front">
+      <path d="M330 442 C285 468 250 518 238 575 C226 628 265 671 320 655 C365 641 380 594 359 566 C343 544 314 545 303 563 C295 575 297 592 309 601" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="283" cy="584" rx="12" ry="7" fill="#f8a1be"/>
+      <ellipse cx="305" cy="580" rx="12" ry="7" fill="#f8a1be"/>
+      <ellipse cx="327" cy="574" rx="12" ry="7" fill="#f8a1be"/>
+    </g>
+
+    <g id="tentacle_center_left">
+      <path d="M374 448 C347 491 337 552 348 610 C357 658 397 683 436 661 C468 642 471 598 445 587 C427 579 407 588 402 605" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g id="tentacle_center_right">
+      <path d="M426 448 C453 491 463 552 452 610 C443 658 403 683 364 661 C332 642 329 598 355 587 C373 579 393 588 398 605" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+    </g>
+
+    <g id="tentacle_right_front">
+      <path d="M470 442 C515 468 550 518 562 575 C574 628 535 671 480 655 C435 641 420 594 441 566 C457 544 486 545 497 563 C505 575 503 592 491 601" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="517" cy="584" rx="12" ry="7" fill="#f8a1be"/>
+      <ellipse cx="495" cy="580" rx="12" ry="7" fill="#f8a1be"/>
+      <ellipse cx="473" cy="574" rx="12" ry="7" fill="#f8a1be"/>
+    </g>
+
+    <g id="tentacle_right_mid">
+      <path d="M500 430 C552 388 630 398 655 450 C678 499 646 545 586 543 C550 542 521 524 500 500" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="615" cy="468" rx="11" ry="7" fill="#f8a1be"/>
+      <ellipse cx="600" cy="488" rx="11" ry="7" fill="#f8a1be"/>
+      <ellipse cx="582" cy="507" rx="11" ry="7" fill="#f8a1be"/>
+    </g>
+
+    <g id="tentacle_left_small">
+      <path d="M182 498 C140 486 92 499 78 538 C67 568 85 596 118 596 C144 596 164 582 167 563 C169 548 156 536 143 538 C133 539 125 547 125 556" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g id="tentacle_right_small">
+      <path d="M618 498 C660 486 708 499 722 538 C733 568 715 596 682 596 C656 596 636 582 633 563 C631 548 644 536 657 538 C667 539 675 547 675 556" fill="url(#tentacleGrad)" stroke="#6e3fa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- helmet -->
+    <circle cx="400" cy="292" r="198" fill="url(#helmetGrad)" stroke="#7eacc4" stroke-width="4"/>
+    <circle cx="400" cy="292" r="172" fill="none" stroke="#86b7cd" stroke-width="3"/>
+    <ellipse cx="260" cy="170" rx="28" ry="13" fill="#f2ffff" opacity="0.65" transform="rotate(-28 260 170)"/>
+    <ellipse cx="548" cy="164" rx="28" ry="13" fill="#f2ffff" opacity="0.65" transform="rotate(28 548 164)"/>
+    <ellipse cx="478" cy="184" rx="24" ry="14" fill="#f1d7ff" opacity="0.6" transform="rotate(32 478 184)"/>
+
+    <!-- collar -->
+    <ellipse cx="400" cy="430" rx="188" ry="48" fill="url(#ringGrad)"/>
+    <ellipse cx="400" cy="422" rx="176" ry="34" fill="#5a5663"/>
+    <ellipse cx="400" cy="415" rx="163" ry="26" fill="#6a6572" opacity="0.7"/>
+    <g fill="#4d4956">
+      <ellipse cx="214" cy="430" rx="24" ry="34"/>
+      <ellipse cx="586" cy="430" rx="24" ry="34"/>
+    </g>
+
+    <!-- face -->
+    <g id="face">
+      <circle cx="337" cy="292" r="53" fill="#edf8ff"/>
+      <circle cx="463" cy="292" r="53" fill="#edf8ff"/>
+      <circle cx="337" cy="298" r="35" fill="#36343d"/>
+      <circle cx="463" cy="298" r="35" fill="#36343d"/>
+      <circle cx="350" cy="282" r="10" fill="#ffffff"/>
+      <circle cx="476" cy="282" r="10" fill="#ffffff"/>
+
+      <path d="M352 345 C370 363 430 363 448 345 C449 362 438 380 400 383 C362 380 351 362 352 345 Z" fill="#5a2436"/>
+      <path d="M373 369 C385 377 415 377 427 369 C424 384 411 391 400 391 C389 391 376 384 373 369 Z" fill="#f27395"/>
+
+      <circle cx="274" cy="345" r="28" fill="#f68cb0"/>
+      <circle cx="526" cy="345" r="28" fill="#f68cb0"/>
+    </g>
+
+    <!-- body highlights -->
+    <ellipse cx="304" cy="264" rx="42" ry="20" fill="#d8b0f5" opacity="0.55" transform="rotate(-28 304 264)"/>
+    <ellipse cx="495" cy="496" rx="18" ry="8" fill="#d8b0f5" opacity="0.7" transform="rotate(35 495 496)"/>
+    <ellipse cx="292" cy="496" rx="18" ry="8" fill="#d8b0f5" opacity="0.7" transform="rotate(-30 292 496)"/>
+  </g>
+</svg>

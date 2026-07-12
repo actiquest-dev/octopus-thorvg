@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240" height="240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .octopus-head { fill: #FF6B9D; stroke: #FF1493; stroke-width: 2; }
+      .octopus-eye { fill: white; stroke: black; stroke-width: 1; }
+      .octopus-pupil { fill: black; }
+      .octopus-mouth { stroke: black; stroke-width: 2; fill: none; }
+      .octopus-arm { stroke: #FF6B9D; stroke-width: 3; fill: none; stroke-linecap: round; }
+    </style>
+  </defs>
+  
+  <g id="octopus">
+    <!-- HEAD -->
+    <circle id="head" cx="120" cy="80" r="50" class="octopus-head"/>
+    
+    <!-- EYES -->
+    <circle id="left-eye-white" cx="100" cy="70" r="8" class="octopus-eye"/>
+    <circle id="left-eye-pupil" cx="100" cy="70" r="4" class="octopus-pupil"/>
+    <circle id="right-eye-white" cx="140" cy="70" r="8" class="octopus-eye"/>
+    <circle id="right-eye-pupil" cx="140" cy="70" r="4" class="octopus-pupil"/>
+    
+    <!-- EYEBROWS -->
+    <g id="left-eyebrow-group">
+      <path id="left-eyebrow" d="M 90 50 Q 100 40 110 50" class="octopus-mouth" stroke-width="2"/>
+    </g>
+    <g id="right-eyebrow-group">
+      <path id="right-eyebrow" d="M 130 50 Q 140 40 150 50" class="octopus-mouth" stroke-width="2"/>
+    </g>
+    
+    <!-- MOUTH -->
+    <g id="mouth-group">
+      <path id="mouth" d="M 100 140 Q 120 160 140 140" class="octopus-mouth"/>
+            <animate id="mouth-anim" attributeName="d" values="M 100 140 Q 120 160 140 140;M 100 145 Q 120 130 140 145;;" begin="0s" dur="3.00s" fill="freeze"/>
+    </g>
+    
+    <!-- ARMS -->
+    <g id="arms-group">
+      <path id="arm-0" d="M 170.00 120.00 Q 205.00 110.00 240.00 120.00" class="octopus-arm"/>
+      <path id="arm-1" d="M 155.36 155.36 Q 180.10 170.10 204.85 204.85" class="octopus-arm"/>
+      <path id="arm-2" d="M 120.00 170.00 Q 120.00 195.00 120.00 240.00" class="octopus-arm"/>
+      <path id="arm-3" d="M 84.64 155.36 Q 59.90 170.10 35.15 204.85" class="octopus-arm"/>
+      <path id="arm-4" d="M 70.00 120.00 Q 35.00 110.00 0.00 120.00" class="octopus-arm"/>
+      <path id="arm-5" d="M 84.64 84.64 Q 59.90 49.90 35.15 35.15" class="octopus-arm"/>
+      <path id="arm-6" d="M 120.00 70.00 Q 120.00 25.00 120.00 0.00" class="octopus-arm"/>
+      <path id="arm-7" d="M 155.36 84.64 Q 180.10 49.90 204.85 35.15" class="octopus-arm"/>
+            <animateTransform id="arms-wiggle" attributeName="transform" type="rotate" values="0;15;-15;0" begin="2.00s" dur="0.50s" repeatCount="2" />
+
+    </g>
+    
+        <animate id="eyebrow-anim" attributeName="d" values="M 90 50 Q 100 40 110 50;M 90 35.00 Q 100 25.00 110 35.00" begin="1.50s" dur="0.50s" fill="freeze"/>
+
+  </g>
+</svg>

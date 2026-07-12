@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐙 Octopuzz ThorVG Avatar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+        }
+        .wrap {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+        .avatar-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.3);
+        }
+        #octo {
+            border-radius: 10px;
+            background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 100%);
+            display: block;
+        }
+        .panel {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.3);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 260px;
+        }
+        h2 { font-size: 16px; color: #333; }
+        label { font-size: 13px; font-weight: 600; color: #555; }
+        select, input[type=range] { width: 100%; }
+        .row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .row button {
+            padding: 6px 12px; font-size: 12px;
+            border: 1px solid #ccc; border-radius: 6px;
+            background: #f5f5f5; cursor: pointer;
+        }
+        .row button:hover { background: #e0e0e0; }
+        #log {
+            font-family: monospace; font-size: 11px;
+            background: #f0f0f0; border-radius: 6px;
+            padding: 8px; max-height: 120px; overflow-y: auto;
+            white-space: pre-wrap; color: #333;
+        }
+        .status { font-size: 13px; font-weight: 600; }
+        .status.ok { color: #51cf66; }
+        .status.err { color: #ff6b6b; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="avatar-box">
+        <canvas id="octo" width="400" height="400"></canvas>
+        <div class="status" id="status">⏳ loading ThorVG…</div>
+    </div>
+
+    <div class="panel">
+        <h2>🐙 Controls</h2>
+
+        <label>Эмоция</label>
+        <select id="emo">
+            <option value="calm">calm</option>
+            <option value="happy">happy</option>
+            <option value="excited">excited</option>
+            <option value="sad">sad</option>
+            <option value="angry">angry</option>
+            <option value="curious">curious</option>
+            <option value="confused">confused</option>
+            <option value="proud">proud</option>
+        </select>
+
+        <label>Рот (amplitude)</label>
+        <input type="range" id="mouth" min="0" max="1" step="0.05" value="0">
+
+        <label>Взгляд X</label>
+        <input type="range" id="gazeX" min="-1" max="1" step="0.1" value="0">
+        <label>Взгляд Y</label>
+        <input type="range" id="gazeY" min="-1" max="1" step="0.1" value="0">
+
+        <label>Тесты</label>
+        <div class="row">
+            <button onclick="avatar.blink()">👁 Blink</button>
+            <button onclick="testTalk()">💬 Talk</button>
+            <button onclick="testLookAround()">👀 Look around</button>
+            <button onclick="avatar.setSpeaking(false)">🔇 Stop</button>
+        </div>
+
+        <label>Debug</label>
+        <div id="log">waiting…</div>
+    </div>
+</div>
+
+<!-- ThorVG WASM -->
+<script src="https://unpkg.com/@thorvg/webcanvas@latest/dist/thorvg.js"></script>
+
+<!-- Avatar -->
+<script src="octopuzz_avatar.js"></script>
+
+<script>
+let avatar;
+
+async function boot() {
+    try {
+        avatar = new OctopuzzAvatar('octo', '../Downloads/octopuzz.svg', {
+            width: 400,
+            height: 400,
+            renderer: 'sw'
+        });
+
+        // wait for ready
+        await new Promise((resolve, reject) => {
+            const t0 = Date.now();
+            const iv = setInterval(() => {
+                if (avatar.ready) { clearInterval(iv); resolve(); }
+                if (Date.now() - t0 > 8000) { clearInterval(iv); reject(new Error('timeout')); }
+            }, 100);
+        });
+
+        document.getElementById('status').textContent = '✅ ready';
+        document.getElementById('status').className = 'status ok';
+
+        // controls
+        document.getElementById('emo').onchange = e => avatar.setEmotion(e.target.value);
+        document.getElementById('mouth').oninput = e => avatar.setMouth(+e.target.value);
+        document.getElementById('gazeX').oninput = () => updateGaze();
+        document.getElementById('gazeY').oninput = () => updateGaze();
+
+        // debug loop
+        setInterval(() => {
+            const s = avatar.state;
+            document.getElementById('log').textContent =
+                `emotion: ${s.emotion}\n` +
+                `eye: (${s.eyeLookX.toFixed(2)}, ${s.eyeLookY.toFixed(2)})  scale: ${s.eyeScale.toFixed(2)}\n` +
+                `mouth: ${s.mouthOpen.toFixed(2)}\n` +
+                `brow: ${s.eyebrowY.toFixed(2)}\n` +
+                `phase: ${s.tentaclePhase.toFixed(1)}`;
+        }, 200);
+
+    } catch (err) {
+        document.getElementById('status').textContent = '❌ ' + err.message;
+        document.getElementById('status').className = 'status err';
+        console.error(err);
+    }
+}
+
+function updateGaze() {
+    const x = +document.getElementById('gazeX').value;
+    const y = +document.getElementById('gazeY').value;
+    avatar.lookAt(x, y);
+}
+
+function testTalk() {
+    let i = 0;
+    avatar.setSpeaking(true, 0);
+    const iv = setInterval(() => {
+        if (i > 30) { clearInterval(iv); avatar.setSpeaking(false); return; }
+        avatar.setMouth(Math.random() * 0.8 + 0.1);
+        i++;
+    }, 100);
+}
+
+function testLookAround() {
+    const positions = [
+        [0.8, 0], [-0.8, 0], [0, 0.6], [0, -0.6],
+        [0.5, 0.5], [-0.5, -0.5], [0, 0]
+    ];
+    let i = 0;
+    const iv = setInterval(() => {
+        if (i >= positions.length) { clearInterval(iv); return; }
+        avatar.lookAt(positions[i][0], positions[i][1]);
+        i++;
+    }, 500);
+}
+
+boot();
+</script>
+</body>
+</html>

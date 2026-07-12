@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octobuss Reference Lock Animated</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: #cfd2d7;
+      overflow: hidden;
+    }
+    .frame {
+      width: min(88vmin, 820px);
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+    }
+    .octo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+      transform-origin: 50% 62%;
+      animation: floaty 3.6s ease-in-out infinite, sway 4.8s ease-in-out infinite;
+      will-change: transform;
+      filter: drop-shadow(0 6px 10px rgba(50, 58, 70, 0.12));
+    }
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-8px) scale(1.006); }
+    }
+    @keyframes sway {
+      0%, 100% { rotate: -1.2deg; }
+      50% { rotate: 1.2deg; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <img class="octo" src="octobuss.svg" alt="Octobuss animated reference" />
+  </div>
+</body>
+</html>

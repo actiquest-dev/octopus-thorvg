@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octobuss Redraw v4</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: #c8ccd4;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+    }
+    .stage { width: min(84vmin, 760px); aspect-ratio: 472 / 540; }
+    svg { width: 100%; height: 100%; display: block; }
+
+    .arm-main { fill: #9f73d1; stroke: #7243a5; stroke-width: 4; stroke-linejoin: round; }
+    .arm-shade { fill: rgba(111,66,163,.30); }
+    .arm-hi { fill: none; stroke: rgba(221,191,246,.72); stroke-width: 4; stroke-linecap: round; }
+    .sucker { fill: #f1a0bf; stroke: #c66f96; stroke-width: 1.5; }
+
+    .body-main { fill: #a57fd6; stroke: #7243a5; stroke-width: 4; }
+    .glass { fill: rgba(183,228,244,.22); stroke: #7aa7bf; stroke-width: 3.2; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <svg viewBox="0 0 472 540" xmlns="http://www.w3.org/2000/svg" aria-label="Octobuss full redraw">
+      <rect width="472" height="540" fill="#c8ccd4"/>
+
+      <g id="arms-back">
+        <g id="arm_l1" transform-origin="126px 339px">
+          <path class="arm-main" d="M126 334 C92 332 60 327 33 321 L33 343 C61 349 95 353 129 351 C135 346 134 338 126 334 Z"/>
+          <path class="arm-shade" d="M125 338 C97 337 68 333 41 328 L41 338 C69 344 98 347 128 346 Z"/>
+          <path class="arm-hi" d="M116 339 C95 337 75 334 56 330"/>
+          <ellipse class="sucker" cx="63" cy="329" rx="5" ry="3.2"/>
+          <ellipse class="sucker" cx="82" cy="331" rx="4.8" ry="3.1"/>
+          <ellipse class="sucker" cx="101" cy="333" rx="4.6" ry="3"/>
+        </g>
+
+        <g id="arm_l2" transform-origin="154px 356px">
+          <path class="arm-main" d="M150 349 C111 363 84 381 70 410 L72 434 C98 428 126 413 160 388 C168 373 164 355 150 349 Z"/>
+          <path class="arm-shade" d="M149 355 C121 367 96 384 80 406 L81 421 C103 412 128 399 153 380 Z"/>
+          <path class="arm-hi" d="M141 360 C122 370 105 382 91 395"/>
+          <ellipse class="sucker" cx="101" cy="394" rx="5.1" ry="3.2" transform="rotate(-24 101 394)"/>
+          <ellipse class="sucker" cx="88" cy="402" rx="4.8" ry="3.1" transform="rotate(-24 88 402)"/>
+          <ellipse class="sucker" cx="76" cy="410" rx="4.5" ry="2.9" transform="rotate(-24 76 410)"/>
+        </g>
+
+        <g id="arm_r1" transform-origin="346px 337px">
+          <path class="arm-main" d="M343 350 C379 355 407 355 439 349 L438 322 C407 321 376 317 346 312 C338 317 336 345 343 350 Z"/>
+          <path class="arm-shade" d="M346 344 C374 349 402 349 432 344 L431 333 C402 334 376 331 348 326 Z"/>
+          <path class="arm-hi" d="M353 339 C372 342 392 343 411 341"/>
+          <ellipse class="sucker" cx="388" cy="342" rx="5" ry="3.2"/>
+          <ellipse class="sucker" cx="404" cy="342" rx="4.8" ry="3.1"/>
+          <ellipse class="sucker" cx="419" cy="341" rx="4.6" ry="3"/>
+        </g>
+
+        <g id="arm_r2" transform-origin="322px 350px">
+          <path class="arm-main" d="M319 351 C358 369 390 382 429 386 L431 366 C393 359 360 346 323 331 C315 335 313 346 319 351 Z"/>
+          <path class="arm-shade" d="M323 347 C353 361 383 370 422 376 L423 366 C386 359 356 349 326 337 Z"/>
+          <path class="arm-hi" d="M331 344 C351 352 371 359 392 364"/>
+          <ellipse class="sucker" cx="366" cy="366" rx="5.1" ry="3.2" transform="rotate(18 366 366)"/>
+          <ellipse class="sucker" cx="381" cy="370" rx="4.8" ry="3.1" transform="rotate(18 381 370)"/>
+          <ellipse class="sucker" cx="396" cy="374" rx="4.5" ry="2.9" transform="rotate(18 396 374)"/>
+        </g>
+      </g>
+
+      <g id="body">
+        <circle class="body-main" cx="236" cy="255" r="124"/>
+        <ellipse cx="207" cy="206" rx="33" ry="14" fill="rgba(214,183,243,.60)" transform="rotate(-28 207 206)"/>
+        <ellipse cx="298" cy="201" rx="19" ry="11" fill="rgba(214,183,243,.58)" transform="rotate(29 298 201)"/>
+
+        <circle cx="189" cy="289" r="23" fill="#ea8cb2"/>
+        <circle cx="286" cy="289" r="23" fill="#ea8cb2"/>
+
+        <g id="eyes">
+          <circle cx="191" cy="255" r="29" fill="#eaf6ff"/>
+          <circle cx="271" cy="255" r="29" fill="#eaf6ff"/>
+          <circle cx="194" cy="258" r="19" fill="#596575"/>
+          <circle cx="274" cy="258" r="19" fill="#596575"/>
+          <circle cx="203" cy="246" r="5.6" fill="#fff"/>
+          <circle cx="283" cy="246" r="5.6" fill="#fff"/>
+        </g>
+
+        <path id="mouth_top" d="M206 320 C219 334 252 334 265 320 C261 336 210 336 206 320 Z" fill="#6c3e89"/>
+        <path id="mouth_tongue" d="M217 329 C226 339 245 339 255 329" fill="none" stroke="#ea8caf" stroke-width="7" stroke-linecap="round"/>
+      </g>
+
+      <g id="arms-front">
+        <g id="arm_l3" transform-origin="184px 365px">
+          <path class="arm-main" d="M178 362 C151 392 127 418 98 440 L108 457 C143 443 170 418 194 382 C197 372 191 362 178 362 Z"/>
+          <path class="arm-shade" d="M179 368 C159 393 140 414 116 433 L121 443 C146 428 164 409 183 386 Z"/>
+          <path class="arm-hi" d="M170 372 C156 390 141 406 126 420"/>
+          <ellipse class="sucker" cx="146" cy="408" rx="5.1" ry="3.2" transform="rotate(-40 146 408)"/>
+          <ellipse class="sucker" cx="133" cy="420" rx="4.8" ry="3.1" transform="rotate(-40 133 420)"/>
+          <ellipse class="sucker" cx="120" cy="431" rx="4.5" ry="2.9" transform="rotate(-40 120 431)"/>
+        </g>
+
+        <g id="arm_c1" transform-origin="228px 374px">
+          <path class="arm-main" d="M214 370 C206 413 205 454 213 500 L242 499 C248 454 248 414 242 370 C235 360 221 360 214 370 Z"/>
+          <path class="arm-shade" d="M220 372 C215 414 215 453 220 493 L232 493 C235 454 235 415 232 372 Z"/>
+          <path class="arm-hi" d="M225 378 C221 411 221 444 225 475"/>
+          <ellipse class="sucker" cx="214" cy="414" rx="4.7" ry="3" transform="rotate(90 214 414)"/>
+          <ellipse class="sucker" cx="214" cy="436" rx="4.5" ry="2.9" transform="rotate(90 214 436)"/>
+          <ellipse class="sucker" cx="214" cy="458" rx="4.2" ry="2.7" transform="rotate(90 214 458)"/>
+        </g>
+
+        <g id="arm_c2" transform-origin="266px 374px">
+          <path class="arm-main" d="M252 370 C260 414 262 455 256 500 L285 499 C295 455 296 413 289 370 C281 360 261 360 252 370 Z"/>
+          <path class="arm-shade" d="M264 372 C269 414 270 453 266 493 L278 493 C284 454 284 415 279 372 Z"/>
+          <path class="arm-hi" d="M271 378 C274 411 275 444 271 475"/>
+          <ellipse class="sucker" cx="257" cy="414" rx="4.7" ry="3" transform="rotate(90 257 414)"/>
+          <ellipse class="sucker" cx="258" cy="436" rx="4.5" ry="2.9" transform="rotate(90 258 436)"/>
+          <ellipse class="sucker" cx="259" cy="458" rx="4.2" ry="2.7" transform="rotate(90 259 458)"/>
+        </g>
+
+        <g id="arm_r3" transform-origin="286px 363px">
+          <path class="arm-main" d="M279 362 C307 391 332 417 354 455 L374 448 C357 410 329 377 296 351 C287 349 279 354 279 362 Z"/>
+          <path class="arm-shade" d="M286 363 C309 389 330 413 348 445 L360 440 C344 412 324 388 301 362 Z"/>
+          <path class="arm-hi" d="M293 365 C309 383 324 402 338 423"/>
+          <ellipse class="sucker" cx="324" cy="405" rx="5" ry="3.2" transform="rotate(40 324 405)"/>
+          <ellipse class="sucker" cx="337" cy="418" rx="4.8" ry="3.1" transform="rotate(40 337 418)"/>
+          <ellipse class="sucker" cx="349" cy="431" rx="4.5" ry="2.9" transform="rotate(40 349 431)"/>
+        </g>
+      </g>
+
+      <g id="collar">
+        <ellipse cx="236" cy="338" rx="128" ry="30" fill="#7b8494"/>
+        <ellipse cx="236" cy="332" rx="117" ry="23" fill="#7f8898"/>
+        <ellipse cx="236" cy="338" rx="128" ry="30" fill="none" stroke="#6f7888" stroke-width="3"/>
+      </g>
+
+      <g id="helmet">
+        <circle class="glass" cx="236" cy="255" r="146"/>
+        <ellipse cx="179" cy="184" rx="20" ry="10" fill="rgba(255,255,255,.58)" transform="rotate(-34 179 184)"/>
+        <ellipse cx="295" cy="184" rx="20" ry="10" fill="rgba(255,255,255,.58)" transform="rotate(34 295 184)"/>
+      </g>
+    </svg>
+  </div>
+
+  <script>
+    const arms = [
+      ['arm_l1', 5.5, 1.1, 0.0],
+      ['arm_l2', 6.7, 1.3, 0.6],
+      ['arm_l3', 8.2, 1.5, 1.1],
+      ['arm_c1', 5.2, 1.0, 1.9],
+      ['arm_c2', 5.2, 1.0, 2.4],
+      ['arm_r3', 8.2, 1.5, 3.2],
+      ['arm_r2', 6.7, 1.3, 3.9],
+      ['arm_r1', 5.5, 1.1, 4.6],
+    ].map(([id,amp,speed,phase]) => ({
+      node: document.getElementById(id), amp, speed, phase,
+      origin: document.getElementById(id).getAttribute('transform-origin')
+    }));
+
+    const body = document.getElementById('body');
+    const collar = document.getElementById('collar');
+    const eyes = document.getElementById('eyes');
+
+    function tick(ms){
+      const t = ms * 0.001;
+      const breathe = Math.sin(t * 1.9) * 1.3;
+
+      for (const a of arms) {
+        const r = Math.sin(t * a.speed + a.phase) * a.amp;
+        const ty = -Math.abs(Math.sin(t * a.speed + a.phase)) * 0.8;
+        a.node.setAttribute('transform', `translate(0 ${ty.toFixed(2)}) rotate(${r.toFixed(2)} ${a.origin})`);
+      }
+
+      body.setAttribute('transform', `translate(0 ${(breathe*0.7).toFixed(2)})`);
+      collar.setAttribute('transform', `translate(0 ${(breathe*0.45).toFixed(2)})`);
+      const lx = Math.sin(t * 0.5) * 2.4;
+      const ly = Math.sin(t * 0.37 + 0.7) * 1.6;
+      eyes.setAttribute('transform', `translate(${lx.toFixed(2)} ${ly.toFixed(2)})`);
+
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

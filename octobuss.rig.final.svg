@@ -1,0 +1,287 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="bodyGrad" cx="45%" cy="35%" r="70%">
+      <stop offset="0%"   stop-color="#D4A6F0"/>
+      <stop offset="50%"  stop-color="#B57AE0"/>
+      <stop offset="100%" stop-color="#9656D4"/>
+    </radialGradient>
+    <radialGradient id="tentGrad" cx="50%" cy="50%" r="60%">
+      <stop offset="0%"   stop-color="#B57AE0"/>
+      <stop offset="70%"  stop-color="#A855D8"/>
+      <stop offset="100%" stop-color="#7C3FA1"/>
+    </radialGradient>
+    <radialGradient id="helmetGrad" cx="40%" cy="30%" r="65%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.65"/>
+      <stop offset="35%"  stop-color="#C3E9F7" stop-opacity="0.40"/>
+      <stop offset="85%"  stop-color="#7EAABF" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#4A7A92" stop-opacity="0.25"/>
+    </radialGradient>
+    <radialGradient id="eyeGrad" cx="50%" cy="55%" r="50%">
+      <stop offset="0%"   stop-color="#3A3340"/>
+      <stop offset="100%" stop-color="#15121A"/>
+    </radialGradient>
+    <radialGradient id="suckerGrad" cx="45%" cy="45%" r="55%">
+      <stop offset="0%"   stop-color="#F9D1DE"/>
+      <stop offset="100%" stop-color="#D18FA5"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ================ ЗАДНИЕ ЩУПАЛЬЦА (за телом) ================ -->
+  <g id="tentacles_back">
+
+    <!-- Левое верхнее щупальце (загибается влево-вверх) -->
+    <g id="tentacle_07" style="transform-origin:380px 420px">
+      <!-- основная форма щупальца -->
+      <path d="M 380 420
+               C 320 380, 250 340, 220 280
+               C 200 240, 190 180, 210 140
+               C 230 100, 280 90, 320 110
+               C 340 125, 355 150, 360 180
+               C 365 240, 350 310, 370 370
+               C 380 390, 390 410, 380 420 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <!-- тёмная грань для объёма -->
+      <path d="M 380 420
+               C 320 380, 250 340, 220 280
+               C 215 270, 210 255, 220 250
+               C 250 320, 310 360, 360 390
+               C 375 405, 380 415, 380 420 Z"
+            fill="#5C2D7A" opacity="0.4"/>
+      <!-- присоски -->
+      <ellipse cx="300" cy="350" rx="12" ry="9" fill="url(#suckerGrad)"/>
+      <ellipse cx="260" cy="300" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="240" cy="230" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="260" cy="160" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+    <!-- Левое щупальце (загибается влево) -->
+    <g id="tentacle_08" style="transform-origin:300px 500px">
+      <path d="M 300 500
+               C 240 490, 160 480, 100 510
+               C 60 535, 40 580, 60 620
+               C 85 660, 130 670, 170 650
+               C 200 635, 220 600, 215 560
+               C 210 530, 230 505, 300 500 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 300 500
+               C 240 490, 160 480, 100 510
+               C 95 512, 85 515, 85 520
+               C 140 495, 210 505, 270 510
+               C 290 505, 300 505, 300 500 Z"
+            fill="#5C2D7A" opacity="0.35"/>
+      <ellipse cx="220" cy="540" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="160" cy="545" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="110" cy="550" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+    <!-- Правое щупальце (зеркало левого верхнего) -->
+    <g id="tentacle_05" style="transform-origin:644px 420px">
+      <path d="M 644 420
+               C 704 380, 774 340, 804 280
+               C 824 240, 834 180, 814 140
+               C 794 100, 744 90, 704 110
+               C 684 125, 669 150, 664 180
+               C 659 240, 674 310, 654 370
+               C 644 390, 634 410, 644 420 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 644 420
+               C 704 380, 774 340, 804 280
+               C 809 270, 814 255, 804 250
+               C 774 320, 714 360, 664 390
+               C 649 405, 644 415, 644 420 Z"
+            fill="#5C2D7A" opacity="0.4"/>
+      <ellipse cx="724" cy="350" rx="12" ry="9" fill="url(#suckerGrad)"/>
+      <ellipse cx="764" cy="300" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="784" cy="230" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="764" cy="160" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+    <!-- Правое щупальце (зеркало левого) -->
+    <g id="tentacle_06" style="transform-origin:724px 500px">
+      <path d="M 724 500
+               C 784 490, 864 480, 924 510
+               C 964 535, 984 580, 964 620
+               C 939 660, 894 670, 854 650
+               C 824 635, 804 600, 809 560
+               C 814 530, 794 505, 724 500 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 724 500
+               C 784 490, 864 480, 924 510
+               C 929 512, 939 515, 939 520
+               C 884 495, 814 505, 754 510
+               C 734 505, 724 505, 724 500 Z"
+            fill="#5C2D7A" opacity="0.35"/>
+      <ellipse cx="804" cy="540" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="864" cy="545" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="914" cy="550" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+  </g>
+
+  <!-- ================ ТЕЛО (голова) ================ -->
+  <g id="body" style="transform-origin:512px 380px">
+    <circle cx="512" cy="380" r="240" fill="url(#bodyGrad)"/>
+    <!-- Лёгкий бок для объёма -->
+    <ellipse cx="512" cy="500" rx="200" ry="60" fill="#7A47A8" opacity="0.25"/>
+  </g>
+
+  <!-- ================ ВОРОТНИК (тёмное кольцо) ================ -->
+  <g id="collar" style="transform-origin:512px 610px">
+    <ellipse cx="512" cy="610" rx="280" ry="50" fill="#1F1B26"/>
+    <ellipse cx="512" cy="600" rx="280" ry="38" fill="#3A3441"/>
+    <ellipse cx="512" cy="593" rx="280" ry="12" fill="#5A5266" opacity="0.8"/>
+  </g>
+
+  <!-- ================ ПЕРЕДНИЕ ЩУПАЛЬЦА (перед телом, свисают) ================ -->
+  <g id="tentacles_front">
+
+    <!-- Левое нижнее-нижнее щупальце (свисает с загибом) -->
+    <g id="tentacle_03" style="transform-origin:350px 620px">
+      <path d="M 350 620
+               C 320 680, 310 750, 330 810
+               C 350 850, 390 880, 430 870
+               C 450 865, 460 835, 450 800
+               C 440 760, 440 700, 450 640
+               C 460 620, 380 610, 350 620 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 350 620
+               C 320 680, 310 750, 330 810
+               C 340 810, 350 800, 355 770
+               C 360 730, 360 680, 360 640
+               C 355 620, 360 610, 350 620 Z"
+            fill="#5C2D7A" opacity="0.35"/>
+      <ellipse cx="340" cy="700" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="345" cy="770" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="365" cy="825" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+    <!-- Левое среднее щупальце (свисает прямо) -->
+    <g id="tentacle_02" style="transform-origin:450px 630px">
+      <path d="M 450 630
+               C 440 700, 450 770, 480 830
+               C 505 870, 545 890, 570 860
+               C 580 845, 575 810, 560 770
+               C 545 730, 535 680, 540 630
+               C 530 625, 460 625, 450 630 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 450 630
+               C 440 700, 450 770, 480 830
+               C 485 825, 490 800, 490 760
+               C 485 710, 485 670, 495 630
+               C 480 625, 460 625, 450 630 Z"
+            fill="#5C2D7A" opacity="0.35"/>
+      <ellipse cx="470" cy="710" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="490" cy="780" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="515" cy="835" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+    <!-- Правое среднее щупальце (свисает прямо) -->
+    <g id="tentacle_04" style="transform-origin:574px 630px">
+      <path d="M 574 630
+               C 584 700, 574 770, 544 830
+               C 519 870, 479 890, 454 860
+               C 444 845, 449 810, 464 770
+               C 479 730, 489 680, 484 630
+               C 494 625, 584 625, 574 630 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 574 630
+               C 584 700, 574 770, 544 830
+               C 539 825, 534 800, 534 760
+               C 539 710, 539 670, 529 630
+               C 544 625, 564 625, 574 630 Z"
+            fill="#5C2D7A" opacity="0.35"/>
+      <ellipse cx="554" cy="710" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="534" cy="780" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="509" cy="835" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+    <!-- Правое нижнее щупальце (свисает с загибом) -->
+    <g id="tentacle_01" style="transform-origin:674px 620px">
+      <path d="M 674 620
+               C 704 680, 714 750, 694 810
+               C 674 850, 634 880, 594 870
+               C 574 865, 564 835, 574 800
+               C 584 760, 584 700, 574 640
+               C 564 620, 644 610, 674 620 Z"
+            fill="url(#tentGrad)" stroke="#6E408B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 674 620
+               C 704 680, 714 750, 694 810
+               C 684 810, 674 800, 669 770
+               C 664 730, 664 680, 664 640
+               C 669 620, 664 610, 674 620 Z"
+            fill="#5C2D7A" opacity="0.35"/>
+      <ellipse cx="684" cy="700" rx="11" ry="8" fill="url(#suckerGrad)"/>
+      <ellipse cx="679" cy="770" rx="10" ry="7" fill="url(#suckerGrad)"/>
+      <ellipse cx="659" cy="825" rx="9" ry="6" fill="url(#suckerGrad)"/>
+    </g>
+
+  </g>
+
+  <!-- ================ ЛИЦО ================ -->
+  <g id="face" style="transform-origin:512px 380px">
+
+    <!-- Румянец -->
+    <g id="cheeks" opacity="0.9">
+      <ellipse cx="380" cy="450" rx="58" ry="32" fill="#E88AA6"/>
+      <ellipse cx="644" cy="450" rx="58" ry="32" fill="#E88AA6"/>
+    </g>
+
+    <!-- Левый глаз -->
+    <g id="eye_l" style="transform-origin:420px 350px">
+      <ellipse cx="420" cy="350" rx="70" ry="85" fill="url(#eyeGrad)"/>
+      <!-- большой основной блик -->
+      <ellipse cx="450" cy="310" rx="28" ry="36" fill="#FFFFFF"/>
+      <!-- маленький нижний блик -->
+      <circle cx="410" cy="390" r="12" fill="#FFFFFF"/>
+      <!-- микро-блик -->
+      <circle cx="455" cy="370" r="5" fill="#FFFFFF" opacity="0.85"/>
+    </g>
+
+    <!-- Правый глаз -->
+    <g id="eye_r" style="transform-origin:604px 350px">
+      <ellipse cx="604" cy="350" rx="70" ry="85" fill="url(#eyeGrad)"/>
+      <ellipse cx="634" cy="310" rx="28" ry="36" fill="#FFFFFF"/>
+      <circle cx="594" cy="390" r="12" fill="#FFFFFF"/>
+      <circle cx="639" cy="370" r="5" fill="#FFFFFF" opacity="0.85"/>
+    </g>
+
+    <!-- Рот -->
+    <g id="mouth" style="transform-origin:512px 470px">
+      <!-- контур рта -->
+      <path d="M 480 460
+               Q 512 500 544 460
+               Q 512 485 480 460 Z"
+            fill="#6B2D41"/>
+      <!-- язычок -->
+      <ellipse cx="512" cy="485" rx="24" ry="13" fill="#E85A7D"/>
+      <!-- блик на языке -->
+      <ellipse cx="508" cy="480" rx="8" ry="3" fill="#F5B8D4" opacity="0.85"/>
+    </g>
+
+  </g>
+
+  <!-- ================ ШЛЕМ (стеклянный куполообразный) ================ -->
+  <g id="helmet" style="transform-origin:512px 360px">
+    <!-- основной купол -->
+    <ellipse cx="512" cy="360" rx="310" ry="340"
+             fill="url(#helmetGrad)"
+             stroke="#5A8FA8" stroke-opacity="0.4" stroke-width="3"/>
+
+    <!-- Верхний большой блик (левый) -->
+    <ellipse cx="380" cy="220" rx="70" ry="120"
+             fill="#FFFFFF" opacity="0.58" transform="rotate(-25 380 220)"/>
+
+    <!-- Верхний левый маленький блик -->
+    <ellipse cx="440" cy="160" rx="20" ry="55"
+             fill="#FFFFFF" opacity="0.72" transform="rotate(-20 440 160)"/>
+
+    <!-- Правый маленький блик -->
+    <ellipse cx="630" cy="290" rx="16" ry="38"
+             fill="#FFFFFF" opacity="0.48" transform="rotate(22 630 290)"/>
+
+    <!-- Нижний голубой отблеск -->
+    <ellipse cx="512" cy="630" rx="250" ry="80"
+             fill="#6DB3D8" opacity="0.18"/>
+  </g>
+
+</svg>

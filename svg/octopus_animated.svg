@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1024" viewBox="0 0 2048 2048" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <!-- Gradients from original design -->
+    <linearGradient id="f" x1="1325.96" x2="1305.98" y1="1491.2" y2="1509.13" gradientUnits="userSpaceOnUse"><stop class="stop0" offset="0" stop-color="#A75175"/><stop class="stop1" offset="1" stop-color="#CD6883"/></linearGradient>
+    <linearGradient id="e" x1="1389.65" x2="1396.42" y1="1550.07" y2="1524.3" gradientUnits="userSpaceOnUse"><stop class="stop0" offset="0" stop-color="#A94E66"/><stop class="stop1" offset="1" stop-color="#8D4A84"/></linearGradient>
+    <linearGradient id="d" x1="1491.9" x2="1492.03" y1="1562.05" y2="1537.73" gradientUnits="userSpaceOnUse"><stop class="stop0" offset="0" stop-color="#A34863"/><stop class="stop1" offset="1" stop-color="#6E408B"/></linearGradient>
+    <linearGradient id="c" x1="752.405" x2="744.164" y1="1589.14" y2="1567.58" gradientUnits="userSpaceOnUse"><stop class="stop0" offset="0" stop-color="#903F68"/><stop class="stop1" offset="1" stop-color="#673C84"/></linearGradient>
+    <linearGradient id="b" x1="1036.35" x2="1026.15" y1="988.534" y2="1192.66" gradientUnits="userSpaceOnUse"><stop class="stop0" offset="0" stop-color="#323133"/><stop class="stop1" offset="1" stop-color="#38303F"/></linearGradient>
+    <linearGradient id="a" x1="1033.55" x2="1031.07" y1="1015.85" y2="1105.28" gradientUnits="userSpaceOnUse"><stop class="stop0" offset="0" stop-color="#35393B"/><stop class="stop1" offset="1" stop-color="#3B3042"/></linearGradient>
+  </defs>
+
+  <!-- BODY: Main octopus body (head) - centered around 1024, 1024 -->
+  <g id="body" transform="translate(1024, 1024) scale(1, 1)">
+    <path fill="#B57AE0" d="M646.21 988.631c-172.725-161.81-163.264-420.339-5.228-588.426a536.591 536.591 0 0 1 375.468-165.327c150.01-4.369 297.84 43.247 406.68 149.515 85.67 83.646 134.56 190.83 137.75 310.973a404.913 404.913 0 0 1-110.56 287.014c-7.38 7.712-15.84 15.675-23.68 22.96 14.23 13.32 17.86 25.21 18.04 44.23.27 28.77-.23 44.52-18.48 66.82l-6.19 6.07c-25.4 18.97-59.22 31.53-89.13 41.6-4.12 1.55-6.55 2.1-10.88 3.12-47.18 12.28-98.78 18.17-147.25 22.2-133.59 11.1-314.103 5.04-440.911-39.16-.967-.15-8.85-2.87-10.298-3.35-31.116-12.78-42.869-18.93-69.913-38.72l-8.383-8.25a347.712 347.712 0 0 0-4.964-6.3c-15.809-19.96-16.962-41.91-14.776-66.88 1.498-17.1 9.577-27.906 22.705-38.089z" opacity="0.95"/>
+    <path fill="#C3E9F7" d="M646.21 988.631c-172.725-161.81-163.264-420.339-5.228-588.426a536.591 536.591 0 0 1 375.468-165.327c150.01-4.369 297.84 43.247 406.68 149.515 85.67 83.646 134.56 190.83 137.75 310.973a404.913 404.913 0 0 1-110.56 287.014c-7.38 7.712-15.84 15.675-23.68 22.96-2.65 1.94-5.72 4.05-8.27 6.07-3.12 2.47-13.15 11.03-16.23 11.68-3.83 2.14-16.02 9.24-19.45 10.44 3.08-6.33 26.05-24.34 32.54-29.78-5.82-3.41-12.09-5.878-18.3-8.528-6.16-3.271-11.63-1.721-17.71-6.496 136.57-147.696 99.08-384.686-47.5-511.078-98.25-84.718-187.49-114.701-316-113.026-332.694 4.335-560.464 396.692-296.544 648.008 15.603 14.86 35.805 27.84 53.728 39.67 3.325 2.16 14.728 8.46 15.726 11.1-24.876-6.19-58.811-21.2-81.41-33.88-15.403-5.76-28.239-15.47-40.998-25.64-2.078-2.78-8.588-7.524-11.634-9.944-2.147-1.901-5.78-3.808-8.378-5.305z" opacity="0.6"/>
+    <path fill="#F2FCFD" d="M646.21 988.631c-172.725-161.81-163.264-420.339-5.228-588.426a536.591 536.591 0 0 1 375.468-165.327c150.01-4.369 297.84 43.247 406.68 149.515 85.67 83.646 134.56 190.83 137.75 310.973a404.913 404.913 0 0 1-110.56 287.014c-7.38 7.712-15.84 15.675-23.68 22.96 14.23 13.32 17.86 25.21 18.04 44.23.27 28.77-.23 44.52-18.48 66.82l-6.19 6.07c-25.4 18.97-59.22 31.53-89.13 41.6-4.12 1.55-6.55 2.1-10.88 3.12-47.18 12.28-98.78 18.17-147.25 22.2-133.59 11.1-314.103 5.04-440.911-39.16-.967-.15-8.85-2.87-10.298-3.35-31.116-12.78-42.869-18.93-69.913-38.72l-8.383-8.25a347.712 347.712 0 0 0-4.964-6.3c-15.809-19.96-16.962-41.91-14.776-66.88 1.498-17.1 9.577-27.906 22.705-38.089z" opacity="0.3"/>
+  </g>
+
+  <!-- ARMS: Tentacles group (for wave animation) -->
+  <g id="arms" transform="translate(1024, 1024)">
+    <!-- Left tentacles (will wave) -->
+    <g id="tentacle-left-1" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M1215.2 865.5 Q 1100 850 950 900"/>
+      <path fill="#A24A66" d="M1215.2 865.5 Q 1100 840 950 890"/>
+    </g>
+    <g id="tentacle-left-2" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M764.9 1555.7 Q 600 1600 400 1700"/>
+      <path fill="#A24A66" d="M764.9 1555.7 Q 600 1590 400 1690"/>
+    </g>
+    <g id="tentacle-left-3" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M584.8 1597.7 Q 450 1650 250 1750"/>
+      <path fill="#A24A66" d="M584.8 1597.7 Q 450 1640 250 1740"/>
+    </g>
+    <g id="tentacle-left-4" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M487.7 1488.4 Q 350 1550 150 1650"/>
+      <path fill="#A24A66" d="M487.7 1488.4 Q 350 1540 150 1640"/>
+    </g>
+
+    <!-- Right tentacles (will wave) -->
+    <g id="tentacle-right-1" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M1358.8 1510.7 Q 1500 1550 1700 1650"/>
+      <path fill="#A24A66" d="M1358.8 1510.7 Q 1500 1540 1700 1640"/>
+    </g>
+    <g id="tentacle-right-2" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M1693.2 1457.8 Q 1850 1480 2050 1550"/>
+      <path fill="#A24A66" d="M1693.2 1457.8 Q 1850 1470 2050 1540"/>
+    </g>
+    <g id="tentacle-right-3" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M1747.6 1389.8 Q 1900 1400 2100 1450"/>
+      <path fill="#A24A66" d="M1747.6 1389.8 Q 1900 1390 2100 1440"/>
+    </g>
+    <g id="tentacle-right-4" transform="translate(0, 0)">
+      <path fill="#FA8FAE" d="M1436.8 1526.0 Q 1580 1560 1780 1660"/>
+      <path fill="#A24A66" d="M1436.8 1526.0 Q 1580 1550 1780 1650"/>
+    </g>
+  </g>
+
+  <!-- EYES: Eye group (for blink and gaze) -->
+  <g id="eyes" transform="translate(1024, 1024)">
+    <!-- Left eye -->
+    <g id="eye-left" transform="translate(-150, -250)">
+      <circle cx="0" cy="0" r="50" fill="#39343B"/>
+      <circle cx="5" cy="0" r="25" fill="#fff"/>
+      <circle cx="8" cy="3" r="12" fill="#000"/>
+    </g>
+    <!-- Right eye -->
+    <g id="eye-right" transform="translate(150, -250)">
+      <circle cx="0" cy="0" r="50" fill="#39343B"/>
+      <circle cx="5" cy="0" r="25" fill="#fff"/>
+      <circle cx="8" cy="3" r="12" fill="#000"/>
+    </g>
+  </g>
+
+  <!-- MOUTH: Mouth group (for lip sync) -->
+  <g id="mouth" transform="translate(1024, 1024)">
+    <path id="mouth-shape" fill="none" stroke="#2D0F1A" stroke-width="8" stroke-linecap="round" d="M-30 80 Q 0 100 30 80"/>
+  </g>
+</svg>

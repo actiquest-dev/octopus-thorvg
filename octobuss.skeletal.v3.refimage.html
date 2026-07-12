@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octobuss Skeletal v3 (Ref Image)</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: #c8ccd4;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+    }
+    .stage { width: min(86vmin, 760px); aspect-ratio: 472 / 540; }
+    svg { width: 100%; height: 100%; display: block; }
+
+    .tentacle-fill {
+      fill: #9f74d2;
+      stroke: #7445a8;
+      stroke-width: 4;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+    .tentacle-shade { fill: rgba(117, 71, 172, 0.26); }
+    .tentacle-hi {
+      fill: none;
+      stroke: rgba(216, 186, 244, 0.78);
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+    .sucker {
+      fill: #f2a3c1;
+      stroke: #c8749b;
+      stroke-width: 1.4;
+    }
+    .body-fill { fill: #a67fd8; stroke: #7445a8; stroke-width: 4; }
+    .helmet {
+      fill: rgba(180, 225, 242, 0.22);
+      stroke: #79a7bf;
+      stroke-width: 3.2;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <svg id="scene" viewBox="0 0 472 540" xmlns="http://www.w3.org/2000/svg" aria-label="Octopus ref-close rig">
+      <rect width="472" height="540" fill="#c8ccd4" />
+
+      <g id="tentacles-back">
+        <g id="tentacle_01" data-pivot-x="125" data-pivot-y="338">
+          <path class="tentacle-fill" d="M120 330 C75 327 45 322 25 317 L23 338 C46 345 78 349 123 347 C130 342 129 334 120 330 Z"/>
+          <path class="tentacle-shade" d="M119 334 C87 334 58 330 31 325 L30 335 C58 341 88 344 122 344 Z"/>
+          <path class="tentacle-hi" d="M110 336 C88 334 70 332 51 327"/>
+          <g>
+            <ellipse class="sucker" cx="64" cy="325" rx="5.2" ry="3.3"/>
+            <ellipse class="sucker" cx="83" cy="327" rx="5.1" ry="3.2"/>
+            <ellipse class="sucker" cx="102" cy="329" rx="4.8" ry="3.1"/>
+          </g>
+        </g>
+
+        <g id="tentacle_02" data-pivot-x="154" data-pivot-y="357">
+          <path class="tentacle-fill" d="M150 348 C103 370 74 390 53 417 L60 437 C89 425 122 404 160 375 C166 364 162 352 150 348 Z"/>
+          <path class="tentacle-shade" d="M147 354 C114 372 86 392 63 415 L67 425 C95 410 124 392 153 370 Z"/>
+          <path class="tentacle-hi" d="M138 360 C116 373 96 387 78 403"/>
+          <g>
+            <ellipse class="sucker" cx="98" cy="390" rx="5.3" ry="3.4" transform="rotate(-24 98 390)"/>
+            <ellipse class="sucker" cx="84" cy="399" rx="5.1" ry="3.2" transform="rotate(-24 84 399)"/>
+            <ellipse class="sucker" cx="71" cy="409" rx="4.7" ry="3.0" transform="rotate(-24 71 409)"/>
+          </g>
+        </g>
+
+        <g id="tentacle_03" data-pivot-x="181" data-pivot-y="366">
+          <path class="tentacle-fill" d="M174 360 C145 397 120 425 83 444 L95 462 C140 448 172 418 199 378 C201 367 190 359 174 360 Z"/>
+          <path class="tentacle-shade" d="M175 366 C153 395 132 418 102 438 L108 447 C139 433 163 410 185 382 Z"/>
+          <path class="tentacle-hi" d="M167 371 C151 391 134 409 117 423"/>
+          <g>
+            <ellipse class="sucker" cx="142" cy="408" rx="5.2" ry="3.3" transform="rotate(-42 142 408)"/>
+            <ellipse class="sucker" cx="128" cy="421" rx="5.0" ry="3.1" transform="rotate(-42 128 421)"/>
+            <ellipse class="sucker" cx="113" cy="434" rx="4.6" ry="2.9" transform="rotate(-42 113 434)"/>
+          </g>
+        </g>
+
+        <g id="tentacle_08" data-pivot-x="311" data-pivot-y="324">
+          <path class="tentacle-fill" d="M309 333 C348 342 384 343 424 336 L423 317 C382 316 346 312 312 309 C302 313 300 327 309 333 Z"/>
+          <path class="tentacle-shade" d="M312 329 C343 336 377 336 417 331 L417 321 C378 322 347 318 314 313 Z"/>
+          <path class="tentacle-hi" d="M322 325 C343 329 364 330 387 328"/>
+          <g>
+            <ellipse class="sucker" cx="362" cy="330" rx="5.2" ry="3.3"/>
+            <ellipse class="sucker" cx="379" cy="330" rx="5.0" ry="3.1"/>
+            <ellipse class="sucker" cx="395" cy="329" rx="4.7" ry="3.0"/>
+          </g>
+        </g>
+
+        <g id="tentacle_07" data-pivot-x="308" data-pivot-y="345">
+          <path class="tentacle-fill" d="M304 347 C352 365 387 381 430 386 L432 366 C391 356 353 342 311 325 C300 327 297 338 304 347 Z"/>
+          <path class="tentacle-shade" d="M309 344 C345 358 379 369 423 375 L424 367 C382 358 347 345 313 332 Z"/>
+          <path class="tentacle-hi" d="M319 341 C344 349 368 357 392 362"/>
+          <g>
+            <ellipse class="sucker" cx="364" cy="364" rx="5.3" ry="3.4" transform="rotate(18 364 364)"/>
+            <ellipse class="sucker" cx="380" cy="369" rx="5.1" ry="3.2" transform="rotate(18 380 369)"/>
+            <ellipse class="sucker" cx="398" cy="373" rx="4.8" ry="3.0" transform="rotate(18 398 373)"/>
+          </g>
+        </g>
+      </g>
+
+      <g id="body">
+        <circle class="body-fill" cx="236" cy="255" r="124"/>
+        <ellipse cx="210" cy="205" rx="36" ry="15" fill="rgba(214,182,243,.58)" transform="rotate(-28 210 205)"/>
+        <ellipse cx="301" cy="198" rx="20" ry="12" fill="rgba(214,182,243,.56)" transform="rotate(28 301 198)"/>
+
+        <circle cx="188" cy="288" r="24" fill="#ea8db3"/>
+        <circle cx="286" cy="288" r="24" fill="#ea8db3"/>
+
+        <g id="eyes">
+          <circle cx="192" cy="255" r="30" fill="#eaf6ff"/>
+          <circle cx="272" cy="255" r="30" fill="#eaf6ff"/>
+          <circle cx="196" cy="258" r="20" fill="#596575"/>
+          <circle cx="276" cy="258" r="20" fill="#596575"/>
+          <circle cx="205" cy="245" r="6" fill="#fff"/>
+          <circle cx="285" cy="245" r="6" fill="#fff"/>
+        </g>
+
+        <path d="M206 321 C219 336 252 336 265 321 C261 338 210 338 206 321 Z" fill="#6d3f8a"/>
+        <path d="M216 330 C226 341 245 341 255 330" fill="none" stroke="#ea8caf" stroke-width="7" stroke-linecap="round"/>
+      </g>
+
+      <g id="tentacles-front">
+        <g id="tentacle_04" data-pivot-x="228" data-pivot-y="374">
+          <path class="tentacle-fill" d="M214 370 C206 413 205 454 213 500 L242 499 C248 454 248 414 242 370 C235 360 221 360 214 370 Z"/>
+          <path class="tentacle-shade" d="M220 372 C215 414 215 453 220 493 L232 493 C235 454 235 415 232 372 Z"/>
+          <path class="tentacle-hi" d="M225 378 C221 411 221 444 225 475"/>
+          <g>
+            <ellipse class="sucker" cx="214" cy="413" rx="4.8" ry="3.0" transform="rotate(90 214 413)"/>
+            <ellipse class="sucker" cx="214" cy="435" rx="4.6" ry="2.9" transform="rotate(90 214 435)"/>
+            <ellipse class="sucker" cx="214" cy="457" rx="4.3" ry="2.7" transform="rotate(90 214 457)"/>
+          </g>
+        </g>
+
+        <g id="tentacle_05" data-pivot-x="267" data-pivot-y="374">
+          <path class="tentacle-fill" d="M253 370 C260 414 262 455 256 500 L285 499 C295 455 296 413 289 370 C281 360 261 360 253 370 Z"/>
+          <path class="tentacle-shade" d="M265 372 C269 414 270 453 266 493 L278 493 C284 454 284 415 279 372 Z"/>
+          <path class="tentacle-hi" d="M271 378 C274 411 275 444 271 475"/>
+          <g>
+            <ellipse class="sucker" cx="257" cy="413" rx="4.8" ry="3.0" transform="rotate(90 257 413)"/>
+            <ellipse class="sucker" cx="258" cy="435" rx="4.6" ry="2.9" transform="rotate(90 258 435)"/>
+            <ellipse class="sucker" cx="259" cy="457" rx="4.3" ry="2.7" transform="rotate(90 259 457)"/>
+          </g>
+        </g>
+
+        <g id="tentacle_06" data-pivot-x="286" data-pivot-y="362">
+          <path class="tentacle-fill" d="M279 361 C310 394 336 420 355 456 L376 448 C359 408 330 376 295 350 C287 349 279 353 279 361 Z"/>
+          <path class="tentacle-shade" d="M286 362 C312 391 334 417 350 446 L362 441 C346 413 325 387 300 360 Z"/>
+          <path class="tentacle-hi" d="M293 364 C311 384 327 405 341 426"/>
+          <g>
+            <ellipse class="sucker" cx="326" cy="407" rx="5.2" ry="3.3" transform="rotate(40 326 407)"/>
+            <ellipse class="sucker" cx="339" cy="420" rx="5.0" ry="3.1" transform="rotate(40 339 420)"/>
+            <ellipse class="sucker" cx="351" cy="433" rx="4.7" ry="3.0" transform="rotate(40 351 433)"/>
+          </g>
+        </g>
+      </g>
+
+      <g id="collar">
+        <ellipse cx="236" cy="338" rx="127" ry="31" fill="#7d8595"/>
+        <ellipse cx="236" cy="332" rx="117" ry="23" fill="#7f8898"/>
+        <ellipse cx="236" cy="339" rx="128" ry="29" fill="none" stroke="#6f7888" stroke-width="3"/>
+      </g>
+
+      <g id="helmet-layer">
+        <circle class="helmet" cx="236" cy="255" r="146"/>
+      </g>
+
+      <g id="helmet-gloss">
+        <ellipse cx="179" cy="184" rx="20" ry="10" fill="rgba(255,255,255,.58)" transform="rotate(-34 179 184)"/>
+        <ellipse cx="295" cy="184" rx="20" ry="10" fill="rgba(255,255,255,.58)" transform="rotate(34 295 184)"/>
+      </g>
+    </svg>
+  </div>
+
+  <script>
+    const anim = [
+      { id: 'tentacle_01', amp: 6.5, speed: 1.2, phase: 0.0 },
+      { id: 'tentacle_02', amp: 8.0, speed: 1.35, phase: 0.7 },
+      { id: 'tentacle_03', amp: 9.5, speed: 1.5, phase: 1.3 },
+      { id: 'tentacle_04', amp: 6.0, speed: 1.1, phase: 2.2 },
+      { id: 'tentacle_05', amp: 6.0, speed: 1.1, phase: 2.8 },
+      { id: 'tentacle_06', amp: 9.5, speed: 1.5, phase: 3.7 },
+      { id: 'tentacle_07', amp: 8.0, speed: 1.35, phase: 4.3 },
+      { id: 'tentacle_08', amp: 6.5, speed: 1.2, phase: 5.0 }
+    ].map(cfg => {
+      const node = document.getElementById(cfg.id);
+      return {
+        ...cfg,
+        node,
+        px: Number(node.dataset.pivotX),
+        py: Number(node.dataset.pivotY),
+      };
+    });
+
+    const eyes = document.getElementById('eyes');
+    const mouthTop = document.querySelector('#body path[d^="M206"]');
+    const mouthTongue = document.querySelector('#body path[d^="M216"]');
+    const body = document.getElementById('body');
+    const collar = document.getElementById('collar');
+
+    function frame(ms) {
+      const t = ms * 0.001;
+      const breathe = Math.sin(t * 1.9) * 1.8;
+
+      for (const a of anim) {
+        const rot = Math.sin(t * a.speed + a.phase) * a.amp;
+        const ty = -Math.abs(Math.sin(t * a.speed + a.phase)) * 0.9;
+        a.node.setAttribute('transform', `translate(0 ${ty.toFixed(2)}) rotate(${rot.toFixed(2)} ${a.px} ${a.py})`);
+      }
+
+      body.setAttribute('transform', `translate(0 ${(breathe * 0.8).toFixed(2)})`);
+      collar.setAttribute('transform', `translate(0 ${(breathe * 0.6).toFixed(2)})`);
+
+      const lookX = Math.sin(t * 0.52) * 2.8;
+      const lookY = Math.sin(t * 0.41 + 0.6) * 1.8;
+      eyes.setAttribute('transform', `translate(${lookX.toFixed(2)} ${lookY.toFixed(2)})`);
+
+      requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

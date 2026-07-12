@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octopus Beauty Rig Animate</title>
+  <style>
+    html,body{margin:0;height:100%;display:grid;place-items:center;background:#0e1322}
+    #stage{width:min(92vw,920px);height:min(92vh,920px)}
+    #stage svg{width:100%;height:100%;display:block}
+  </style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+(async function(){
+  const stage = document.getElementById('stage');
+  const txt = await (await fetch('./octobuss.beauty.rig.svg',{cache:'no-store'})).text();
+  const svg = new DOMParser().parseFromString(txt,'image/svg+xml').documentElement;
+  stage.appendChild(svg);
+
+  // Animate only object containers to keep layers coherent.
+  const tentacles = [...svg.querySelectorAll('g[id^="tentacle_"]')];
+  tentacles.forEach((g,i)=>{
+    const px = Number(g.getAttribute('data-pivot-x')||1024);
+    const py = Number(g.getAttribute('data-pivot-y')||1200);
+    g.style.transformBox = 'view-box';
+    g.style.transformOrigin = `${px}px ${py}px`;
+    g.style.willChange = 'transform';
+  });
+
+  const eyes = [svg.getElementById('eye_left'), svg.getElementById('eye_right')].filter(Boolean);
+  eyes.forEach(g=>{
+    const px = Number(g.getAttribute('data-pivot-x')||1024);
+    const py = Number(g.getAttribute('data-pivot-y')||760);
+    g.style.transformBox = 'view-box';
+    g.style.transformOrigin = `${px}px ${py}px`;
+  });
+
+  let t=0;
+  function loop(){
+    t += 0.055;
+    tentacles.forEach((g,i)=>{
+      const side = i < 4 ? -1 : 1;
+      const a = Math.sin(t*1.18 + i*0.5) * (4.2 + (i%3)*0.8) * side;
+      const x = Math.sin(t + i*0.33) * 1.2 * side;
+      g.style.transform = `translateX(${x.toFixed(2)}px) rotate(${a.toFixed(2)}deg)`;
+    });
+
+    const blink = (Math.sin(t*0.65)+1)/2;
+    const sy = 0.82 + blink*0.18;
+    eyes.forEach(g=> g.style.transform = `scaleY(${sy.toFixed(3)})`);
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

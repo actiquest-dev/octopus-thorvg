@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaPipe Face Detection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .panel {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        h1 {
+            color: #00d4ff;
+            margin: 0 0 20px 0;
+        }
+        h2 {
+            color: #00d4ff;
+            font-size: 16px;
+            margin: 15px 0 10px 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+        button {
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover {
+            background: #00f0ff;
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        #video {
+            width: 100%;
+            background: #000;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+        #canvas {
+            display: none;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .status.ok {
+            background: #1a4d1a;
+            color: #00ff00;
+        }
+        .status.error {
+            background: #4d1a1a;
+            color: #ff4444;
+        }
+        .status.info {
+            background: #1a2a4d;
+            color: #00d4ff;
+        }
+        .stat {
+            background: #1a1a1a;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .stat-label {
+            color: #00d4ff;
+            font-weight: bold;
+            display: inline-block;
+            width: 150px;
+        }
+        .stat-value {
+            color: #00ff00;
+        }
+        .embedding-preview {
+            font-family: monospace;
+            font-size: 11px;
+            color: #00ff00;
+            background: #000;
+            padding: 8px;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            word-break: break-all;
+        }
+        progress {
+            width: 100%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐙 MediaPipe Face Detection Test</h1>
+
+    <div class="container">
+        <!-- Video Panel -->
+        <div class="panel">
+            <h2>📷 Camera</h2>
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas"></canvas>
+            <div style="margin-top: 10px;">
+                <button id="startBtn" onclick="startCamera()">Запустить камеру</button>
+                <button id="stopBtn" onclick="stopCamera()" disabled>Остановить</button>
+                <button id="captureBtn" onclick="captureFrame()" disabled>Захватить кадр</button>
+            </div>
+            <div id="cameraStatus" class="status info">⏳ Ожидание...</div>
+        </div>
+
+        <!-- Detection Panel -->
+        <div class="panel">
+            <h2>🔍 Детектирование</h2>
+            <div id="detectionStatus" class="status info">❌ MediaPipe не загружен</div>
+            <div class="stat">
+                <span class="stat-label">Статус:</span>
+                <span class="stat-value" id="statusText">Ожидание</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Загруженные модели:</span>
+                <span class="stat-value" id="modelsLoaded">-</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">FPS:</span>
+                <span class="stat-value" id="fps">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Лиц найдено:</span>
+                <span class="stat-value" id="facesDetected">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Время обработки:</span>
+                <span class="stat-value" id="processingTime">0ms</span>
+            </div>
+            <button id="testApiBtn" onclick="testApi()" disabled>Тест API /api/face/identify</button>
+            <div id="apiStatus" class="status info" style="display: none;">...</div>
+        </div>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="panel" style="margin-top: 20px;">
+        <h2>📊 Результаты</h2>
+        <div id="results" style="min-height: 100px;">
+            <div class="status info">Ожидание результатов...</div>
+        </div>
+    </div>
+
+    <!-- Embedding Preview -->
+    <div class="panel" style="margin-top: 20px;">
+        <h2>🧮 Embedding Preview</h2>
+        <div id="embeddingPreview" class="embedding-preview">
+            Embeddings будут отображены здесь...
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let mediaStream = null;
+        let detector = null;
+        let faceDetector = null;
+        let lastFrameTime = 0;
+        let frameCount = 0;
+        let totalFacesDetected = 0;
+
+        // Load MediaPipe and FaceMesh
+        async function loadMediaPipe() {
+            try {
+                console.log('🔄 Загрузка MediaPipe...');
+                updateStatus('Загрузка MediaPipe...', 'info');
+
+                // Load FaceMesh
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js';
+                document.head.appendChild(script);
+
+                // Wait for MediaPipe to load
+                const faceMeshScript = document.createElement('script');
+                faceMeshScript.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js';
+                faceMeshScript.onload = async () => {
+                    console.log('✅ MediaPipe FaceMesh загружен');
+
+                    // Create detector
+                    const vision = window;
+                    if (!vision.FaceMesh) {
+                        throw new Error('FaceMesh not available');
+                    }
+
+                    faceDetector = new vision.FaceMesh({
+                        locateFile: (file) => {
+                            return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                        },
+                    });
+
+                    await faceDetector.initialize();
+                    console.log('✅ FaceMesh инициализирован');
+                    document.getElementById('detectionStatus').innerHTML = '✅ MediaPipe загружен и готов';
+                    document.getElementById('modelsLoaded').textContent = 'FaceMesh v1.0';
+                    updateStatus('✅ MediaPipe готов', 'ok');
+
+                    // Enable buttons
+                    document.getElementById('startBtn').disabled = false;
+                    document.getElementById('captureBtn').disabled = false;
+                };
+
+                document.head.appendChild(faceMeshScript);
+            } catch (error) {
+                console.error('❌ Ошибка загрузки MediaPipe:', error);
+                updateStatus(`❌ Ошибка: ${error.message}`, 'error');
+            }
+        }
+
+        async function startCamera() {
+            try {
+                console.log('📷 Запуск камеры...');
+                updateStatus('Запуск камеры...', 'info');
+
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user'
+                    },
+                    audio: false
+                });
+
+                mediaStream = stream;
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+
+                // Wait for video to load
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        console.log(`✅ Video loaded: ${video.videoWidth}x${video.videoHeight}`);
+                        resolve();
+                    };
+                });
+
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('captureBtn').disabled = false;
+                document.getElementById('testApiBtn').disabled = false;
+
+                updateStatus('✅ Камера запущена', 'ok');
+                console.log('✅ Камера запущена');
+
+                // Start detection loop after a small delay
+                setTimeout(detectFaces, 500);
+            } catch (error) {
+                console.error('❌ Ошибка запуска камеры:', error);
+                updateStatus(`❌ Ошибка камеры: ${error.message}`, 'error');
+            }
+        }
+
+        function stopCamera() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            document.getElementById('video').srcObject = null;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            updateStatus('❌ Камера остановлена', 'error');
+            console.log('⏹️ Камера остановлена');
+        }
+
+        async function detectFaces() {
+            if (!mediaStream || !faceDetector) return;
+
+            try {
+                const video = document.getElementById('video');
+
+                // Check video is ready
+                if (video.videoWidth === 0 || video.videoHeight === 0) {
+                    console.warn('⏳ Video not ready yet...');
+                    requestAnimationFrame(detectFaces);
+                    return;
+                }
+
+                const startTime = performance.now();
+
+                // Detect faces - with error handling
+                let results;
+                try {
+                    results = await faceDetector.send({ image: video });
+                } catch (detectionError) {
+                    console.warn('⚠️ Detection frame skipped:', detectionError.message);
+                    requestAnimationFrame(detectFaces);
+                    return;
+                }
+
+                const processingTime = performance.now() - startTime;
+
+                if (results && results.multiFaceLandmarks) {
+                    const facesCount = results.multiFaceLandmarks.length;
+                    totalFacesDetected += facesCount;
+
+                    document.getElementById('facesDetected').textContent = facesCount;
+                    document.getElementById('processingTime').textContent = `${processingTime.toFixed(1)}ms`;
+
+                    // Calculate FPS
+                    frameCount++;
+                    if (performance.now() - lastFrameTime > 1000) {
+                        document.getElementById('fps').textContent = frameCount;
+                        frameCount = 0;
+                        lastFrameTime = performance.now();
+                    }
+
+                    // Display results
+                    if (facesCount > 0) {
+                        displayResults(results);
+                    }
+                }
+
+                // Continue detection
+                requestAnimationFrame(detectFaces);
+            } catch (error) {
+                console.error('❌ Ошибка детектирования:', error.message);
+                // Continue anyway
+                requestAnimationFrame(detectFaces);
+            }
+        }
+
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            let html = '';
+
+            results.multiFaceLandmarks.forEach((landmarks, faceIdx) => {
+                // Calculate embedding (simplified - use first 10 landmarks)
+                const embedding = landmarks.slice(0, 10).flatMap(lm => [lm.x, lm.y, lm.z]);
+
+                html += `
+                    <div style="background: #1a1a1a; padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 3px solid #00d4ff;">
+                        <div class="stat">
+                            <span class="stat-label">Лицо ${faceIdx + 1}:</span>
+                            <span class="stat-value">
+                                Landmarks: ${landmarks.length},
+                                Embedding: ${embedding.length}D
+                            </span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Примеры координат:</span>
+                            <span class="stat-value" style="font-size: 10px;">
+                                ${landmarks.slice(0, 3).map((l, i) => `[${l.x.toFixed(3)}, ${l.y.toFixed(3)}, ${l.z.toFixed(3)}]`).join(' ')}...
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                // Show embedding preview
+                if (faceIdx === 0) {
+                    document.getElementById('embeddingPreview').innerHTML = `
+                        <strong>Embedding из ${landmarks.length} landmarks:</strong><br>
+                        ${embedding.slice(0, 20).map((v, i) => `${v.toFixed(3)}`).join(', ')}...<br>
+                        <em>(Показано первые 20 из ${embedding.length} значений)</em>
+                    `;
+                }
+            });
+
+            resultsDiv.innerHTML = html || '<div class="status info">Лица не найдены</div>';
+        }
+
+        async function captureFrame() {
+            if (!mediaStream) {
+                updateStatus('❌ Камера не запущена', 'error');
+                return;
+            }
+
+            try {
+                const video = document.getElementById('video');
+                const canvas = document.getElementById('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0);
+
+                const imageData = canvas.toDataURL('image/jpeg');
+                console.log('📸 Кадр захвачен, размер:', imageData.length, 'bytes');
+
+                document.getElementById('results').innerHTML = `
+                    <div class="status ok">
+                        ✅ Кадр захвачен (${imageData.length} bytes)
+                        <br><small>${canvas.width}x${canvas.height}px</small>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('❌ Ошибка захвата:', error);
+                updateStatus(`❌ Ошибка: ${error.message}`, 'error');
+            }
+        }
+
+        async function testApi() {
+            if (!mediaStream) {
+                updateStatus('❌ Камера не запущена', 'error');
+                return;
+            }
+
+            try {
+                document.getElementById('testApiBtn').disabled = true;
+                document.getElementById('apiStatus').style.display = 'block';
+                document.getElementById('apiStatus').className = 'status info';
+                document.getElementById('apiStatus').textContent = '⏳ Отправка на backend...';
+
+                const video = document.getElementById('video');
+                const canvas = document.getElementById('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0);
+
+                const imageB64 = canvas.toDataURL('image/jpeg').split(',')[1];
+
+                const response = await fetch('/api/face/identify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image_b64: imageB64,
+                        threshold: 0.6
+                    })
+                });
+
+                const data = await response.json();
+                console.log('📡 API Response:', data);
+
+                let statusHtml = '';
+                if (data.matched) {
+                    statusHtml = `
+                        ✅ <strong>Пользователь найден!</strong><br>
+                        Name: ${data.user_name}<br>
+                        Confidence: ${(data.confidence * 100).toFixed(1)}%<br>
+                        Interactions: ${data.user_history.interaction_count}<br>
+                        Avg Emotion: ${data.user_history.average_emotion}
+                    `;
+                    document.getElementById('apiStatus').className = 'status ok';
+                } else {
+                    statusHtml = `
+                        ❌ <strong>Пользователь не найден</strong><br>
+                        Начинаем процесс регистрации...
+                    `;
+                    document.getElementById('apiStatus').className = 'status info';
+                }
+
+                document.getElementById('apiStatus').innerHTML = statusHtml;
+
+                // Show full response
+                document.getElementById('results').innerHTML = `
+                    <div style="font-family: monospace; font-size: 11px; background: #000; padding: 10px; border-radius: 4px; max-height: 300px; overflow-y: auto;">
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                document.getElementById('apiStatus').className = 'status error';
+                document.getElementById('apiStatus').innerHTML = `❌ Ошибка: ${error.message}`;
+            } finally {
+                document.getElementById('testApiBtn').disabled = false;
+            }
+        }
+
+        function updateStatus(message, type) {
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            document.getElementById('statusText').textContent = message;
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            console.log('🚀 Инициализация тестовой страницы...');
+            loadMediaPipe();
+        };
+    </script>
+</body>
+</html>

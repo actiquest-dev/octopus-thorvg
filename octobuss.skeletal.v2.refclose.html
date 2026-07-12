@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octobuss Skeletal v2</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: #d7dbe0;
+      font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+    }
+    .stage { width: min(90vmin, 860px); aspect-ratio: 1 / 1; }
+    svg { width: 100%; height: 100%; display: block; }
+    .tentacle-fill { fill: #ab73db; stroke: #7543a8; stroke-width: 5; stroke-linejoin: round; }
+    .tentacle-shadow { fill: #8a56c5; opacity: .22; }
+    .tentacle-highlight { fill: none; stroke: rgba(224,193,248,.75); stroke-width: 6; stroke-linecap: round; }
+    .sucker { fill: #f8b2cf; stroke: #cf7598; stroke-width: 1.8; }
+    .hud {
+      position: fixed;
+      left: 12px;
+      bottom: 12px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 10px;
+      padding: 7px 9px;
+      font-size: 12px;
+      color: #223042;
+      backdrop-filter: blur(5px);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <svg id="svg" viewBox="0 0 768 768" xmlns="http://www.w3.org/2000/svg" aria-label="Octopus skeletal v2">
+      <defs>
+        <radialGradient id="headGrad" cx="46%" cy="35%" r="72%">
+          <stop offset="0" stop-color="#b57ee2"/>
+          <stop offset="1" stop-color="#9c64cf"/>
+        </radialGradient>
+        <linearGradient id="collarGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6f6879"/>
+          <stop offset="1" stop-color="#57525f"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="768" height="768" fill="#d7dbe0" />
+
+      <g id="tentacles-back"></g>
+
+      <g id="body">
+        <circle cx="384" cy="280" r="157" fill="url(#headGrad)" stroke="#6f3e9f" stroke-width="5"/>
+        <ellipse cx="448" cy="244" rx="26" ry="16" fill="rgba(225,186,246,.58)" transform="rotate(32 448 244)"/>
+        <ellipse cx="309" cy="224" rx="36" ry="16" fill="rgba(225,186,246,.55)" transform="rotate(-28 309 224)"/>
+        <ellipse cx="300" cy="328" rx="30" ry="29" fill="#ef8cb2"/>
+        <ellipse cx="468" cy="328" rx="30" ry="29" fill="#ef8cb2"/>
+      </g>
+
+      <g id="tentacles-front"></g>
+
+      <g id="collar">
+        <ellipse cx="384" cy="432" rx="142" ry="38" fill="#4f4a56"/>
+        <ellipse cx="384" cy="423" rx="130" ry="29" fill="url(#collarGrad)"/>
+        <ellipse cx="384" cy="435" rx="144" ry="32" fill="#5d5866"/>
+      </g>
+
+      <g id="face">
+        <g>
+          <circle cx="324" cy="286" r="48" fill="#f6fcff"/>
+          <circle cx="324" cy="293" r="29" fill="#3a3641"/>
+          <circle cx="340" cy="275" r="8" fill="#fff"/>
+        </g>
+        <g>
+          <circle cx="444" cy="286" r="48" fill="#f6fcff"/>
+          <circle cx="444" cy="293" r="29" fill="#3a3641"/>
+          <circle cx="460" cy="275" r="8" fill="#fff"/>
+        </g>
+        <path d="M334 360 C350 382 418 382 434 360 C429 391 338 391 334 360 Z" fill="#5b2f3a"/>
+        <path d="M356 378 C372 395 396 395 412 378" fill="none" stroke="#ed7997" stroke-width="12" stroke-linecap="round"/>
+      </g>
+
+      <g id="helmet">
+        <circle cx="384" cy="280" r="188" fill="rgba(181,226,242,.22)" stroke="#84acc1" stroke-width="4"/>
+        <ellipse cx="272" cy="188" rx="28" ry="13" fill="rgba(255,255,255,.62)" transform="rotate(-34 272 188)"/>
+        <ellipse cx="498" cy="188" rx="28" ry="13" fill="rgba(255,255,255,.62)" transform="rotate(34 498 188)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hud">v2: redraw + per-tentacle bone rig</div>
+
+  <script>
+    const NS = "http://www.w3.org/2000/svg";
+    const gBack = document.getElementById("tentacles-back");
+    const gFront = document.getElementById("tentacles-front");
+
+    const configs = [
+      { id: "t1", side: -1, depth: "back",  anchor:[266,430], base:2.85, phase:0.0, amp:0.18, speed:1.20, lengths:[42,38,35,31], w0:29, w1:13, suckers:4 },
+      { id: "t2", side: -1, depth: "back",  anchor:[298,442], base:2.50, phase:0.8, amp:0.21, speed:1.28, lengths:[46,41,36,32], w0:31, w1:14, suckers:5 },
+      { id: "t3", side: -1, depth: "front", anchor:[334,450], base:2.14, phase:1.7, amp:0.24, speed:1.37, lengths:[52,47,43,38], w0:33, w1:15, suckers:6 },
+      { id: "t4", side: -1, depth: "front", anchor:[368,454], base:1.72, phase:2.6, amp:0.20, speed:1.30, lengths:[52,50,46,40], w0:33, w1:16, suckers:5 },
+      { id: "t5", side:  1, depth: "front", anchor:[400,454], base:1.44, phase:3.1, amp:0.20, speed:1.30, lengths:[52,50,46,40], w0:33, w1:16, suckers:5 },
+      { id: "t6", side:  1, depth: "front", anchor:[434,450], base:1.00, phase:3.8, amp:0.24, speed:1.37, lengths:[52,47,43,38], w0:33, w1:15, suckers:6 },
+      { id: "t7", side:  1, depth: "back",  anchor:[470,442], base:0.64, phase:4.7, amp:0.21, speed:1.28, lengths:[46,41,36,32], w0:31, w1:14, suckers:5 },
+      { id: "t8", side:  1, depth: "back",  anchor:[502,430], base:0.30, phase:5.5, amp:0.18, speed:1.20, lengths:[42,38,35,31], w0:29, w1:13, suckers:4 },
+    ];
+
+    function el(name, attrs = {}) {
+      const node = document.createElementNS(NS, name);
+      for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+      return node;
+    }
+
+    function catmull(pts, steps=10) {
+      const out = [];
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[Math.max(i - 1, 0)];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[Math.min(i + 2, pts.length - 1)];
+        for (let j = 0; j < steps; j++) {
+          const t = j / steps;
+          const t2 = t * t;
+          const t3 = t2 * t;
+          const x = 0.5 * ((2*p1.x) + (-p0.x + p2.x)*t + (2*p0.x - 5*p1.x + 4*p2.x - p3.x)*t2 + (-p0.x + 3*p1.x - 3*p2.x + p3.x)*t3);
+          const y = 0.5 * ((2*p1.y) + (-p0.y + p2.y)*t + (2*p0.y - 5*p1.y + 4*p2.y - p3.y)*t2 + (-p0.y + 3*p1.y - 3*p2.y + p3.y)*t3);
+          out.push({x,y});
+        }
+      }
+      out.push(pts[pts.length - 1]);
+      return out;
+    }
+
+    function ribbon(spine, w0, w1) {
+      const L = [], R = [];
+      for (let i = 0; i < spine.length; i++) {
+        const p = spine[i];
+        const a = spine[Math.max(0, i-1)];
+        const b = spine[Math.min(spine.length-1, i+1)];
+        let tx = b.x - a.x, ty = b.y - a.y;
+        const m = Math.hypot(tx, ty) || 1;
+        tx /= m; ty /= m;
+        const nx = -ty, ny = tx;
+        const k = i / (spine.length - 1);
+        const w = w0 + (w1 - w0) * (k * k);
+        L.push({x: p.x + nx * w, y: p.y + ny * w});
+        R.push({x: p.x - nx * w, y: p.y - ny * w});
+      }
+      return {L,R};
+    }
+
+    function pathClosed(L, R) {
+      let d = `M ${L[0].x.toFixed(2)} ${L[0].y.toFixed(2)}`;
+      for (let i = 1; i < L.length; i++) d += ` L ${L[i].x.toFixed(2)} ${L[i].y.toFixed(2)}`;
+      for (let i = R.length - 1; i >= 0; i--) d += ` L ${R[i].x.toFixed(2)} ${R[i].y.toFixed(2)}`;
+      d += " Z";
+      return d;
+    }
+
+    function pathOpen(points) {
+      if (!points.length) return "";
+      let d = `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
+      for (let i = 1; i < points.length; i++) d += ` L ${points[i].x.toFixed(2)} ${points[i].y.toFixed(2)}`;
+      return d;
+    }
+
+    class Tentacle {
+      constructor(cfg) {
+        this.cfg = cfg;
+        this.group = el("g", { id: cfg.id });
+        this.fill = el("path", { class: "tentacle-fill" });
+        this.shadow = el("path", { class: "tentacle-shadow" });
+        this.hi = el("path", { class: "tentacle-highlight" });
+        this.suckers = el("g");
+
+        this.group.append(this.shadow, this.fill, this.hi, this.suckers);
+        (cfg.depth === "back" ? gBack : gFront).append(this.group);
+      }
+
+      joints(t, breathe) {
+        const { anchor, base, lengths, amp, speed, phase, side } = this.cfg;
+        const pts = [{ x: anchor[0], y: anchor[1] + breathe * 1.5 }];
+        let x = pts[0].x;
+        let y = pts[0].y;
+        let a = base + Math.sin(t * speed + phase) * amp;
+        for (let i = 0; i < lengths.length; i++) {
+          const k = i / (lengths.length - 1);
+          const bend = Math.sin(t * (speed * 1.9) + phase + i * 0.55) * amp * (0.65 + k * 0.7) * side;
+          a += bend;
+          x += Math.cos(a) * lengths[i];
+          y += Math.sin(a) * lengths[i];
+          pts.push({ x, y });
+        }
+        return pts;
+      }
+
+      update(t, breathe) {
+        const j = this.joints(t, breathe);
+        const spine = catmull(j, 9);
+        const { w0, w1, side, suckers } = this.cfg;
+        const { L, R } = ribbon(spine, w0, w1);
+
+        this.fill.setAttribute("d", pathClosed(L, R));
+
+        const center = spine[Math.floor(spine.length * 0.55)];
+        const off = side < 0 ? -8 : 8;
+        const shadowPts = spine.slice(3, spine.length - 2).map((p, i) => ({ x: p.x + off + i * 0.08 * side, y: p.y + 5 }));
+        this.shadow.setAttribute("d", `${pathOpen(shadowPts)} L ${spine[spine.length-1].x.toFixed(2)} ${spine[spine.length-1].y.toFixed(2)} Z`);
+
+        const hiPts = [];
+        for (let i = 4; i < spine.length - 6; i += 4) {
+          const p = spine[i];
+          const q = spine[Math.min(spine.length - 1, i + 1)];
+          const tx = q.x - p.x;
+          const ty = q.y - p.y;
+          const m = Math.hypot(tx, ty) || 1;
+          const nx = -ty / m;
+          const ny = tx / m;
+          const k = i / (spine.length - 1);
+          const hw = w0 * (0.28 - 0.12 * k);
+          hiPts.push({ x: p.x + nx * hw * (side < 0 ? 1 : -1), y: p.y + ny * hw });
+        }
+        this.hi.setAttribute("d", pathOpen(hiPts));
+
+        this.suckers.innerHTML = "";
+        for (let i = 0; i < suckers; i++) {
+          const p = spine[Math.floor((i + 2) / (suckers + 2) * (spine.length - 1))];
+          const q = spine[Math.min(spine.length - 1, Math.floor((i + 2) / (suckers + 2) * (spine.length - 1)) + 1)];
+          const tx = q.x - p.x;
+          const ty = q.y - p.y;
+          const m = Math.hypot(tx, ty) || 1;
+          const nx = -ty / m;
+          const ny = tx / m;
+          const rr = 9 - i * 0.8;
+          const w = (w0 * 0.62) - i * 1.1;
+          const sx = p.x + nx * w * (side < 0 ? 1 : -1);
+          const sy = p.y + ny * w;
+          const e = el("ellipse", {
+            class: "sucker",
+            cx: sx.toFixed(2),
+            cy: sy.toFixed(2),
+            rx: Math.max(4.2, rr).toFixed(2),
+            ry: Math.max(3.0, rr * 0.65).toFixed(2),
+            transform: `rotate(${(Math.atan2(ty, tx) * 180 / Math.PI).toFixed(2)} ${sx.toFixed(2)} ${sy.toFixed(2)})`
+          });
+          this.suckers.appendChild(e);
+        }
+      }
+    }
+
+    const rigs = configs.map(c => new Tentacle(c));
+
+    function tick(ms) {
+      const t = ms * 0.001;
+      const breathe = Math.sin(t * 2.0) * 1.6;
+      for (const r of rigs) r.update(t, breathe);
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

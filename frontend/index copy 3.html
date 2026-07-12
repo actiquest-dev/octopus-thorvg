@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐙 Octopus Avatar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+
+        }
+
+        h1 {
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+
+        }
+
+        .avatar-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 350px;
+
+        }
+
+        #avatar-canvas {
+            border-radius: 10px;
+            background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 100%);
+
+        }
+
+        #tag-display {
+            margin-top: 10px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        #emotion-display,
+        #action-display {
+            font-size: 14px;
+        }
+
+        .tag-sep {
+            opacity: 0.6;
+        }
+
+        #animation-test {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        #animation-test select,
+        #animation-test button {
+            font-size: 12px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            background: #ffffff;
+            color: #2d2d2d;
+        }
+
+        .video-container {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 350px;
+
+        }
+
+        .video-container video {
+            max-width: 100%;
+            max-height: 310px;
+            border-radius: 10px;
+
+        }
+
+        .video-container p {
+            color: #666;
+        }
+
+        .chat-section {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 12px;
+            max-width: 80%;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .user {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+
+        }
+
+        .assistant {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+
+        }
+
+        .system {
+            background: #e8f4f8;
+            color: #666;
+            font-size: 12px;
+            align-self: center;
+
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        #chatInput {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+
+        }
+
+        #chatInput:focus {
+            outline: none;
+            border-color: #667eea;
+
+        }
+
+        #sendBtn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+
+        }
+
+        #sendBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            grid-column: 1 / -1;
+            flex-wrap: wrap;
+
+        }
+
+        .controls button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: all 0.3s;
+
+        }
+
+        .controls button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+
+        }
+
+        .controls button:disabled {
+            background: #ccc;
+            transform: none;
+            box-shadow: none;
+
+        }
+
+        .controls button.active {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: pulse 1.5s infinite;
+
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+
+        }
+
+        .status {
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+
+        }
+
+        #debug {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-family: monospace;
+            text-align: center;
+
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🐙 Octopus Avatar</h1>
+
+        <div class="main-content">
+            <div class="avatar-container">
+                <canvas id="avatar-canvas" width="280" height="280"></canvas>
+                <div id="tag-display">
+                    <span id="emotion-display">emotion: 😊 calm</span>
+                    <span class="tag-sep">|</span>
+                    <span id="action-display">action: ✨ none</span>
+                </div>
+                <div id="animation-test">
+                    <select id="test-emotion">
+                        <option value="neutral">emotion: neutral</option>
+                        <option value="happy">emotion: happy</option>
+                        <option value="sad">emotion: sad</option>
+                        <option value="angry">emotion: angry</option>
+                        <option value="excited">emotion: excited</option>
+                        <option value="calm">emotion: calm</option>
+                        <option value="curious">emotion: curious</option>
+                        <option value="confused">emotion: confused</option>
+                        <option value="sarcastic">emotion: sarcastic</option>
+                        <option value="proud">emotion: proud</option>
+                        <option value="tender">emotion: tender</option>
+                        <option value="playful">emotion: playful</option>
+                    </select>
+                    <button onclick="runEmotionTest()">Test Emotion</button>
+                    <select id="test-action">
+                        <option value="none">action: none</option>
+                        <option value="sing">action: sing</option>
+                        <option value="laugh">action: laugh</option>
+                        <option value="whisper">action: whisper</option>
+                        <option value="shout">action: shout</option>
+                        <option value="heart">action: heart</option>
+                        <option value="wave">action: wave</option>
+                        <option value="clap">action: clap</option>
+                        <option value="point">action: point</option>
+                        <option value="hug">action: hug</option>
+                        <option value="shrug">action: shrug</option>
+                        <option value="wipe">action: wipe</option>
+                        <option value="sfx_pop">action: sfx_pop</option>
+                        <option value="sfx_sparkle">action: sfx_sparkle</option>
+                        <option value="sfx_boop">action: sfx_boop</option>
+                        <option value="sfx_wave">action: sfx_wave</option>
+                        <option value="sfx_spin">action: sfx_spin</option>
+                        <option value="sfx_tear">action: sfx_tear</option>
+                        <option value="sfx_sweat">action: sfx_sweat</option>
+                        <option value="sfx_heart">action: sfx_heart</option>
+                        <option value="sfx_bubble">action: sfx_bubble</option>
+                        <option value="photobooth">action: photobooth</option>
+                    </select>
+                    <button onclick="runActionTest()">Test Action</button>
+                </div>
+            </div>
+
+            <div class="video-container" id="videoContainer">
+                <p>📷 Камера выключена</p>
+            </div>
+
+            <div class="chat-section">
+                <div class="chat-container" id="chatContainer"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Введите сообщение...">
+                    <button id="sendBtn" onclick="sendTextMessage()">Отправить</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="audioBtn" onclick="toggleAudio()" disabled>🎤 Микрофон</button>
+            <button id="videoBtn" onclick="toggleVideo()" disabled>📹 Камера</button>
+        </div>
+
+        <div class="status" id="status">Подключение...</div>
+        <div id="debug"></div>
+    </div>
+
+    <!-- MediaPipe Face Mesh for Face ID detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
+    <script src="octopus_paths.js"></script>
+    <script src="octopus_animator.js"></script>
+    <script src="geminilive.js"></script>
+    <script src="mediaUtils.js"></script>
+    <script src="tools.js"></script>
+    <script>
+        // ============== ANIMATOR ==============
+        const canvas = document.getElementById("avatar-canvas");
+        if (!canvas) throw new Error("Canvas #avatar-canvas not found");
+        const animator = new OctopusAnimator(canvas);
+        window.octopusAnimator = animator;
+
+        const emotionEmojis = {
+            calm: '😊',
+            neutral: '🙂',
+            happy: '😄',
+            excited: '🤩',
+            sad: '😢',
+            angry: '😠',
+            confused: '🤔',
+            curious: '🧐',
+            sarcastic: '😏',
+            proud: '😌',
+            tender: '🥹',
+            playful: '😜',
+            empathetic: '🤗',
+            surprised: '😮',
+            nervous: '😰'
+        };
+
+        const actionEmojis = {
+            none: '✨',
+            sing: '🎵',
+            laugh: '😂',
+            whisper: '🤫',
+            shout: '📢',
+            heart: '💖',
+            wave: '👋',
+            clap: '👏',
+            point: '👉',
+            hug: '🫂',
+            shrug: '🤷',
+            sfx_pop: '💥',
+            sfx_sparkle: '✨',
+            sfx_boop: '🔔',
+            sfx_wave: '🌊',
+            sfx_spin: '🌀',
+            sfx_tear: '💧',
+            sfx_sweat: '💦',
+            sfx_heart: '💖',
+            sfx_bubble: '🫧',
+            wipe: '🧽',
+            photobooth: '📸'
+        };
+
+        class EmitTagsTool extends FunctionCallDefinition {
+            constructor() {
+                super(
+                    "emit_tags",
+                    "Emit emotion/action tags for avatar animation without speaking them",
+                    {
+                        type: "object",
+                        properties: {
+                            emotion: { type: "string" },
+                            action: { type: "string" }
+                        }
+                    },
+                    ["emotion", "action"]
+                );
+            }
+
+            functionToCall(parameters) {
+                const emotion = (parameters?.emotion || "").toLowerCase();
+                const action = (parameters?.action || "").toLowerCase();
+                if (emotion) updateEmotion(emotion);
+                if (action) updateAction(action);
+                if (action) playSfx(action);
+                if (window.octopusAnimator && typeof window.octopusAnimator.handleCommand === "function") {
+                    if (emotion) {
+                        window.octopusAnimator.handleCommand({ cmd: "emotion", emotion });
+                    }
+                    if (action && action !== "none") {
+                        window.octopusAnimator.handleCommand({ cmd: "action", action, duration_ms: 1400 });
+                    }
+                }
+                if (emotion || action) {
+                    sendTagsToBackend(emotion, action);
+                }
+            }
+        }
+
+
+        function updateEmotion(emotion) {
+            const emoji = emotionEmojis[emotion] || '😊';
+            document.getElementById('emotion-display').textContent = `emotion: ${emoji} ${emotion}`;
+            playEmotionSfx(emotion);
+        }
+
+        let currentAction = null;
+
+        function updateAction(action) {
+            const emoji = actionEmojis[action] || '✨';
+            document.getElementById('action-display').textContent = `action: ${emoji} ${action}`;
+            currentAction = action || null;
+            playActionSfx(action);
+        }
+
+        const sfxUrlCache = new Map();
+        const sfxAudioCache = new Map();
+        const sfxLastPlayed = new Map();
+        const emotionSfxQueries = {
+            happy: ["bright chime", "magic sparkle", "happy bell"],
+            sad: ["soft chime", "low bell", "gentle tone"],
+            angry: ["impact thud", "short whoosh", "hit"],
+            neutral: ["soft whoosh", "light tap", "subtle click"],
+            excited: ["sparkle", "rising chime", "bright bell"],
+            calm: ["soft wind", "breath", "gentle whoosh"],
+            curious: ["boop", "sparkle", "bloop"],
+            confused: ["boing", "glitch", "question ding"],
+            sarcastic: ["rimshot", "snare hit", "short hit"],
+            proud: ["fanfare", "trumpet", "victory chime"],
+            tender: ["soft harp", "gentle chime", "warm bell"],
+            playful: ["cartoon pop", "boing", "bubble pop"]
+        };
+        const actionSfxQueries = {
+            sing: [
+                "short melody",
+                "music jingle",
+                "harp arpeggio",
+                "musical flourish",
+                "ukulele riff",
+                "music box",
+                "whistle melody",
+                "vocal riff",
+                "jingle",
+                "short tune"
+            ],
+            laugh: ["cartoon laugh", "giggle", "short chuckle"],
+            whisper: ["soft breath", "gentle whoosh", "whisper"],
+            shout: ["short shout", "impact hit", "sharp whoosh"],
+            wave: ["whoosh", "swish", "air swipe"],
+            clap: ["hand clap", "clap", "applause single"],
+            point: ["tap", "click", "short tick"],
+            hug: ["soft thump", "warm thud", "gentle bump"],
+            shrug: ["boing", "soft pop", "comic shrug"],
+            heart: ["sparkle", "magic chime", "warm bell"],
+            wipe: ["swish", "wipe", "soft whoosh"],
+            photobooth: ["camera shutter", "camera click", "photo shutter sound"]
+        };
+
+        function shouldPlaySfx(action) {
+            const now = Date.now();
+            const last = sfxLastPlayed.get(action) || 0;
+            if (now - last < 250) return false;
+            sfxLastPlayed.set(action, now);
+            return true;
+        }
+
+        function playWithLimit(audio, maxMs, fadeOutMs = 0) {
+            if (!audio) return;
+            if (audio._sfxTimer) {
+                clearTimeout(audio._sfxTimer);
+            }
+            audio._sfxTimer = setTimeout(() => {
+                try {
+                    if (fadeOutMs > 0) {
+                        const startVol = audio.volume ?? 1;
+                        const steps = 8;
+                        let step = 0;
+                        const stepMs = Math.max(30, Math.floor(fadeOutMs / steps));
+                        const fadeTimer = setInterval(() => {
+                            step += 1;
+                            audio.volume = Math.max(0, startVol * (1 - step / steps));
+                            if (step >= steps) {
+                                clearInterval(fadeTimer);
+                                audio.pause();
+                                audio.volume = startVol;
+                            }
+                        }, stepMs);
+                        return;
+                    }
+                    audio.pause();
+                } catch (e) {
+                    // ignore
+                }
+            }, maxMs);
+        }
+
+        async function fetchSfxUrl(action) {
+            if (sfxUrlCache.has(action)) return sfxUrlCache.get(action);
+            const res = await fetch(`/sfx/search?action=${encodeURIComponent(action)}`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            if (!data.url) return null;
+            sfxUrlCache.set(action, data.url);
+            return data.url;
+        }
+
+        async function fetchSfxUrlByQuery(query, cacheKey, opts = null) {
+            const bypassCache = cacheKey.startsWith("act:sing");
+            if (!bypassCache && sfxUrlCache.has(cacheKey)) return sfxUrlCache.get(cacheKey);
+            const params = new URLSearchParams({ q: query });
+            if (opts && opts.minDuration != null) params.set("min_duration", String(opts.minDuration));
+            if (opts && opts.maxDuration != null) params.set("max_duration", String(opts.maxDuration));
+            const res = await fetch(`/sfx/search?${params.toString()}`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            if (!data.url) return null;
+            if (!bypassCache) {
+                sfxUrlCache.set(cacheKey, data.url);
+            }
+            return data.url;
+        }
+
+        function pickRandom(items) {
+            if (!items || items.length === 0) return null;
+            return items[Math.floor(Math.random() * items.length)];
+        }
+
+        async function playSfx(action) {
+            if (!action) return;
+            if (!action.startsWith("sfx_") && action !== "wipe") return;
+            if (!shouldPlaySfx(action)) return;
+            const url = await fetchSfxUrl(action);
+            if (!url) return;
+            let audio = sfxAudioCache.get(action);
+            if (!audio || audio.src !== url) {
+                audio = new Audio(url);
+                audio.preload = "auto";
+                audio.volume = 0.6;
+                sfxAudioCache.set(action, audio);
+            }
+            try {
+                audio.currentTime = 0;
+                await audio.play();
+                playWithLimit(audio, 2500, 350);
+            } catch (e) {
+                console.log("🔇 SFX play failed", e);
+            }
+        }
+
+        async function playEmotionSfx(emotion) {
+            if (!emotion) return;
+            if (currentAction && currentAction !== "none") return;
+            const queries = emotionSfxQueries[emotion];
+            if (!queries || queries.length === 0) return;
+            const query = pickRandom(queries);
+            if (!query) return;
+            const rateKey = `emo:${emotion}`;
+            if (!shouldPlaySfx(rateKey)) return;
+            const cacheKey = `emo:${emotion}:${query}`;
+            const durationOpts = currentAction === "sing" ? { minDuration: 4, maxDuration: 7 } : null;
+            const url = await fetchSfxUrlByQuery(query, cacheKey, durationOpts);
+            if (!url) return;
+            let audio = sfxAudioCache.get(cacheKey);
+            if (!audio || audio.src !== url) {
+                audio = new Audio(url);
+                audio.preload = "auto";
+                audio.volume = 0.35;
+                sfxAudioCache.set(cacheKey, audio);
+            }
+            try {
+                audio.currentTime = 0;
+                await audio.play();
+                playWithLimit(audio, 2500, 350);
+            } catch (e) {
+                console.log("🔇 emotion SFX play failed", e);
+            }
+        }
+
+        async function playActionSfx(action) {
+            if (!action) return;
+            if (action.startsWith("sfx_") || action === "wipe") return;
+            const queries = actionSfxQueries[action];
+            if (!queries || queries.length === 0) return;
+            const query = pickRandom(queries);
+            if (!query) return;
+            const rateKey = `act:${action}`;
+            if (!shouldPlaySfx(rateKey)) return;
+            const cacheKey = `act:${action}:${query}`;
+            const url = await fetchSfxUrlByQuery(query, cacheKey);
+            if (!url) return;
+            let audio = sfxAudioCache.get(cacheKey);
+            if (!audio || audio.src !== url) {
+                audio = new Audio(url);
+                audio.preload = "auto";
+                audio.volume = 0.45;
+                sfxAudioCache.set(cacheKey, audio);
+            }
+            try {
+                audio.currentTime = 0;
+                await audio.play();
+                const maxMs = action === "sing" ? 7000 : 2500;
+                const fadeMs = action === "sing" ? 700 : 350;
+                playWithLimit(audio, maxMs, fadeMs);
+            } catch (e) {
+                console.log("🔇 action SFX play failed", e);
+            }
+        }
+
+        function sendTagsToBackend(emotion, action) {
+            if (!state.geminiClient || !state.geminiClient.connected) return;
+            const now = Date.now();
+            const key = `${emotion || ""}|${action || ""}`;
+            // Увеличен интервал троттлинга с 1500ms до 2000ms для снижения нагрузки
+            if (state.lastTag && state.lastTag.key === key && (now - state.lastTag.ts) < 2000) {
+                return;
+            }
+            state.lastTag = { key, ts: now };
+            state.geminiClient.sendMessage({
+                client_tag: {
+                    emotion: emotion || "",
+                    action: action || "",
+                    duration_ms: 1400
+                }
+            });
+        }
+
+        function sendGazeFrame(imageB64, mime, w, h) {
+            const ws = ensureGazeSocket();
+            if (!ws || ws.readyState !== WebSocket.OPEN) return;
+            const now = Date.now();
+            // Throttle gaze frames to avoid queue buildup.
+            if (now - state.lastGazeSentMs < 83) return; // ~12 fps, чтобы совпадало с захватом
+            state.lastGazeSentMs = now;
+            ws.send(JSON.stringify({
+                gaze_frame: {
+                    image_b64: imageB64,
+                    mime: mime || "image/jpeg",
+                    w: w || 0,
+                    h: h || 0,
+                    ts_ms: now
+                }
+            }));
+        }
+
+        function getGazeWsUrl() {
+            const proto = location.protocol === "https:" ? "wss" : "ws";
+            // Connecting directly to 8082 to avoid app.py proxy overhead and interference
+            const hostname = location.hostname;
+            return `${proto}://${hostname}:8082/gaze-client`;
+        }
+
+        function ensureGazeSocket() {
+            if (state.gazeSocket && state.gazeSocket.readyState === WebSocket.OPEN) {
+                return state.gazeSocket;
+            }
+            if (state.gazeSocketConnecting) {
+                return state.gazeSocket;
+            }
+            const url = getGazeWsUrl();
+            state.gazeSocketConnecting = true;
+            state.gazeSocket = new WebSocket(url);
+            state.gazeSocket.onopen = () => {
+                state.gazeSocketConnecting = false;
+                console.log("👁️ gaze socket open");
+            };
+            state.gazeSocket.onerror = (e) => {
+                state.gazeSocketConnecting = false;
+                console.log("👁️ gaze socket error", e);
+            };
+            state.gazeSocket.onclose = (e) => {
+                state.gazeSocketConnecting = false;
+                console.log("👁️ gaze socket close", e.code, e.reason);
+                state.gazeSocket = null;
+            };
+            // 🔥 КРИТИЧНО: Обработать render_packet сообщения из timeline-sync
+            state.gazeSocket.onmessage = (event) => {
+                try {
+                    const msg = JSON.parse(event.data);
+                    if (msg.type === "render_packet" && msg.packet) {
+                        const packet = msg.packet;
+                        // Логирование для отладки
+                        if (packet.cmd === "audio_sync") {
+                            if (window.__lipDebug) {
+                                console.log(`🔊 audio_sync from timeline-sync (raw):`, {
+                                    cmd: packet.cmd,
+                                    start_s: packet.start_s,
+                                    duration_s: packet.duration_s,
+                                    jaw: packet.jaw ? { step_ms: packet.jaw.step_ms, values_len: packet.jaw.values?.length || 0 } : null,
+                                    viseme_proxy: packet.viseme_proxy ? { step_ms: packet.viseme_proxy.step_ms, values_len: packet.viseme_proxy.values?.length || 0 } : null,
+                                });
+                            } else {
+                                console.log(`🔊 audio_sync from timeline-sync: start_s=${packet.start_s?.toFixed(3)}, duration=${packet.duration_s?.toFixed(3)}, jaw=${packet.jaw?.values?.length}, viseme=${packet.viseme_proxy?.values?.length}`);
+                            }
+                        }
+                        // Передать аниматору
+                        if (window.octopusAnimator) {
+                            window.octopusAnimator.handleCommand(packet);
+                        }
+                    }
+                } catch (e) {
+                    console.error("👁️ error processing gaze message:", e);
+                }
+            };
+            return state.gazeSocket;
+        }
+
+        // ============== STATE ==============
+        const state = {
+            geminiClient: null,
+            audioStreamer: null,
+            audioPlayer: null,
+            videoStreamer: null,
+            currentOutputMsg: null,
+            outputTimer: null,
+            heartbeatTimer: null,
+            gazeSocket: null,
+            gazeSocketConnecting: false,
+            lastGazeSentMs: 0,
+            heartbeatEnabled: true,
+            lastTag: null,
+            micUserEnabled: false,
+            unknownUserGreetingSent: false,  // 🔥 Флаг чтобы не спамить приветствие
+            audioResponseStarted: false      // 🔥 Флаг для reset_audio при первом аудио ответе
+        };
+
+        // ============== CHAT ==============
+        function addMessage(text, type) {
+            const container = document.getElementById('chatContainer');
+            const msg = document.createElement('div');
+            msg.className = 'message ' + type;
+            msg.textContent = text;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+            return msg;
+
+        }
+
+        function appendToMessage(msg, text) {
+            if (msg) {
+                msg.textContent += text;
+                document.getElementById('chatContainer').scrollTop =
+                    document.getElementById('chatContainer').scrollHeight;
+
+            }
+
+        }
+
+        function updateStatus(text) {
+            document.getElementById('status').textContent = text;
+
+        }
+
+        function updateDebug(text) {
+            document.getElementById('debug').textContent = text;
+
+        }
+
+        // ============== TEXT INPUT ==============
+        let lastSentText = '';
+        let lastSentTime = 0;
+
+        function sendTextMessage() {
+            // DEBUG: логируем откуда вызывается
+            console.log('📤 sendTextMessage called, stack:', new Error().stack.split('\n')[2]);
+
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text || !state.geminiClient) return;
+
+            // Защита от множественной отправки (debounce 500ms)
+            const now = Date.now();
+            if (text === lastSentText && (now - lastSentTime) < 500) {
+                console.log('⚠️ Duplicate message blocked, text:', text);
+                return;
+            }
+
+            lastSentText = text;
+            lastSentTime = now;
+
+            console.log('✅ Sending text message:', text);
+            addMessage(text, "user");
+            state.geminiClient.sendTextMessage(text);
+            input.value = '';
+
+        }
+
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Предотвращаем submit формы
+                sendTextMessage();
+            }
+        });
+
+        function getWsProxyUrl() {
+            const override =
+                window.WS_PROXY_URL ||
+                window.__WS_PROXY_URL ||
+                localStorage.getItem("wsProxyUrl");
+            if (override) return override;
+            const loc = window.location;
+            if (loc.protocol === "https:") {
+                return `wss://${loc.host}/ws`;
+            }
+            if (loc.hostname === "localhost" || loc.hostname === "127.0.0.1") {
+                return "ws://localhost:8080/ws";
+            }
+            return `ws://${loc.host}/ws`;
+        }
+
+        // ============== GEMINI CONNECTION ==============
+        async function connectGemini() {
+            try {
+                updateStatus("Подключение...");
+
+                state.geminiClient = new GeminiLiveAPI(
+                    getWsProxyUrl(),
+                    "gen-lang-client-0711067295",
+                    "gemini-live-2.5-flash-native-audio"
+                );
+                state.geminiClient.inputAudioTranscription = true;
+                state.geminiClient.outputAudioTranscription = true;
+                state.geminiClient.responseModalities = ["AUDIO"]; // AUDIO модальность + транскрипция отдельно
+                // Avoid auto-interrupting model responses while mic is streaming.
+                state.geminiClient.activityHandling = "ACTIVITY_HANDLING_UNSPECIFIED";
+                state.geminiClient.automaticActivityDetection = {
+                    disabled: false,
+                    silence_duration_ms: 1500,
+                    prefix_padding_ms: 300,
+                    end_of_speech_sensitivity: "END_SENSITIVITY_HIGH",
+                    start_of_speech_sensitivity: "START_SENSITIVITY_HIGH"
+                };
+                state.geminiClient.systemInstructions = "Ты веселый дружелюбный осьминог. Отвечай коротко на русском. После каждого предложения ОБЯЗАТЕЛЬНО вызывай tool emit_tags с полями emotion и action. Не выводи теги в тексте и не произноси их. Используй только: emotion=[happy|sad|angry|neutral|excited|calm|curious|confused|sarcastic|proud|tender|playful], action=[none|sing|laugh|whisper|shout|heart|wave|clap|point|hug|shrug|wipe|sfx_pop|sfx_sparkle|sfx_boop|sfx_wave|sfx_spin|sfx_tear|sfx_sweat|sfx_heart|sfx_bubble|photobooth]. Если сомневаешься — emotion=neutral, action=none.";
+
+                state.geminiClient.onReceiveResponse = handleGeminiMessage;
+                state.geminiClient.addFunction(new EmitTagsTool());
+
+                state.geminiClient.onConnectionStarted = async () => {
+                    updateStatus("✅ Подключено!");
+                    console.log("✅ onConnectionStarted callback fired");
+                    document.getElementById('audioBtn').disabled = false;
+                    document.getElementById('videoBtn').disabled = false;
+                    document.getElementById('chatInput').disabled = false;
+                    document.getElementById('sendBtn').disabled = false;
+
+                    // AudioPlayer уже инициализирован в DOMContentLoaded
+                    // Просто убедимся что он готов
+                    if (state.audioPlayer && !state.audioPlayer.isInitialized) {
+                        await state.audioPlayer.init();
+                    }
+
+                    addMessage("Привет! Я готов к общению 🐙", "system");
+
+                    // Intercept WebSocket for avatar commands
+                    interceptWebSocket();
+                    startHeartbeat();
+                };
+
+                state.geminiClient.connect();
+
+            } catch (err) {
+                updateStatus("❌ Ошибка: " + err.message);
+            }
+
+        }
+
+        function parseTagLines(text) {
+            let emotion = null;
+            let action = null;
+            if (!text) return { emotion, action };
+            const lines = text.split(/\r?\n/);
+            for (const line of lines) {
+                const t = line.trim();
+                if (t.startsWith("EMOTION_TAG:")) {
+                    emotion = t.split(":", 2)[1]?.trim() || emotion;
+                } else if (t.startsWith("ACTION_TAG:")) {
+                    action = t.split(":", 2)[1]?.trim() || action;
+                }
+            }
+            return { emotion, action };
+        }
+
+        function stripTagLines(text) {
+            if (!text) return "";
+            const lines = text.split(/\r?\n/);
+            const kept = lines.filter((l) => {
+                const t = l.trim();
+                return !t.startsWith("EMOTION_TAG:") && !t.startsWith("ACTION_TAG:");
+            });
+            return kept.join("\n");
+        }
+
+        // ============== MESSAGE HANDLER ==============
+        function handleGeminiMessage(message) {
+            switch (message.type) {
+                case MultimodalLiveResponseType.TOOL_CALL: {
+                    const toolCall = message.data || {};
+                    const callEntries = [];
+                    if (toolCall.functionCalls && Array.isArray(toolCall.functionCalls)) {
+                        toolCall.functionCalls.forEach((c) => {
+                            callEntries.push({
+                                call: c,
+                                id: c.id || c.callId || c.toolCallId || toolCall.id || toolCall.callId || toolCall.toolCallId
+                            });
+                        });
+                    } else if (toolCall.functionCall || toolCall.function_call) {
+                        callEntries.push({
+                            call: toolCall,
+                            id: toolCall.id || toolCall.callId || toolCall.toolCallId
+                        });
+                    } else if (toolCall.calls && Array.isArray(toolCall.calls) && toolCall.calls.length) {
+                        toolCall.calls.forEach((c) => {
+                            callEntries.push({
+                                call: c,
+                                id: c.id || c.callId || c.toolCallId || toolCall.id || toolCall.callId || toolCall.toolCallId
+                            });
+                        });
+                    }
+
+                    callEntries.forEach(({ call, id }) => {
+                        const fc =
+                            call.functionCall ||
+                            call.function_call ||
+                            (call.name ? { name: call.name, args: call.args || call.arguments || {} } : null);
+                        if (fc && fc.name) {
+                            let args = fc.args || fc.arguments || {};
+                            if (typeof args === "string") {
+                                try { args = JSON.parse(args); } catch (_) { }
+                            }
+                            state.geminiClient.callFunction(fc.name, args);
+                        }
+                        if (id) {
+                            state.geminiClient.sendToolResponse(id, { ok: true });
+                        }
+                    });
+                    break;
+                }
+                case MultimodalLiveResponseType.INPUT_TRANSCRIPTION:
+                    if (message.data.text) {
+                        addMessage(message.data.text, "user");
+
+                    }
+                    break;
+
+                case MultimodalLiveResponseType.OUTPUT_TRANSCRIPTION:
+                    if (message.data.text) {
+                        const tags = parseTagLines(message.data.text);
+                        if (tags.emotion) updateEmotion(tags.emotion);
+                        if (tags.action) updateAction(tags.action);
+                        if (tags.emotion || tags.action) {
+                            sendTagsToBackend(tags.emotion, tags.action);
+                            // Play sound for photobooth action
+                            if (tags.action === "photobooth") {
+                                playActionSfx(tags.action);
+                            }
+                        }
+                        const cleanText = stripTagLines(message.data.text);
+                        if (cleanText.length === 0) break;
+                        clearTimeout(state.outputTimer);
+
+                        if (!state.currentOutputMsg) {
+                            state.currentOutputMsg = addMessage(cleanText, "assistant");
+                        } else {
+                            appendToMessage(state.currentOutputMsg, cleanText);
+
+                        }
+
+                        if (message.data.finished) {
+                            state.currentOutputMsg = null;
+                        } else {
+                            state.outputTimer = setTimeout(() => {
+                                state.currentOutputMsg = null;
+                            }, 300);
+
+                        }
+                    }
+                    break;
+                case MultimodalLiveResponseType.AUDIO:
+                    if (state.audioPlayer && message.data) {
+                        // 🔥 КРИТИЧНО: Сбросить audio timeline при первом аудио ответе
+                        // Это нужно чтобы backend правильно рассчитывал start_s для виземов
+                        if (!state.audioResponseStarted) {
+                            state.audioResponseStarted = true;
+                            // Отправить reset_audio в timeline-sync
+                            setTimeout(() => {
+                                if (state.gazeSocket && state.gazeSocket.readyState === WebSocket.OPEN) {
+                                    state.gazeSocket.send(JSON.stringify({
+                                        type: "reset_audio",
+                                        client_id: "default"
+                                    }));
+                                    console.log("📢 Sent reset_audio to timeline-sync");
+                                }
+                            }, 0);
+                        }
+
+                        window.__octoAudioStartTs = performance.now();
+                        // 🔥 Установить t0 ДО воспроизведения чтобы синхронизировать виземы
+                        if (state.audioT0 == null) {
+                            state.audioT0 = window.__octoAudioStartTs;
+                        }
+                        state.audioPlayer.play(message.data);
+
+                    }
+                    break;
+                case MultimodalLiveResponseType.TURN_COMPLETE:
+                case MultimodalLiveResponseType.INTERRUPTED:
+                    // 🔥 Сбросить флаг при окончании разговора
+                    state.audioResponseStarted = false;
+                    break;
+
+            }
+
+        }
+
+        // ============== INTERCEPT AVATAR COMMANDS ==============
+        function interceptWebSocket() {
+            if (!state.geminiClient || !state.geminiClient.webSocket) {
+                setTimeout(interceptWebSocket, 500);
+                return;
+            }
+
+            const ws = state.geminiClient.webSocket;
+            if (ws._intercepted) return;
+            ws._intercepted = true;
+
+            ws.addEventListener('message', (event) => {
+                // ===== AVATAR ANIMATION HOOK (JSON) =====
+                try {
+                    if (typeof event.data === "string") {
+                        const msg = JSON.parse(event.data);
+
+                        if (msg.type === "photobooth_start") {
+                            console.log("📸 Received photobooth_start from backend", msg);
+                            startPhotoboothSession(msg.user_name, msg.message);
+                        }
+
+                        const a =
+                            (msg && msg.serverContent && msg.serverContent.avatar)
+                                ? msg.serverContent.avatar
+                                : (msg ? msg.avatar : null);
+
+                        if (a && window.octopusAnimator && typeof window.octopusAnimator.handleCommand === "function") {
+                            // 🔥 Логирование для отладки липсинка
+                            if (a.cmd === "audio_sync") {
+                                console.log(`🔊 audio_sync: start_s=${a.start_s?.toFixed(3)}, duration=${a.duration_s?.toFixed(3)}, jaw=${a.jaw?.values?.length}, viseme=${a.viseme_proxy?.values?.length}`);
+                            } else {
+                                console.log("🎨 Avatar cmd:", a.cmd);
+                            }
+
+                            if (a.cmd === "action" && a.action) {
+                                playSfx(a.action);
+                            }
+                            // align visemes with audio playback start (one-shot)
+                            if (state.audioT0 != null && (a.cmd === "sync" || a.cmd === "start") && typeof a.t0 !== "number") {
+                                a.t0 = state.audioT0;
+                                state.audioT0 = null;
+                            }
+
+                            window.octopusAnimator.handleCommand(a);
+                        }
+                    }
+                } catch (e) {
+                    // Ignore parsing errors for non-JSON or binary data
+                }
+            });
+            console.log("✅ WebSocket interceptor installed");
+        }
+
+        function startHeartbeat() {
+            if (state.heartbeatTimer) return;
+            if (!state.heartbeatEnabled) return;
+            state.heartbeatTimer = setInterval(() => {
+                if (!state.geminiClient || !state.geminiClient.webSocket) return;
+                if (state.geminiClient.webSocket.readyState !== WebSocket.OPEN) return;
+                const ap = state.audioPlayer;
+                const playbackDelay = ap
+                    ? Math.max(0, (typeof ap.queuedSeconds === "number" ? ap.queuedSeconds : (ap.queuedSamples || 0) / (ap.lastQueueSr || 24000)))
+                    : 0;
+                state.geminiClient.sendMessage({
+                    client_event: {
+                        type: "heartbeat",
+                        playback_delay_s: playbackDelay
+                    }
+                });
+            }, 1500); // Увеличено с 250ms до 1500ms (1.5 сек) для снижения нагрузки на WebSocket
+        }
+
+        // ============== AUDIO CONTROL ==============
+        async function toggleAudio() {
+            const btn = document.getElementById('audioBtn');
+
+            if (!state.audioStreamer) {
+                try {
+                    state.audioStreamer = new AudioStreamer(state.geminiClient);
+                    await state.audioStreamer.start();
+                    state.micUserEnabled = true;
+                    btn.classList.add('active');
+                    btn.textContent = '🎤 Стоп';
+                } catch (err) {
+                    updateStatus("❌ Микрофон: " + err.message);
+
+                }
+            } else {
+                state.audioStreamer.stop();
+                state.audioStreamer = null;
+                state.micUserEnabled = false;
+                btn.classList.remove('active');
+                btn.textContent = '🎤 Микрофон';
+
+            }
+
+        }
+
+        // ============== VIDEO CONTROL ==============
+        async function toggleVideo() {
+            const btn = document.getElementById('videoBtn');
+            const container = document.getElementById('videoContainer');
+
+            if (!state.videoStreamer) {
+                try {
+                    state.videoStreamer = new SplitVideoStreamer(state.geminiClient);
+                    state.videoStreamer.gazeOnFrame = (b64, mime, w, h) => {
+                        sendGazeFrame(b64, mime, w, h);
+                    };
+
+                    // ============ Face ID Handler ============
+                    state.videoStreamer.onFaceIDResult = (result) => {
+                        console.log("🔍 Face ID Result:", result);
+
+                        if (result.type === "face_identified") {
+                            // Лицо узнано!
+                            console.log(`✅ User identified: ${result.user_name}`);
+                            updateStatus(`👋 Привет, ${result.user_name}! (confidence: ${(result.confidence * 100).toFixed(0)}%)`);
+
+                            // Сбросить флаг при узнавании пользователя
+                            state.unknownUserGreetingSent = false;
+
+                            // Обновить эмоцию на радость
+                            updateEmotion('happy');
+
+                            // Отправить действие аватару
+                            if (window.octopusAnimator) {
+                                window.octopusAnimator.handleCommand({
+                                    cmd: 'action',
+                                    action: 'greet',
+                                    duration: 1.5
+                                });
+                            }
+
+                        } else if (result.type === "face_unknown") {
+                            // Лицо не узнано - новый пользователь
+                            console.log("🆕 Unknown face detected");
+                            updateStatus("👤 Новое лицо! Начинаю разговор...");
+
+                            // Обновить эмоцию на любопытство
+                            updateEmotion('neutral');
+
+                            // Аватар смотрит вверх (любопытство)
+                            if (window.octopusAnimator) {
+                                window.octopusAnimator.handleCommand({
+                                    cmd: 'action',
+                                    action: 'curious',
+                                    duration: 2.0
+                                });
+                            }
+
+                            // 🔥 ОТПРАВИТЬ СООБЩЕНИЕ В GEMINI - ТОЛЬКО ОДИН РАЗ
+                            if (!state.unknownUserGreetingSent) {
+                                if (state.geminiClient && state.geminiClient.connected) {
+                                    state.unknownUserGreetingSent = true;
+                                    const msg = result.message || "Привет! Мы не знакомы. Спроси, как меня зовут, и давай знакомиться!";
+                                    console.log("📢 Sending greeting to unknown user:", msg);
+                                    state.geminiClient.sendTextMessage(msg);
+                                } else {
+                                    console.warn(`⚠️ Cannot send greeting: Gemini client not connected (connected=${state.geminiClient?.connected})`);
+                                }
+                            } else {
+                                // console.log("ℹ️ Greeting already sent for this session");
+                            }
+
+                        } else if (result.type === "no_face") {
+                            // Лиц нет в кадре - ничего не делаем
+                            // console.log("No face detected");
+                        }
+                    };
+
+                    const video = await state.videoStreamer.start({
+                        gemini: { fps: 1, width: 640, height: 480, quality: 0.8 },
+                        gaze: { fps: 12, width: 320, height: 240, quality: 0.6 }, // ускорено ради отзывчивости
+                    });
+                    container.innerHTML = '';
+                    container.appendChild(video);
+                    btn.classList.add('active');
+                    btn.textContent = '📹 Стоп';
+                } catch (err) {
+                    updateStatus("❌ Камера: " + err.message);
+
+                }
+            } else {
+                state.videoStreamer.stop();
+                state.videoStreamer.onFrame = null;
+                state.videoStreamer = null;
+                if (state.gazeSocket) {
+                    state.gazeSocket.close();
+                    state.gazeSocket = null;
+                }
+                // Сбросить флаг при выключении камеры
+                state.unknownUserGreetingSent = false;
+                container.innerHTML = '<p>📷 Камера выключена</p>';
+                btn.classList.remove('active');
+                btn.textContent = '📹 Камера';
+
+            }
+
+        }
+
+        async function startPhotoboothSession(userName, initialMessage) {
+            console.log(`🎬 Photobooth Session Started for ${userName}`);
+
+            // 1. Показать сообщение от аватара в чате
+            if (initialMessage) {
+                addMessage(initialMessage, "assistant");
+            }
+
+            // 2. Визуальная индикатор в интерфейсе
+            updateStatus(`📸 Фотосессия для ${userName}... Не двигайся!`);
+
+            const photoboothOverlay = document.createElement('div');
+            photoboothOverlay.style.position = 'fixed';
+            photoboothOverlay.style.top = '0';
+            photoboothOverlay.style.left = '0';
+            photoboothOverlay.style.width = '100vw';
+            photoboothOverlay.style.height = '100vh';
+            photoboothOverlay.style.backgroundColor = 'rgba(255,255,255,0.8)';
+            photoboothOverlay.style.display = 'flex';
+            photoboothOverlay.style.flexDirection = 'column';
+            photoboothOverlay.style.alignItems = 'center';
+            photoboothOverlay.style.justifyContent = 'center';
+            photoboothOverlay.style.zIndex = '9999';
+            photoboothOverlay.style.transition = 'background-color 0.1s ease';
+            photoboothOverlay.innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center;">
+                    <h1 style="color: #333; font-size: 32px; margin-bottom: 20px;">🐙 Привет, ${userName}!</h1>
+                    <p style="font-size: 20px; color: #666; margin-bottom: 30px;">Запоминаю твоё лицо...</p>
+                    <div id="countdown" style="font-size: 80px; font-weight: bold; color: #ff00ff; min-height: 100px;">3</div>
+                </div>
+            `;
+            document.body.appendChild(photoboothOverlay);
+
+            const countdownEl = document.getElementById('countdown');
+            const frames = [];
+
+            // Звуковой эффект вспышки
+            const shutterSound = new Audio('https://www.soundjay.com/mechanical/camera-shutter-click-01.mp3');
+
+            for (let i = 3; i > 0; i--) {
+                countdownEl.textContent = i;
+                await new Promise(r => setTimeout(r, 1000));
+            }
+
+            countdownEl.textContent = "📸";
+
+            // Сделать 5 снимков с интервалом
+            for (let i = 0; i < 5; i++) {
+                if (state.videoStreamer) {
+                    const snapshot = state.videoStreamer.takeSnapshot();
+                    const base64 = snapshot.split(',')[1];
+                    frames.push(base64);
+
+                    // Эффект вспышки
+                    photoboothOverlay.style.backgroundColor = 'white';
+                    try { shutterSound.play(); } catch (e) { }
+                    setTimeout(() => { photoboothOverlay.style.backgroundColor = 'rgba(255,255,255,0.8)'; }, 100);
+                }
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            countdownEl.style.fontSize = "32px";
+            countdownEl.textContent = "Готово! Обрабатываю...";
+
+            // Отправить на сервер для получения эмбеддинга и регистрации
+            try {
+                // Берем первый кадр для простоты
+                const res = await fetch('/api/face/detect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image_b64: frames[0] })
+                });
+
+                const data = await res.json();
+                if (data.faces && data.faces.length > 0) {
+                    const embedding = data.faces[0].embedding;
+
+                    const regRes = await fetch('/api/face/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_name: userName,
+                            embedding: embedding,
+                            photobooth_frames_count: frames.length
+                        })
+                    });
+
+                    const regData = await regRes.json();
+                    addMessage(regData.message, "assistant");
+                    updateStatus(`✅ ${userName} зарегистрирован!`);
+
+                    // Визуальное подтверждение успеха
+                    countdownEl.style.color = "#00ff00";
+                    countdownEl.textContent = "✨ Запомнил! ✨";
+                } else {
+                    addMessage("Ой, я не смог разглядеть твоё лицо на фото. Давай попробуем позже!", "assistant");
+                    countdownEl.style.color = "#ff0000";
+                    countdownEl.textContent = "❌ Лицо не найдено";
+                }
+            } catch (err) {
+                console.error("Registration error:", err);
+                countdownEl.textContent = "❌ Ошибка сервера";
+            }
+
+            setTimeout(() => {
+                if (photoboothOverlay.parentNode) {
+                    document.body.removeChild(photoboothOverlay);
+                }
+            }, 2500);
+        }
+
+        // ============== TEST FUNCTION ==============
+        window.testAnimation = (emotion = 'happy') => {
+            animator.handleCommand({
+                cmd: 'start',
+                visemes: ['REST', 'A', 'E', 'I', 'O', 'U', 'E', 'A', 'REST'],
+                emotion: emotion,
+                duration: 2.5
+            });
+            updateEmotion(emotion);
+        };
+
+        function runEmotionTest() {
+            const emotion = document.getElementById('test-emotion').value;
+            updateEmotion(emotion);
+            if (window.octopusAnimator && typeof window.octopusAnimator.handleCommand === "function") {
+                window.octopusAnimator.handleCommand({
+                    cmd: "emotion",
+                    emotion: emotion
+                });
+            }
+        }
+
+        function runActionTest() {
+            const action = document.getElementById('test-action').value;
+            updateAction(action);
+            playSfx(action);
+            if (action === "photobooth") {
+                playActionSfx(action);
+            }
+            if (window.octopusAnimator && typeof window.octopusAnimator.handleCommand === "function") {
+                if (action !== "none") {
+                    window.octopusAnimator.handleCommand({
+                        cmd: "action",
+                        action: action,
+                        duration_ms: 1400
+                    });
+                }
+            }
+        }
+
+        window.addEventListener("octopus-audio-chunk", (e) => {
+            if (state.audioT0 == null) state.audioT0 = e.detail?.t0 ?? null;
+        });
+
+        // ============== INIT ==============
+        window.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('chatInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+
+            // 🔥 Инициализировать audioPlayer ДО подключения к Gemini
+            // Это нужно чтобы липсинк работал даже если микрофон включен первым
+            try {
+                state.audioPlayer = new AudioPlayer();
+                await state.audioPlayer.init();
+                window.getAudioPlayheadS = () => state.audioPlayer.getPlayheadS();
+                window.__audioPlayer = state.audioPlayer;
+                console.log("✅ AudioPlayer инициализирован при загрузке");
+            } catch (err) {
+                console.error("❌ Ошибка инициализации AudioPlayer:", err);
+            }
+
+            // 🔥 Включить отладку липсинка (можно вводить в браузерной консоли: window.__lipDebug = true)
+            window.__lipDebug = false;
+            console.log("💡 Для отладки липсинка введите в консоли: window.__lipDebug = true");
+
+            // 🔥 Инициализировать gaze socket для audio_sync команд из timeline-sync
+            ensureGazeSocket();
+            console.log("✅ Gaze socket initialized for audio_sync commands");
+
+            // Start connection
+            setTimeout(connectGemini, 300);
+        });
+    </script>
+</body>
+
+</html>

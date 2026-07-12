@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Octobuss Master v2 Rig</title>
+  <style>
+    html,body{margin:0;height:100%}
+    body{display:grid;place-items:center;background:#d8dade}
+    .stage{width:min(92vmin,980px);aspect-ratio:1266/1238}
+    svg{width:100%;height:100%;display:block}
+    .limb{will-change:transform}
+  </style>
+</head>
+<body>
+<div class="stage">
+<svg viewBox="0 0 1266 1238" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip_t1"><path d="M 40 500 C 200 430 360 455 470 570 C 430 710 250 760 120 710 C 40 680 15 590 40 500 Z"/></clipPath>
+    <clipPath id="clip_t2"><path d="M 40 640 C 210 610 390 655 470 790 C 430 930 260 980 130 930 C 40 890 15 740 40 640 Z"/></clipPath>
+    <clipPath id="clip_t3"><path d="M 170 720 C 360 680 530 760 585 930 C 540 1040 390 1090 250 1070 C 160 1050 120 920 170 720 Z"/></clipPath>
+    <clipPath id="clip_t4"><path d="M 470 720 C 560 680 660 680 730 760 C 760 890 750 1040 680 1130 C 590 1160 500 1130 470 1040 C 430 920 430 800 470 720 Z"/></clipPath>
+
+    <clipPath id="clip_t5"><path d="M 536 720 C 626 680 726 680 796 760 C 836 890 836 1040 796 1130 C 706 1160 616 1130 586 1040 C 546 920 536 800 536 720 Z"/></clipPath>
+    <clipPath id="clip_t6"><path d="M 680 720 C 870 680 1040 760 1095 930 C 1145 1040 1005 1090 865 1070 C 725 1050 675 940 680 720 Z"/></clipPath>
+    <clipPath id="clip_t7"><path d="M 796 640 C 966 610 1146 655 1226 790 C 1251 900 1206 980 1116 930 C 986 980 816 930 796 640 Z"/></clipPath>
+    <clipPath id="clip_t8"><path d="M 796 500 C 956 430 1116 455 1226 570 C 1251 650 1226 730 1146 710 C 1016 760 836 710 796 500 Z"/></clipPath>
+
+    <clipPath id="clip_torso">
+      <circle cx="633" cy="426" r="262"/>
+      <ellipse cx="633" cy="620" rx="272" ry="78"/>
+      <path d="M300 620 C 420 700 846 700 966 620 L 966 760 C 860 736 778 772 716 826 C 670 868 596 868 550 826 C 488 772 406 736 300 760 Z"/>
+    </clipPath>
+  </defs>
+
+  <image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238"/>
+
+  <g id="rig_layers">
+    <g id="t1" class="limb" style="transform-origin: 390px 610px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t1)"/></g>
+    <g id="t2" class="limb" style="transform-origin: 430px 760px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t2)"/></g>
+    <g id="t3" class="limb" style="transform-origin: 540px 780px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t3)"/></g>
+    <g id="t4" class="limb" style="transform-origin: 620px 790px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t4)"/></g>
+    <g id="t5" class="limb" style="transform-origin: 646px 790px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t5)"/></g>
+    <g id="t6" class="limb" style="transform-origin: 726px 780px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t6)"/></g>
+    <g id="t7" class="limb" style="transform-origin: 836px 760px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t7)"/></g>
+    <g id="t8" class="limb" style="transform-origin: 876px 610px;"><image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_t8)"/></g>
+  </g>
+
+  <image href="octobuss.master_v2.svg" x="0" y="0" width="1266" height="1238" clip-path="url(#clip_torso)"/>
+</svg>
+</div>
+
+<script>
+const cfg={
+ t1:{amp:4.0,s:1.05,p:0.0},t2:{amp:5.0,s:1.22,p:0.7},t3:{amp:6.2,s:1.38,p:1.4},t4:{amp:4.4,s:1.10,p:2.1},
+ t5:{amp:4.4,s:1.10,p:2.8},t6:{amp:6.2,s:1.38,p:3.5},t7:{amp:5.0,s:1.22,p:4.2},t8:{amp:4.0,s:1.05,p:4.9}
+};
+const nodes=Object.fromEntries(Object.keys(cfg).map(k=>[k,document.getElementById(k)]));
+function tick(ms){
+ const t=ms*0.001;
+ for(const [k,c] of Object.entries(cfg)){
+   const a=Math.sin(t*c.s+c.p), b=Math.sin(t*c.s*1.8+c.p*1.3);
+   const rot=a*c.amp, tx=b*2.2, ty=-Math.abs(a)*1.4;
+   nodes[k].style.transform=`translate(${tx.toFixed(2)}px,${ty.toFixed(2)}px) rotate(${rot.toFixed(2)}deg)`;
+ }
+ requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

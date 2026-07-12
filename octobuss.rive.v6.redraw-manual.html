@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Octobuss v6 Manual Redraw</title>
+  <style>
+    html,body{margin:0;height:100%}
+    body{display:grid;place-items:center;background:#d8dade}
+    .stage{width:min(90vmin,860px);aspect-ratio:1/1}
+    svg{width:100%;height:100%;display:block}
+    .tent{fill:#a972d9;stroke:#7345a8;stroke-width:4;stroke-linejoin:round;stroke-linecap:round}
+    .tentShade{fill:rgba(110,68,165,.26)}
+    .tentHi{fill:none;stroke:rgba(219,190,246,.72);stroke-width:4;stroke-linecap:round}
+    .sucker{fill:#f3a8c5;stroke:#c97199;stroke-width:1.4}
+  </style>
+</head>
+<body>
+<div class="stage">
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="800" fill="#d8dade"/>
+
+  <g id="tentacles_back">
+    <g id="tentacle_01" data-rig="limb" data-pivot-x="260" data-pivot-y="390">
+      <path class="tent" d="M252 381C207 370 157 334 111 320C81 311 56 319 47 343C38 368 48 392 69 402C91 412 111 406 118 387C122 376 116 363 103 358C92 354 83 356 78 365"/>
+      <path class="tentShade" d="M248 392C212 385 177 366 142 350C119 340 97 337 80 345C68 351 61 361 61 374C76 367 93 368 108 374C124 380 137 391 151 402C172 417 198 430 231 434Z"/>
+      <path class="tentHi" d="M131 331C151 334 170 343 186 351"/>
+      <ellipse class="sucker" cx="127" cy="365" rx="10" ry="6" transform="rotate(62 127 365)"/>
+      <ellipse class="sucker" cx="145" cy="395" rx="11" ry="7" transform="rotate(62 145 395)"/>
+      <ellipse class="sucker" cx="165" cy="426" rx="12" ry="7" transform="rotate(62 165 426)"/>
+    </g>
+
+    <g id="tentacle_02" data-rig="limb" data-pivot-x="284" data-pivot-y="430">
+      <path class="tent" d="M282 420C232 417 183 429 134 438C102 444 78 460 71 485C64 511 77 533 101 542C124 550 146 542 155 524C161 513 157 497 143 491C132 485 120 487 113 498"/>
+      <path class="tentShade" d="M274 432C240 434 207 441 174 450C149 457 124 467 108 482C97 492 91 503 91 516C108 507 129 505 146 510C163 515 177 525 190 537C209 553 233 565 263 568Z"/>
+      <path class="tentHi" d="M111 454C129 458 146 466 161 474"/>
+      <ellipse class="sucker" cx="122" cy="491" rx="10" ry="6" transform="rotate(45 122 491)"/>
+      <ellipse class="sucker" cx="142" cy="521" rx="11" ry="7" transform="rotate(45 142 521)"/>
+      <ellipse class="sucker" cx="163" cy="548" rx="12" ry="7" transform="rotate(45 163 548)"/>
+    </g>
+
+    <g id="tentacle_07" data-rig="limb" data-pivot-x="516" data-pivot-y="430">
+      <path class="tent" d="M518 420C568 417 617 429 666 438C698 444 722 460 729 485C736 511 723 533 699 542C676 550 654 542 645 524C639 513 643 497 657 491C668 485 680 487 687 498"/>
+      <path class="tentShade" d="M526 432C560 434 593 441 626 450C651 457 676 467 692 482C703 492 709 503 709 516C692 507 671 505 654 510C637 515 623 525 610 537C591 553 567 565 537 568Z"/>
+      <path class="tentHi" d="M689 454C671 458 654 466 639 474"/>
+      <ellipse class="sucker" cx="678" cy="491" rx="10" ry="6" transform="rotate(-45 678 491)"/>
+      <ellipse class="sucker" cx="658" cy="521" rx="11" ry="7" transform="rotate(-45 658 521)"/>
+      <ellipse class="sucker" cx="637" cy="548" rx="12" ry="7" transform="rotate(-45 637 548)"/>
+    </g>
+
+    <g id="tentacle_08" data-rig="limb" data-pivot-x="540" data-pivot-y="390">
+      <path class="tent" d="M548 381C593 370 643 334 689 320C719 311 744 319 753 343C762 368 752 392 731 402C709 412 689 406 682 387C678 376 684 363 697 358C708 354 717 356 722 365"/>
+      <path class="tentShade" d="M552 392C588 385 623 366 658 350C681 340 703 337 720 345C732 351 739 361 739 374C724 367 707 368 692 374C676 380 663 391 649 402C628 417 602 430 569 434Z"/>
+      <path class="tentHi" d="M669 331C649 334 630 343 614 351"/>
+      <ellipse class="sucker" cx="673" cy="365" rx="10" ry="6" transform="rotate(-62 673 365)"/>
+      <ellipse class="sucker" cx="655" cy="395" rx="11" ry="7" transform="rotate(-62 655 395)"/>
+      <ellipse class="sucker" cx="635" cy="426" rx="12" ry="7" transform="rotate(-62 635 426)"/>
+    </g>
+  </g>
+
+  <g id="body" data-rig="object">
+    <circle cx="400" cy="270" r="166" fill="#a36fd2" stroke="#7345a8" stroke-width="4"/>
+    <ellipse cx="474" cy="222" rx="26" ry="16" fill="rgba(215,184,245,.58)" transform="rotate(34 474 222)"/>
+    <ellipse cx="300" cy="202" rx="35" ry="15" fill="rgba(215,184,245,.58)" transform="rotate(-30 300 202)"/>
+
+    <g id="eyes" data-rig="object">
+      <circle cx="326" cy="272" r="42" fill="#eff8ff"/>
+      <circle cx="475" cy="279" r="42" fill="#eff8ff"/>
+      <circle id="pupil_l" cx="335" cy="286" r="28" fill="#34313d"/>
+      <circle id="pupil_r" cx="468" cy="286" r="28" fill="#34313d"/>
+      <circle cx="349" cy="271" r="9" fill="#fff"/>
+      <circle cx="486" cy="271" r="9" fill="#fff"/>
+    </g>
+
+    <circle cx="276" cy="330" r="31" fill="#eb85ae"/>
+    <circle cx="499" cy="330" r="31" fill="#eb85ae"/>
+
+    <g id="mouth" data-rig="mouth">
+      <path id="mouth_open" d="M350 318C367 340 434 340 452 318C446 357 356 357 350 318Z" fill="#5b2f3c"/>
+      <path id="tongue" d="M372 339C387 354 415 354 430 339" fill="none" stroke="#ea6f93" stroke-width="13" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <g id="tentacles_front">
+    <g id="tentacle_03" data-rig="limb" data-pivot-x="320" data-pivot-y="454">
+      <path class="tent" d="M318 444C287 466 260 505 244 547C230 583 224 625 215 661C208 690 212 714 228 726C246 739 271 738 286 723C300 709 303 687 293 673C285 661 271 654 260 658"/>
+      <path class="tentShade" d="M324 458C303 478 285 508 273 540C261 571 256 604 251 639C247 663 250 684 259 701C270 693 285 690 297 692C309 694 318 702 327 710C339 720 354 727 374 730Z"/>
+      <path class="tentHi" d="M289 486C304 506 316 531 324 558"/>
+      <ellipse class="sucker" cx="245" cy="588" rx="12" ry="7" transform="rotate(25 245 588)"/>
+      <ellipse class="sucker" cx="235" cy="623" rx="13" ry="8" transform="rotate(22 235 623)"/>
+      <ellipse class="sucker" cx="225" cy="658" rx="14" ry="8" transform="rotate(20 225 658)"/>
+    </g>
+
+    <g id="tentacle_04" data-rig="limb" data-pivot-x="372" data-pivot-y="470">
+      <path class="tent" d="M370 460C357 501 354 553 357 607C360 654 369 700 378 738C383 761 399 777 421 778C443 779 462 765 467 744C471 726 463 708 448 700C436 694 422 697 414 709"/>
+      <path class="tentShade" d="M381 470C373 506 372 547 375 589C378 628 386 666 395 701C408 694 423 692 436 695C445 697 453 703 460 710C456 687 448 662 442 635C434 596 431 553 434 509C417 495 400 481 381 470Z"/>
+      <path class="tentHi" d="M389 501C387 535 389 572 394 607"/>
+      <ellipse class="sucker" cx="368" cy="552" rx="9" ry="6" transform="rotate(90 368 552)"/>
+      <ellipse class="sucker" cx="368" cy="586" rx="10" ry="6" transform="rotate(90 368 586)"/>
+      <ellipse class="sucker" cx="370" cy="622" rx="11" ry="7" transform="rotate(90 370 622)"/>
+    </g>
+
+    <g id="tentacle_05" data-rig="limb" data-pivot-x="428" data-pivot-y="470">
+      <path class="tent" d="M430 460C443 501 446 553 443 607C440 654 431 700 422 738C417 761 401 777 379 778C357 779 338 765 333 744C329 726 337 708 352 700C364 694 378 697 386 709"/>
+      <path class="tentShade" d="M419 470C427 506 428 547 425 589C422 628 414 666 405 701C392 694 377 692 364 695C355 697 347 703 340 710C344 687 352 662 358 635C366 596 369 553 366 509C383 495 400 481 419 470Z"/>
+      <path class="tentHi" d="M411 501C413 535 411 572 406 607"/>
+      <ellipse class="sucker" cx="432" cy="552" rx="9" ry="6" transform="rotate(90 432 552)"/>
+      <ellipse class="sucker" cx="432" cy="586" rx="10" ry="6" transform="rotate(90 432 586)"/>
+      <ellipse class="sucker" cx="430" cy="622" rx="11" ry="7" transform="rotate(90 430 622)"/>
+    </g>
+
+    <g id="tentacle_06" data-rig="limb" data-pivot-x="484" data-pivot-y="454">
+      <path class="tent" d="M486 444C517 466 544 505 560 547C574 583 580 625 589 661C596 690 592 714 576 726C558 739 533 738 518 723C504 709 501 687 511 673C519 661 533 654 544 658"/>
+      <path class="tentShade" d="M480 458C501 478 519 508 531 540C543 571 548 604 553 639C557 663 554 684 545 701C534 693 519 690 507 692C495 694 486 702 477 710C465 720 450 727 430 730Z"/>
+      <path class="tentHi" d="M515 486C500 506 488 531 480 558"/>
+      <ellipse class="sucker" cx="559" cy="588" rx="12" ry="7" transform="rotate(-25 559 588)"/>
+      <ellipse class="sucker" cx="569" cy="623" rx="13" ry="8" transform="rotate(-22 569 623)"/>
+      <ellipse class="sucker" cx="579" cy="658" rx="14" ry="8" transform="rotate(-20 579 658)"/>
+    </g>
+  </g>
+
+  <g id="collar" data-rig="object">
+    <ellipse cx="400" cy="396" rx="171" ry="40" fill="#4f4957"/>
+    <ellipse cx="400" cy="386" rx="159" ry="30" fill="#6e6778"/>
+    <ellipse cx="400" cy="397" rx="173" ry="36" fill="none" stroke="#3f3945" stroke-width="4"/>
+  </g>
+
+  <g id="helmet" data-rig="object">
+    <circle cx="400" cy="270" r="197" fill="rgba(185,229,244,.24)" stroke="#7ca9c0" stroke-width="4"/>
+    <ellipse cx="278" cy="171" rx="26" ry="13" fill="rgba(255,255,255,.60)" transform="rotate(-34 278 171)"/>
+    <ellipse cx="523" cy="171" rx="26" ry="13" fill="rgba(255,255,255,.60)" transform="rotate(34 523 171)"/>
+  </g>
+</svg>
+</div>
+
+<script>
+const rigs = [
+ ['tentacle_01',5.4,1.08,0.0],['tentacle_02',6.7,1.22,0.6],['tentacle_03',8.2,1.43,1.2],['tentacle_04',5.8,1.05,2.1],
+ ['tentacle_05',5.8,1.05,2.8],['tentacle_06',8.2,1.43,3.5],['tentacle_07',6.7,1.22,4.2],['tentacle_08',5.4,1.08,4.8]
+].map(([id,amp,speed,phase])=>({id,amp,speed,phase,node:document.getElementById(id)}));
+
+const pupils=[document.getElementById('pupil_l'),document.getElementById('pupil_r')];
+const body=document.getElementById('body');
+const collar=document.getElementById('collar');
+
+function tick(ms){
+  const t=ms*0.001;
+  const breathe=Math.sin(t*1.9)*1.2;
+  for(const r of rigs){
+    const a=Math.sin(t*r.speed+r.phase);
+    const rot=a*r.amp;
+    const ty=-Math.abs(a)*1.1;
+    r.node.setAttribute('transform',`translate(0 ${ty.toFixed(2)}) rotate(${rot.toFixed(2)} ${r.node.getAttribute('data-pivot-x')} ${r.node.getAttribute('data-pivot-y')})`);
+  }
+  body.setAttribute('transform',`translate(0 ${(breathe*0.8).toFixed(2)})`);
+  collar.setAttribute('transform',`translate(0 ${(breathe*0.55).toFixed(2)})`);
+  const lx=Math.sin(t*0.5)*2.6, ly=Math.sin(t*0.36+0.8)*1.7;
+  pupils[0].setAttribute('cx',(335+lx).toFixed(2)); pupils[0].setAttribute('cy',(286+ly).toFixed(2));
+  pupils[1].setAttribute('cx',(468+lx).toFixed(2)); pupils[1].setAttribute('cy',(286+ly).toFixed(2));
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

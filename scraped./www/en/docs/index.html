@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+<link href="assets/images/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../favicon.png" rel="alternate icon" />
+<title>ANIMA — Technical Documentation</title>
+<meta name="description" content="ANIMA: Real-time generative avatar and vector worlds with neural control">
+<meta name="author" content="ANIMA">
+
+<!-- Stylesheet
+============================== -->
+<!-- Bootstrap -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+<!-- Font Awesome Icon -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/font-awesome/css/all.min.css" />
+<!-- Magnific Popup -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/magnific-popup/magnific-popup.min.css" />
+<!-- Highlight Syntax -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/highlight.js/styles/github.css" />
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css" />
+</head>
+
+<body data-spy="scroll" data-target=".idocs-navigation" data-offset="125">
+
+<!-- Preloader -->
+<div class="preloader">
+  <div class="lds-ellipsis">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<!-- Preloader End --> 
+
+<!-- Document Wrapper   
+=============================== -->
+<div id="main-wrapper"> 
+  
+  <!-- Header
+  ============================ -->
+  <header id="header" class="sticky-top"> 
+    <!-- Navbar -->
+    <nav class="primary-menu navbar navbar-expand-lg navbar-dropdown-dark">
+      <div class="container-fluid">
+        <!-- Sidebar Toggler -->
+		<button id="sidebarCollapse" class="navbar-toggler d-block d-md-none" type="button"><span></span><span class="w-75"></span><span class="w-50"></span></button>
+		
+		<!-- Logo -->
+        <a class="logo ml-md-3" href="index.html" title="ANIMA Docs">
+          <svg xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 425.3 243.4" width="50" height="50" style="display:inline-block;vertical-align:middle;">
+            <path d="m398.8 32.3-58.6 98.2-17.2-16-6.8 6.3c5.2 6 11.1 11.3 16.6 17.1 21.4 22.8 41.6 47 61.4 71.2.4.5 2.9 3.4 2.6 3.8-32.9-22.6-66-45-97.2-69.9l-.8.3c-28.6 33.5-71.6 63.2-116.5 67.6-42 4.2-80.8-14.8-110.4-43.1 1.7-1.6 3.3-3.5 5.1-5.1 4.7-4.3 18.6-17.5 23.5-19.4 13.7-5.3 20.2 5.1 30.4 11.4 66.7 40.6 133.2-13.1 183.5-53.5 27.3-21.9 53.5-45.3 81.1-66.8.5-.4 2.9-2.4 3.3-2.1Z"/>
+            <path d="M28.5 126.7c.6 0 1.1-.3 1.5-.7 20.7-19.8 40.9-40.6 62.2-59.7s26.1-19.3 40.7-24.6c60.6-21.9 122.6 11.7 165.3 53.2-4.9 4.8-19.7 15-25.2 19.1-18.1-13-38.1-23.8-59.9-29.4-34.5-9-63.6-4.8-90.9 18.5-20.4 17.4-39.4 36.5-59.7 54.1l-1.8 1.1-32.4-31.5Z"/>
+            <path d="M180.7 94.6c-16.1 0-29.1 13-29.1 29.1s13 29.1 29.1 29.1 29.1-13 29.1-29.1-13-29.1-29.1-29.1Zm.1 39.2c-5.5 0-9.9-4.4-9.9-9.9s4.4-9.9 9.9-9.9 9.9 4.4 9.9 9.9-4.4 9.9-9.9 9.9Z"/>
+          </svg>
+        </a>
+		<span class="ml-2" style="font-size:28px;font-weight:900;letter-spacing:-0.5px;font-family:'Lexend Deca', sans-serif;">ANIMA Docs <sup style="font-size:16px;font-weight:400;margin-left:4px;">v1.0</sup></span> 
+        <!-- Logo End -->
+        
+		<!-- Navbar Toggler -->
+		<button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#header-nav"><span></span><span></span><span></span></button>
+        
+		<div id="header-nav" class="collapse navbar-collapse justify-content-end">
+          <ul class="navbar-nav">
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar End --> 
+  </header>
+  <!-- Header End --> 
+  
+  <!-- Content
+  ============================ -->
+  <div id="content" role="main">
+    
+	<!-- Sidebar Navigation
+	============================ -->
+	<div class="idocs-navigation bg-light">
+      <ul class="nav flex-column ">
+        <li class="nav-item"><a class="nav-link active" href="#anima_start">Overview</a>
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#anima_preamble">Generative AI Exits Render Mode</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_summary">Executive Summary</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_core_principle">Core Principle</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_architecture">Architecture</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#anima_sdk">SDK & Runtime</a>
+          <ul class="nav flex-column">
+			<li class="nav-item"><a class="nav-link" href="#anima_sdk_design">SDK Design</a></li>
+			<li class="nav-item"><a class="nav-link" href="#anima_neural_face">Neural Face</a></li>
+			<li class="nav-item"><a class="nav-link" href="#anima_deformation">Deformation Engine</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#anima_audio">Audio Engine</a>
+			<ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#anima_audio_stack">Audio Stack</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_tts">Text-to-Speech</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_emotion">Emotion Processing</a></li>
+          </ul>
+		</li>
+        <li class="nav-item"><a class="nav-link" href="#anima_neural">Neural Models</a>
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#anima_flow_matching">Flow Matching</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_parameters">Parameter Space</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_inference">Inference Pipeline</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#anima_streaming">Streaming & Protocol</a>
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#anima_json_format">JSON Format</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_delta_encoding">Delta Encoding</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_transport">Transport Options</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#anima_worlds">Vector Worlds</a>
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#anima_scene_generator">Scene Generator</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_physics">Physics Engine</a></li>
+            <li class="nav-item"><a class="nav-link" href="#anima_vector_format">Vector Format</a></li>
+          </ul>
+        </li>
+		<li class="nav-item"><a class="nav-link" href="#anima_use_cases">Use Cases</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_game_engine">Game Engine Integration</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_competitive">Competitive Positioning</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_protocol">Streaming Protocol</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_training_data">Training Data Strategy</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_model_architecture">Model Architecture Summary</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_risks">Open Risks</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_success_criteria">Success Criteria</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_roadmap">Roadmap</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_economics">Economics & Scaling</a></li>
+        <li class="nav-item"><a class="nav-link" href="#anima_appendix">Appendix</a></li>
+      </ul>
+    </div>
+    
+    <!-- Docs Content
+	============================ -->
+    <div class="idocs-content">
+      <div class="container"> 
+        
+        <!-- Overview
+		============================ -->
+        <section id="anima_start">
+        <h1>ANIMA — Technical Documentation</h1>
+        <h2>Adaptive Neural Interface for Motion & Animation</h2>
+        <p class="lead">Real-time generative avatar animation and interactive vector worlds with neural control</p>
+
+		<!-- Preamble -->
+		<section id="anima_preamble">
+		  <h2>Generative AI Exits Render Mode</h2>
+		  <p>All generative AI today works the same way: prompt → wait → file. Midjourney produces an image in a minute. Sora produces video in minutes. Impressive, but it's rendering. You get a finished artifact.</p>
+
+		  <p><strong>ANIMA is the first system where generation happens in real-time.</strong> Not "create me a scene" — a scene that exists and changes while you're watching it. 30 frames per second of continuous generation.</p>
+
+		  <p><em>The difference between a photograph and a window.</em></p>
+
+		  <h3>Why It Hasn't Been Done</h3>
+		  <p>Economics didn't work. Real-time video generation costs $0.30 per minute per user. That's $18 an hour. Fine for enterprise demos, not for consumer products.</p>
+
+		  <p>We rethought what exactly the neural network should generate. Not pixels — what's behind them. This cut costs 100x and unlocked markets that were previously uneconomical.</p>
+
+		  <h3>What Changes</h3>
+		  <p><strong>Interactive media finally becomes real.</strong> Netflix tried with Bandersnatch — pre-rendered branches, choose your ending. That's a tree, not a world. We generate the response to anything, in real-time. Every viewer sees their own version.</p>
+
+		  <p><strong>AI companions</strong> — a $2B market growing 50% annually — are stuck in text chat. Character.ai, Replika, dozens of clones. 20 million users messaging bots because the alternative costs too much. We give those bots a face, a voice, and a world around them.</p>
+
+		  <p><strong>Adult content</strong> — $100B annually — adopts every new media technology first. VHS, streaming, VR. Real-time generative will be next.</p>
+
+		  <h3>Why Now</h3>
+		  <p>Three things converged. Models learned to work fast — single pass, not iterative steps. Browsers learned to render complex graphics. Voice models became indistinguishable from human.</p>
+
+		  <p><em>Separately, evolution. Together, a new product category.</em></p>
+
+		  <h3>What's Next</h3>
+		  <p><strong>First product</strong> — interactive story platform. Anime where the viewer participates. Then creator tools: anyone builds an interactive character without animation skills.</p>
+
+		  <p>But that's just the start. When generation becomes real-time, everything changes. Every banner personalized. Every game NPC unique. Every training course adaptive.</p>
+
+		  <p><strong>We're not improving rendering. We're eliminating it.</strong></p>
+		</section>
+
+		<hr>
+		<div class="row">
+			<div class="col-sm-6 col-lg-4">
+				<ul class="list-unstyled">
+					<li><strong>Version:</strong> 3.0 (Final Architecture)</li>
+					<li><strong>Status:</strong> Ready for Implementation</li>
+				</ul>
+			</div>
+			<div class="col-sm-6 col-lg-4">
+				<ul class="list-unstyled">
+					<li><strong class="font-weight-700">Date:</strong> January 17, 2026</li>
+					<li><strong>Tech Stack:</strong> Flow Matching + Own Audio Stack</li>
+				</ul>
+			</div>
+		</div>
+        </section>
+        <!-- System Architecture -->
+        <section id="anima_architecture">
+          <h2>System Architecture</h2>
+          <p class="lead">ANIMA operates as a distributed system where the server generates parameters and the client renders frames.</p>
+          <h3>What Server Does vs What Client Does</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Server (ANIMA Backend)</th>
+                <th>Client (ANIMA SDK)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Receives audio/emotion from Hume</td>
+                <td>Receives JSON parameters</td>
+              </tr>
+              <tr>
+                <td>Neural inference (30ms)</td>
+                <td>Frame interpolation</td>
+              </tr>
+              <tr>
+                <td>Generates parameter deltas</td>
+                <td>Mesh deformation</td>
+              </tr>
+              <tr>
+                <td>Compresses JSON</td>
+                <td>Texture compositing</td>
+              </tr>
+              <tr>
+                <td>Streams via WebSocket</td>
+                <td>WebGL rendering</td>
+              </tr>
+              <tr>
+                <td><strong>No video encoding</strong></td>
+                <td><strong>Full frame rendering</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Audio Engine -->
+        <section id="anima_audio">
+          <h2>Audio Engine</h2>
+          <p class="lead">Multi-layer audio architecture supporting real-time speech synthesis, emotion processing, and spatial audio.</p>
+          <h3>Why Own Stack (Not Hume)</h3>
+          <ul>
+            <li><strong>Cost/min:</strong> $0.002–0.005 vs $0.05–0.10 (Hume)</li>
+            <li><strong>Control:</strong> Full ownership vs Limited</li>
+            <li><strong>Latency:</strong> Local vs +50ms API call</li>
+            <li><strong>Voice clone:</strong> Supported vs Not available</li>
+          </ul>
+          <h3>Audio Layers</h3>
+          <ol>
+            <li><strong>Voice (TTS/Voice Clone)</strong> - XTTS v2, StyleTTS2, Fish Speech</li>
+            <li><strong>Emotion</strong> - Text classifier (10ms), Prosody extraction</li>
+            <li><strong>SFX</strong> - Script triggers, Procedural sounds, Library foley</li>
+            <li><strong>Ambience</strong> - Scene-based, Dynamic weather/time</li>
+            <li><strong>Music</strong> - Adaptive score, Stems mixing</li>
+          </ol>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Neural Models -->
+        <section id="anima_neural">
+          <h2>Neural Models — Flow Matching</h2>
+          <p class="lead">ANIMA generates parameters, not pixels. Using Flow Matching for real-time inference.</p>
+          <h3>Parameter Space (170D)</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Dimensions</th>
+                <th>Examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mouth</td>
+                <td>12D</td>
+                <td>open, form, smile, teeth, lip_sync</td>
+              </tr>
+              <tr>
+                <td>Eyes</td>
+                <td>12D</td>
+                <td>open L/R, pupil X/Y, squint, widen</td>
+              </tr>
+              <tr>
+                <td>Eyebrows</td>
+                <td>8D</td>
+                <td>angle L/R, height, furrow</td>
+              </tr>
+              <tr>
+                <td>Head</td>
+                <td>6D</td>
+                <td>pos XYZ, rot XYZ</td>
+              </tr>
+              <tr>
+                <td>Body</td>
+                <td>50D</td>
+                <td>spine, shoulders, arms, hands</td>
+              </tr>
+              <tr>
+                <td>Emotion</td>
+                <td>8D</td>
+                <td>8 emotions × intensity</td>
+              </tr>
+              <tr>
+                <td>Effects</td>
+                <td>8D</td>
+                <td>blush, sweat, tears, sparkle</td>
+              </tr>
+              <tr>
+                <td>Other</td>
+                <td>66D</td>
+                <td>breathing, camera, reserved</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>Flow Matching vs Diffusion</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Aspect</th>
+                <th>Diffusion</th>
+                <th>Flow Matching</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Steps</td>
+                <td>20–50</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Latency</td>
+                <td>200ms+</td>
+                <td>15–25ms</td>
+              </tr>
+              <tr>
+                <td>Quality</td>
+                <td>Excellent</td>
+                <td>Very good</td>
+              </tr>
+              <tr>
+                <td><strong>Real-time viable</strong></td>
+                <td><strong>No</strong></td>
+                <td><strong>Yes</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- SDK -->
+        <section id="anima_sdk">
+          <h2>ANIMA SDK — Custom Animation Engine</h2>
+          <p class="lead">Open-source WebGL2 engine optimized for hybrid neural/parametric rendering.</p>
+          <h3>Why Not Live2D</h3>
+          <ul>
+            <li>Proprietary SDK with license costs</li>
+            <li>Limited extensibility for neural blending</li>
+            <li>Unpredictable performance and closed format coupling</li>
+            <li>ANIMA SDK is MIT licensed and fully open</li>
+          </ul>
+          <h3>SDK Modules</h3>
+          <ul>
+            <li><strong>Asset Pipeline:</strong> Import Live2D (.moc3), Spine, PSD/SVG → Convert to .anima</li>
+            <li><strong>Deformation Engine:</strong> Mesh skinning (GPU), Blend shapes, Bone IK, Neural texture injection</li>
+            <li><strong>Render Pipeline:</strong> Layer compositor, Neural face overlay, Particle system, Post-processing</li>
+            <li><strong>Runtime:</strong> Parameter interpolation, Animation state machine, Event system, Performance profiler</li>
+          </ul>
+          <h3>Performance Contract</h3>
+          <ul>
+            <li><strong>Target:</strong> 30 FPS perception, <50ms end-to-end latency</li>
+            <li><strong>Adaptive budget:</strong> Reduce particles, LOD paths, disable effects — keep motion smooth</li>
+          </ul>
+        </section>
+
+        <!-- Roadmap -->
+        <section id="anima_roadmap">
+          <h2>Implementation Roadmap (24 Weeks)</h2>
+          <h3>Phase 1: Foundation (Weeks 1–4)</h3>
+          <ul>
+            <li>Hume EVI integration</li>
+            <li>ANIMA SDK skeleton + Canvas2D vector renderer</li>
+            <li>Basic physics engine (rigid bodies only)</li>
+            <li><strong>Milestone:</strong> Avatar in physics world, voice working</li>
+          </ul>
+          <h3>Phase 2: Physics & Vectors (Weeks 5–8)</h3>
+          <ul>
+            <li>Particle systems</li>
+            <li>Soft body basics (cloth, rope)</li>
+            <li>Delta encoding + streaming protocol</li>
+            <li><strong>Milestone:</strong> Full physics demo, 30 FPS streaming</li>
+          </ul>
+          <h3>Phase 3: GenAI Face (Weeks 9–12)</h3>
+          <ul>
+            <li>Face autoencoder training</li>
+            <li>Flow model training + integration</li>
+            <li><strong>Milestone:</strong> Neural face in physics world</li>
+          </ul>
+          <h3>Phase 4: Scene Generation (Weeks 13–16)</h3>
+          <ul>
+            <li>Procedural scene templates</li>
+            <li>Scene ↔ physics integration</li>
+            <li>Neural scene generator (experimental)</li>
+            <li><strong>Milestone:</strong> Generated worlds with avatar</li>
+          </ul>
+          <h3>Phase 5–6: Polish & Release (Weeks 17–24)</h3>
+          <ul>
+            <li>Voice cloning pipeline, WebGL optimization</li>
+            <li>Multi-user shared worlds</li>
+            <li>SDK documentation + public API</li>
+            <li><strong>Launch</strong></li>
+          </ul>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Use Cases -->
+        <section id="anima_use_cases">
+          <h2>Primary Use Cases</h2>
+          <p class="lead">ANIMA powers diverse interactive experiences across gaming, entertainment, education, and enterprise.</p>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Use Case</th>
+                <th>Description</th>
+                <th>Revenue Model</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Gaming</strong></td>
+                <td>Visual Novels</td>
+                <td>Interactive story with animated avatars</td>
+                <td>SDK license</td>
+              </tr>
+              <tr>
+                <td><strong>Gaming</strong></td>
+                <td>RPG NPCs</td>
+                <td>Living characters in game worlds</td>
+                <td>Per-game license</td>
+              </tr>
+              <tr>
+                <td><strong>Gaming</strong></td>
+                <td>VTuber Tools</td>
+                <td>Real-time avatar for streamers</td>
+                <td>SaaS subscription</td>
+              </tr>
+              <tr>
+                <td><strong>Entertainment</strong></td>
+                <td>Interactive Anime</td>
+                <td>Choose-your-story anime with real-time reactions</td>
+                <td>Per-episode/subscription</td>
+              </tr>
+              <tr>
+                <td><strong>Entertainment</strong></td>
+                <td>AI Companions</td>
+                <td>Chat companions with personality</td>
+                <td>Consumer subscription</td>
+              </tr>
+              <tr>
+                <td><strong>Education</strong></td>
+                <td>AI Tutors</td>
+                <td>Animated teachers for e-learning</td>
+                <td>B2B licensing</td>
+              </tr>
+              <tr>
+                <td><strong>Business</strong></td>
+                <td>Virtual Assistants</td>
+                <td>Customer service avatars</td>
+                <td>Enterprise API</td>
+              </tr>
+              <tr>
+                <td><strong>Social</strong></td>
+                <td>Avatar Chat</td>
+                <td>Animated self-expression in messaging</td>
+                <td>Freemium</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Interactive Anime Series</h3>
+          <p><strong>Concept:</strong> Netflix-style anime where viewer choices affect story, characters react in real-time.</p>
+          <ul>
+            <li><strong>Technical approach:</strong> Pre-rendered scenes + ANIMA real-time character close-ups</li>
+            <li><strong>Business model:</strong> Subscription $15/month or $5–10 per series</li>
+            <li><strong>Competitive advantage:</strong> First real-time anime interaction platform with emotion-native reactions</li>
+          </ul>
+
+          <h3>Gaming Integration</h3>
+          <p><strong>Visual Novels / Dating Sims:</strong></p>
+          <ul>
+            <li>Full character animation during dialogue</li>
+            <li>Emotion reacts to player choices</li>
+            <li>Voice synthesis for all text (~$0.01 per conversation minute)</li>
+          </ul>
+          <p><strong>RPG NPCs:</strong> Shopkeepers and quest givers come alive with dynamic reactions based on player reputation.</p>
+          <p><strong>Streaming/VTuber:</strong> Real-time avatar driven by voice with emotion detection and chat integration.</p>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Game Engine Integration -->
+        <section id="anima_game_engine">
+          <h2>Game Engine Integration</h2>
+          <p class="lead">ANIMA is an Avatar Service, not a game engine. Easy integration with any existing framework.</p>
+
+          <h3>Integration Options by Platform</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Game Type</th>
+                <th>Recommended Stack</th>
+                <th>ANIMA Integration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Web Visual Novel</td>
+                <td>Ink.js + Vanilla JS</td>
+                <td>Direct canvas overlay</td>
+              </tr>
+              <tr>
+                <td>Web 2D Game</td>
+                <td>Phaser.js / PixiJS</td>
+                <td>Texture in scene</td>
+              </tr>
+              <tr>
+                <td>Web 3D Game</td>
+                <td>Three.js / Babylon</td>
+                <td>Render-to-texture plane</td>
+              </tr>
+              <tr>
+                <td>Desktop/Mobile</td>
+                <td>Godot</td>
+                <td>GDScript addon</td>
+              </tr>
+              <tr>
+                <td>AAA/Complex</td>
+                <td>Unity WebGL</td>
+                <td>C# plugin</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>ANIMA Client SDK</h3>
+          <p>Lightweight libraries for any environment:</p>
+          <pre><code>// Core API
+anima.connect(url, apiKey)
+anima.speak(text, {emotion, gesture})
+anima.setEmotion(emotion, intensity)
+anima.triggerGesture(gesture)
+anima.onFrame(callback)     // receive JSON params
+anima.onEvent(callback)     // avatar events
+anima.getCanvas()           // get render target</code></pre>
+
+          <h3>Why Not Build a Game Engine</h3>
+          <p>ANIMA's value = GenAI avatars, not game infrastructure. Developers use familiar tools (Unity, Godot, Phaser), ANIMA adds the "living" avatar as a service. This saves months of development time.</p>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Competitive Positioning -->
+        <section id="anima_competitive">
+          <h2>Competitive Positioning</h2>
+
+          <h3>Market Landscape (2025)</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Approach</th>
+                <th>Latency</th>
+                <th>Key Limitation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>HeyGen</strong></td>
+                <td>Pre-trained humans</td>
+                <td>&lt;100ms</td>
+                <td>No stylized avatars</td>
+              </tr>
+              <tr>
+                <td><strong>Synthesia</strong></td>
+                <td>Render farm</td>
+                <td>Seconds</td>
+                <td>Not real-time</td>
+              </tr>
+              <tr>
+                <td><strong>D-ID</strong></td>
+                <td>GAN talking head</td>
+                <td>~200ms</td>
+                <td>Limited expression</td>
+              </tr>
+              <tr>
+                <td><strong>VTube Studio</strong></td>
+                <td>Parameter-based</td>
+                <td>&lt;10ms</td>
+                <td>No AI, manual rigging</td>
+              </tr>
+              <tr>
+                <td><strong>ANIMA</strong></td>
+                <td>Neural params + JSON</td>
+                <td><strong>35–50ms</strong></td>
+                <td>Stylized 2D focus</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Unique Value Proposition</h3>
+          <ol>
+            <li><strong>JSON streaming</strong> — 100× cheaper than video rendering</li>
+            <li><strong>Real-time</strong> — 30 FPS, &lt;50ms latency</li>
+            <li><strong>Stylized aesthetic</strong> — VTuber/anime, not photorealistic</li>
+            <li><strong>Open SDK</strong> — no Live2D lock-in</li>
+            <li><strong>Emotion-native</strong> — Hume integration from day one</li>
+            <li><strong>Game-ready</strong> — easy integration with any engine</li>
+          </ol>
+
+          <h3>Why ANIMA Wins</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>vs Competitor</th>
+                <th>Our Advantage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>HeyGen/Synthesia</td>
+                <td>100× lower cost, stylized avatars</td>
+              </tr>
+              <tr>
+                <td>VTube Studio</td>
+                <td>AI-driven, no manual rigging</td>
+              </tr>
+              <tr>
+                <td>D-ID</td>
+                <td>Better expression, lower latency</td>
+              </tr>
+              <tr>
+                <td>Custom dev</td>
+                <td>6+ months saved, production-ready</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Streaming Protocol -->
+        <section id="anima_protocol">
+          <h2>Streaming Protocol — JSON Canvas Instructions</h2>
+          <p class="lead">ANIMA streams rendering instructions, not video frames.</p>
+
+          <h3>Message Format (Delta Encoding)</h3>
+          <pre><code>{
+  "frame_id": 1235,
+  "delta": true,
+  "face.mouth_open": 0.65,
+  "face.emotion_blend.happy": 0.7,
+  "body.position": [0.5, 0.6],
+  "audio_sync.viseme_id": 3
+}</code></pre>
+          <p><strong>Typical frame size:</strong> 200–500 bytes (delta) vs 2KB (full state)</p>
+
+          <h3>Transport Options</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Protocol</th>
+                <th>Latency</th>
+                <th>Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WebSocket</td>
+                <td>10–30ms</td>
+                <td>Default, reliable</td>
+              </tr>
+              <tr>
+                <td>WebRTC DataChannel</td>
+                <td>5–15ms</td>
+                <td>Ultra-low latency</td>
+              </tr>
+              <tr>
+                <td>SSE</td>
+                <td>30–50ms</td>
+                <td>Fallback, simple</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Why This Works</h3>
+          <ul>
+            <li><strong>Server:</strong> Lightweight inference (~30ms), no video encoding</li>
+            <li><strong>Bandwidth:</strong> ~30 KB/s (JSON) vs 2–5 Mbps (video)</li>
+            <li><strong>Client:</strong> Full control over rendering, local GPU acceleration</li>
+            <li><strong>Scalability:</strong> 400 users per A100 (vs 5–10 for video)</li>
+          </ul>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Vector Worlds -->
+        <section id="anima_vector_worlds">
+          <h2>Vector Worlds — Generative Scenes with Physics</h2>
+          <p class="lead">ANIMA generates entire interactive vector worlds in real-time. Server handles physics and scene generation; client receives lightweight vector commands.</p>
+
+          <h3>Architecture</h3>
+          <p>Backend (full compute) runs:</p>
+          <ul>
+            <li><strong>Scene Generator:</strong> Neural or procedural scene generation</li>
+            <li><strong>Physics Engine:</strong> Deterministic 60Hz simulation</li>
+            <li><strong>Vector Compositor:</strong> Path/shape/transform streaming (~20KB/frame)</li>
+          </ul>
+          <p>Client renders only: Canvas2D or WebGL path API applied to streamed transforms.</p>
+
+          <h3>Scene Generation Modes</h3>
+          <p><strong>Mode A: Procedural (Fast, Controllable)</strong></p>
+          <ul>
+            <li>Templates: underwater_cave, neon_city, abstract_space</li>
+            <li>Parameters: depth, density, light_rays, building_height, etc.</li>
+            <li>Fast rendering with precise control</li>
+          </ul>
+          <p><strong>Mode B: Neural (Creative, Surprising)</strong></p>
+          <ul>
+            <li>Text-to-vector generation (VectorFusion-style)</li>
+            <li>Latency: 200–500ms for initial generation</li>
+            <li>Then procedural animation with low latency</li>
+          </ul>
+
+          <h3>Physics on Backend</h3>
+          <ul>
+            <li><strong>Rigid Bodies:</strong> Collision detection, gravity, joints</li>
+            <li><strong>Soft Bodies:</strong> Cloth, rope, jelly objects</li>
+            <li><strong>Particles:</strong> 10,000 max per frame (sparks, dust, rain, leaves)</li>
+            <li><strong>Simplified Fluids:</strong> Metaballs or height-field water</li>
+          </ul>
+
+          <h3>Format & Efficiency</h3>
+          <p><strong>Delta Encoding:</strong> Only changed objects are sent.</p>
+          <p><strong>Compression:</strong> MessagePack + LZ4 → ~10–30 KB/frame typical.</p>
+          <p><strong>Client Rendering:</strong> Canvas2D Path API (simple) or WebGL (high complexity).</p>
+
+          <h3>Performance Budget</h3>
+          <ul>
+            <li><strong>Physics step:</strong> 5ms (60Hz internal)</li>
+            <li><strong>Scene update:</strong> 2ms</li>
+            <li><strong>Vector serialize:</strong> 3ms</li>
+            <li><strong>Network:</strong> 10ms (buffered)</li>
+            <li><strong>Total backend:</strong> ~20ms</li>
+            <li><strong>End-to-end:</strong> ~50ms (30 FPS comfortable)</li>
+          </ul>
+
+          <h3>Complexity Limits</h3>
+          <ul>
+            <li>Rigid bodies: 500 max</li>
+            <li>Particles: 10,000 max</li>
+            <li>Vector paths: 2,000 max</li>
+            <li>Gradient fills: 200 max</li>
+          </ul>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Training Data Strategy -->
+        <section id="anima_training_data">
+          <h2>Training Data Strategy</h2>
+
+          <h3>Data Sources</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Volume</th>
+                <th>What We Extract</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>VTuber streams</strong></td>
+                <td>10K+ hours</td>
+                <td>Audio → face tracking → params</td>
+              </tr>
+              <tr>
+                <td><strong>Live2D showcases</strong></td>
+                <td>1K+ hours</td>
+                <td>Clean parameter sequences</td>
+              </tr>
+              <tr>
+                <td><strong>Anime clips</strong></td>
+                <td>5K+ hours</td>
+                <td>Face landmarks → pseudo-params</td>
+              </tr>
+              <tr>
+                <td><strong>Hand-animated</strong></td>
+                <td>100 hours</td>
+                <td>Gold standard pairs</td>
+              </tr>
+              <tr>
+                <td><strong>Synthetic</strong></td>
+                <td>Unlimited</td>
+                <td>TTS + rule-based animator</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Parameter Extraction Pipeline</h3>
+          <p><strong>From video/stream to 170D parameters:</strong></p>
+          <ul>
+            <li><strong>Audio processing:</strong> Phoneme alignment (MFA) → timing, Emotion classifier → emotion (8D)</li>
+            <li><strong>Video processing:</strong> Face landmark detection (MediaPipe) → mouth, eyes, brows (~40D), Pose estimation → body params (~30D)</li>
+            <li><strong>Result:</strong> (audio_features, emotion, visemes) → (170D params) per frame</li>
+          </ul>
+
+          <h3>Synthetic Data Generation</h3>
+          <p><strong>For unlimited training data:</strong></p>
+          <ol>
+            <li>Sample emotion trajectory (random walk)</li>
+            <li>Generate text matching emotion</li>
+            <li>TTS → audio waveform</li>
+            <li>Rule-based animator → baseline params</li>
+            <li>Add noise/variation</li>
+            <li>Model learns to exceed baseline quality</li>
+          </ol>
+          <p><em>Advantage: infinite data, controlled conditions. Disadvantage: ceiling on quality (rules-based ground truth)</em></p>
+
+          <h3>Training Procedure</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Duration</th>
+                <th>Data</th>
+                <th>Goal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1. Pretraining</td>
+                <td>3 days</td>
+                <td>Synthetic (10M frames)</td>
+                <td>Learn basic motion</td>
+              </tr>
+              <tr>
+                <td>2. Fine-tuning</td>
+                <td>4 days</td>
+                <td>VTuber (1M frames)</td>
+                <td>Real motion patterns</td>
+              </tr>
+              <tr>
+                <td>3. Style adaptation</td>
+                <td>1 day</td>
+                <td>Target avatar (10K frames)</td>
+                <td>Character specifics</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><strong>Total: ~1 week training time on 4× A100</strong></p>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Model Architecture Summary -->
+        <section id="anima_model_architecture">
+          <h2>Model Architecture Summary</h2>
+
+          <h3>Complete System Pipeline</h3>
+          <p><strong>OFFLINE (Content Generation):</strong> Script → TTS → Audio → Phoneme Align → Emotion Extract → (audio_feat, emotion, viseme)</p>
+          <p><strong>REAL-TIME (Inference):</strong> (audio_feat, emotion, viseme, char_id, prev) → Context Encoder (15M) → Z (256D) → Flow Decoder (2M) → Params (170D) → JSON → WebSocket</p>
+          <p><strong>CLIENT:</strong> JSON → Interpolation → SDK → WebGL Canvas</p>
+
+          <h3>Inference Timeline</h3>
+          <ul>
+            <li><strong>T=0ms:</strong> Audio features ready</li>
+            <li><strong>T=8ms:</strong> Context Encoder complete → Z (256D)</li>
+            <li><strong>T=20ms:</strong> Flow Decoder complete → Params (170D)</li>
+            <li><strong>T=22ms:</strong> JSON encoded, sent via WebSocket</li>
+            <li><strong>T=32ms:</strong> Client receives JSON (network ~10ms)</li>
+            <li><strong>T=33ms:</strong> Interpolation + SDK apply</li>
+            <li><strong>T=38ms:</strong> WebGL render complete → Frame displayed</li>
+          </ul>
+          <p><strong>Total: ~38ms end-to-end (50+ FPS capable)</strong></p>
+
+          <h3>Model Specifications</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Params</th>
+                <th>Latency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Context Encoder (Transformer 4L)</td>
+                <td>15M</td>
+                <td>8ms</td>
+              </tr>
+              <tr>
+                <td>Flow Velocity Network</td>
+                <td>2M</td>
+                <td>12ms</td>
+              </tr>
+              <tr>
+                <td><strong>Total Neural</strong></td>
+                <td><strong>17M</strong></td>
+                <td><strong>20ms</strong></td>
+              </tr>
+              <tr>
+                <td>JSON encode + network</td>
+                <td>—</td>
+                <td>12ms</td>
+              </tr>
+              <tr>
+                <td>Client render</td>
+                <td>—</td>
+                <td>6ms</td>
+              </tr>
+              <tr>
+                <td><strong>End-to-End</strong></td>
+                <td></td>
+                <td><strong>~38ms</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Scaling Capabilities</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Memory per model</td>
+                <td>~100MB</td>
+              </tr>
+              <tr>
+                <td>Batch size (A100 40GB)</td>
+                <td>400 streams</td>
+              </tr>
+              <tr>
+                <td>Throughput</td>
+                <td>12,000 FPS</td>
+              </tr>
+              <tr>
+                <td>Concurrent users per A100</td>
+                <td>400 (@ 30 FPS)</td>
+              </tr>
+              <tr>
+                <td>Cost per user-hour</td>
+                <td>~$0.005</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Open Risks -->
+        <section id="anima_risks">
+          <h2>Open Risks & Mitigation</h2>
+
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Risk</th>
+                <th>Severity</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Neural param quality vs rules</td>
+                <td><span class="badge badge-warning">Medium</span></td>
+                <td>Start with rules baseline, A/B test</td>
+              </tr>
+              <tr>
+                <td>Hume latency adds up</td>
+                <td><span class="badge badge-warning">Medium</span></td>
+                <td>Async pipeline, buffering</td>
+              </tr>
+              <tr>
+                <td>SDK development scope</td>
+                <td><span class="badge badge-warning">Medium</span></td>
+                <td>Start minimal, iterate</td>
+              </tr>
+              <tr>
+                <td>VTuber data licensing</td>
+                <td><span class="badge badge-warning">Medium</span></td>
+                <td>Focus on permissive sources, synthetic</td>
+              </tr>
+              <tr>
+                <td>Client GPU variance</td>
+                <td><span class="badge badge-info">Low</span></td>
+                <td>Fallback to simpler rendering</td>
+              </tr>
+              <tr>
+                <td>WebGL compatibility</td>
+                <td><span class="badge badge-info">Low</span></td>
+                <td>Test on target browsers early</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Success Criteria -->
+        <section id="anima_success_criteria">
+          <h2>Success Criteria</h2>
+
+          <h3>MVP (Week 4)</h3>
+          <ul>
+            <li>☐ Octopus speaks with Hume voice</li>
+            <li>☐ Body reacts to emotion</li>
+            <li>☐ 30 FPS stable</li>
+            <li>☐ &lt;100ms end-to-end latency</li>
+          </ul>
+
+          <h3>Neural Parameters (Week 14)</h3>
+          <ul>
+            <li>☐ Flow-based param generator integrated</li>
+            <li>☐ Lip-sync error &lt;50ms</li>
+            <li>☐ Emotion expression matches Hume</li>
+            <li>☐ Quality exceeds rule-based baseline</li>
+          </ul>
+
+          <h3>Production (Week 20)</h3>
+          <ul>
+            <li>☐ 100+ concurrent users per A100</li>
+            <li>☐ Own TTS operational</li>
+            <li>☐ SDK public release</li>
+            <li>☐ &lt;$0.01/min cost</li>
+          </ul>
+
+          <h3>Launch (Week 24)</h3>
+          <ul>
+            <li>☐ Public SDK release</li>
+            <li>☐ Developer documentation</li>
+            <li>☐ &lt;$3/user/month cost</li>
+          </ul>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Economics -->
+        <section id="anima_economics">
+          <h2>Economics & Scaling</h2>
+          <h3>Cost Comparison (Per Minute)</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Provider</th>
+                <th>Price/min</th>
+                <th>Our Cost/min</th>
+                <th>Potential Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>HeyGen</td>
+                <td>$0.30</td>
+                <td>$0.002</td>
+                <td>150×</td>
+              </tr>
+              <tr>
+                <td>Synthesia</td>
+                <td>$0.50</td>
+                <td>$0.002</td>
+                <td>250×</td>
+              </tr>
+              <tr>
+                <td>D-ID</td>
+                <td>$0.20</td>
+                <td>$0.002</td>
+                <td>100×</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>Infrastructure (Per 10,000 Concurrent Users)</h3>
+          <ul>
+            <li><strong>GPU (25× A100 spot):</strong> $18,000/month</li>
+            <li><strong>CPU (TTS, alignment):</strong> $2,000/month</li>
+            <li><strong>Servers + Bandwidth:</strong> $1,500/month</li>
+            <li><strong>Total:</strong> $21,500/month (~$2.15 per user/month)</li>
+          </ul>
+          <h3>Pricing Strategy (B2C)</h3>
+          <ul>
+            <li><strong>Free:</strong> 60 min/month</li>
+            <li><strong>Pro:</strong> $10/month for 20 hrs ($0.008/min)</li>
+            <li><strong>Unlimited:</strong> $25/month</li>
+          </ul>
+          <p class="alert alert-success"><strong>Unit economics @ $0.03/min API:</strong><br>Cost: $0.002/min | Margin: 93% | 1M minutes/month = $30K revenue, $28K profit</p>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Appendix -->
+        <section id="anima_appendix">
+          <h2>Appendix: Technology Choices</h2>
+
+          <h3>Why Flow Matching (Not Diffusion)</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Aspect</th>
+                <th>Diffusion</th>
+                <th>Flow Matching</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Steps</td>
+                <td>20–50</td>
+                <td>1–4</td>
+              </tr>
+              <tr>
+                <td>Latency</td>
+                <td>500ms+</td>
+                <td>20–50ms</td>
+              </tr>
+              <tr>
+                <td>Quality</td>
+                <td>Excellent</td>
+                <td>Very good</td>
+              </tr>
+              <tr>
+                <td>Training</td>
+                <td>Stable</td>
+                <td>Stable</td>
+              </tr>
+              <tr>
+                <td><strong>Real-time viable</strong></td>
+                <td><strong>No</strong></td>
+                <td><strong>Yes</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Why WebGL2 (Not WebGPU)</h3>
+          <ul>
+            <li>WebGPU support still incomplete (Safari, older browsers)</li>
+            <li>WebGL2 sufficient for 2D compositing</li>
+            <li>Migrate to WebGPU when mature</li>
+          </ul>
+
+          <h3>Why Hume (Not OpenAI/ElevenLabs)</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Provider</th>
+                <th>Emotion</th>
+                <th>Latency</th>
+                <th>Integration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Hume EVI</strong></td>
+                <td>Native, excellent</td>
+                <td>Low</td>
+                <td>WebSocket, clean</td>
+              </tr>
+              <tr>
+                <td>OpenAI</td>
+                <td>None</td>
+                <td>Medium</td>
+                <td>REST only</td>
+              </tr>
+              <tr>
+                <td>ElevenLabs</td>
+                <td>Basic</td>
+                <td>Medium</td>
+                <td>Good but no emotion</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </div>
+    </div>
+  </div>
+  <!-- Content end --> 
+  
+  <!-- Footer
+  ============================ -->
+  <footer id="footer" class="section bg-dark footer-text-light">
+    <div class="container">
+      <ul class="social-icons social-icons-lg social-icons-muted justify-content-center mb-3">
+        <li><a data-toggle="tooltip" href="https://github.com/animatech" target="_blank" title="" data-original-title="GitHub"><i class="fab fa-github"></i></a></li>
+      </ul>
+      <p class="text-center">ANIMA — Adaptive Neural Interface for Motion & Animation</p>
+      <p class="text-2 text-center mb-0">Technical Documentation v3.0 | January 17, 2026</p>
+    </div>
+  </footer>
+  <!-- Footer end -->
+  
+</div>
+<!-- Document Wrapper end --> 
+
+<!-- Back To Top --> 
+<a id="back-to-top" data-toggle="tooltip" title="Back to Top" href="javascript:void(0)"><i class="fa fa-chevron-up"></i></a> 
+
+<!-- jQuery --> 
+<script src="assets/vendor/jquery/jquery.min.js"></script> 
+<!-- Bootstrap JS -->
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script> 
+<!-- Highlight JS -->
+<script src="assets/vendor/highlight.js/highlight.min.js"></script> 
+<!-- Easing --> 
+<script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script> 
+<!-- Magnific Popup --> 
+<script src="assets/vendor/magnific-popup/jquery.magnific-popup.min.js"></script> 
+<!-- Custom Script -->
+<script src="assets/js/theme.js"></script>
+</body>
+</html>

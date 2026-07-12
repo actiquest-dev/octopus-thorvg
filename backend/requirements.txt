@@ -1,0 +1,25 @@
+# ============== Core WebSocket & Web Framework ==============
+websockets>=12.0,<13.0
+aiohttp>=3.8.0
+google-auth>=2.23.0
+certifi>=2023.7.22
+google-generativeai>=0.6.0  # Gemini API
+
+# ============== ML & Computer Vision ==============
+numpy>=1.24.0
+mediapipe>=0.10.0  # Face detection + TFLite runtime встроено
+Pillow>=10.0.0  # JPEG декодирование из base64
+
+# ============== Dify Integration ==============
+httpx>=0.24.0  # HTTP клиент для внешних API
+dify-client>=0.1.0  # Dify SDK (если доступен)
+
+# ============== Database & Caching (ВНЕШНИЕ СЕРВИСЫ) ==============
+# Redis: используем внешний сервер + HTTP API
+# FalkorDB: используем внешний сервер + HTTP API
+# Dify: используем их API для долгой памяти + RAG
+
+# ============== Utilities ==============
+python-dotenv>=1.0.0
+pydantic>=2.0.0  # Data validation
+pydantic-settings>=2.0.0  # Settings management

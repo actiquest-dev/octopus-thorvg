@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Octopus SVG Path Test</title>
+    <style>
+        body { margin: 0; padding: 20px; background: #f0f0f0; font-family: sans-serif; }
+        canvas { border: 2px solid #333; background: white; border-radius: 10px; }
+        #info { margin-top: 20px; padding: 10px; background: white; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🐙 Octopus SVG Path Rendering Test</h1>
+    <canvas id="testCanvas" width="400" height="400"></canvas>
+    <div id="info">
+        <p>Status: <span id="status">Loading...</span></p>
+        <p>Paths loaded: <span id="pathCount">0</span></p>
+    </div>
+
+    <script src="octopus_paths.js"></script>
+    <script>
+        const canvas = document.getElementById('testCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        document.getElementById('status').textContent = 'Checking paths...';
+        document.getElementById('pathCount').textContent = typeof OCTOPUS_PATHS !== 'undefined' ? OCTOPUS_PATHS.length : 'NOT LOADED';
+        
+        if (typeof OCTOPUS_PATHS === 'undefined' || OCTOPUS_PATHS.length === 0) {
+            document.getElementById('status').textContent = '❌ OCTOPUS_PATHS not loaded';
+            throw new Error('OCTOPUS_PATHS not available');
+        }
+        
+        document.getElementById('status').textContent = '✅ Paths loaded, rendering...';
+        
+        // Simple path parser
+        function drawSVGPath(ctx, pathData) {
+            let x = 0, y = 0, startX = 0, startY = 0;
+            const pathRe = /([MmLlCcQqZzHhVv])([^MmLlCcQqZzHhVv]*)/g;
+            let match;
+            
+            while ((match = pathRe.exec(pathData)) !== null) {
+                const cmd = match[1];
+                const args = (match[2] || '').trim().match(/[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?/g) || [];
+                const nums = args.map(n => parseFloat(n));
+                
+                if (cmd === 'M') { x = nums[0]; y = nums[1]; startX = x; startY = y; ctx.moveTo(x, y); }
+                else if (cmd === 'm') { x += nums[0]; y += nums[1]; ctx.moveTo(x, y); }
+                else if (cmd === 'L') { x = nums[0]; y = nums[1]; ctx.lineTo(x, y); }
+                else if (cmd === 'l') { x += nums[0]; y += nums[1]; ctx.lineTo(x, y); }
+                else if (cmd === 'C') { ctx.bezierCurveTo(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5]); x = nums[4]; y = nums[5]; }
+                else if (cmd === 'c') { ctx.bezierCurveTo(x+nums[0], y+nums[1], x+nums[2], y+nums[3], x+nums[4], y+nums[5]); x += nums[4]; y += nums[5]; }
+                else if (cmd === 'Q') { ctx.quadraticCurveTo(nums[0], nums[1], nums[2], nums[3]); x = nums[2]; y = nums[3]; }
+                else if (cmd === 'q') { ctx.quadraticCurveTo(x+nums[0], y+nums[1], x+nums[2], y+nums[3]); x += nums[2]; y += nums[3]; }
+                else if (cmd === 'H') { x = nums[0]; ctx.lineTo(x, y); }
+                else if (cmd === 'h') { x += nums[0]; ctx.lineTo(x, y); }
+                else if (cmd === 'V') { y = nums[0]; ctx.lineTo(x, y); }
+                else if (cmd === 'v') { y += nums[0]; ctx.lineTo(x, y); }
+                else if (cmd === 'Z' || cmd === 'z') { ctx.closePath(); x = startX; y = startY; }
+            }
+        }
+        
+        // Draw octopus
+        const cx = 200, cy = 200;
+        const displaySize = 320;
+        const scale = displaySize / 2048;
+        
+        ctx.save();
+        ctx.translate(cx - displaySize/2, cy - displaySize/2);
+        ctx.scale(scale, scale);
+        
+        let pathCount = 0;
+        OCTOPUS_PATHS.forEach(path => {
+            ctx.fillStyle = path.color;
+            ctx.beginPath();
+            try {
+                drawSVGPath(ctx, path.d);
+                ctx.fill();
+                pathCount++;
+            } catch(e) {
+                console.error('Path error:', e);
+            }
+        });
+        
+        ctx.restore();
+        
+        document.getElementById('status').textContent = `✅ Rendered ${pathCount} paths`;
+    </script>
+</body>
+</html>

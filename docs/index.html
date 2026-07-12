@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ANIMA Documentation</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+        --bg: #010103;
+        --panel: rgba(4, 5, 12, 0.9);
+        --border: rgba(255, 255, 255, 0.08);
+        --accent: #5ef1c9;
+        --muted: rgba(247, 251, 255, 0.65);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: radial-gradient(circle at 15% 20%, rgba(94, 241, 201, 0.15), transparent 40%),
+          radial-gradient(circle at 80% 0%, rgba(95, 159, 255, 0.12), transparent 50%),
+          var(--bg);
+        color: #f7fbff;
+        min-height: 100vh;
+      }
+
+      header {
+        padding: 3rem 5vw 1rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        letter-spacing: 0.35rem;
+        font-size: clamp(2rem, 4vw, 3rem);
+        text-transform: uppercase;
+      }
+
+      header p {
+        color: var(--muted);
+        margin-top: 0.6rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 0.95rem;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto 4rem;
+        padding: 0 5vw 3rem;
+      }
+
+      .badge {
+        display: inline-flex;
+        padding: 0.2rem 0.85rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 0.65rem;
+        letter-spacing: 0.4rem;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      section {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 1.4rem;
+        padding: 2rem;
+        margin-top: 1.8rem;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      }
+
+      section h2 {
+        margin: 0 0 0.75rem;
+        letter-spacing: 0.25rem;
+        text-transform: uppercase;
+        font-size: 1rem;
+      }
+
+      section p {
+        margin-top: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      ul {
+        margin: 1rem 0 0;
+        padding-left: 1.2rem;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
+      }
+
+      .diagram {
+        background: rgba(255, 255, 255, 0.04);
+        padding: 1rem;
+        border-radius: 1rem;
+        font-size: 0.82rem;
+        font-family: "SFMono-Regular", Menlo, monospace;
+        line-height: 1.4;
+        color: #c6d0ff;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 1rem;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+
+      details summary {
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.3rem;
+        font-size: 0.75rem;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+      }
+
+      details p,
+      details ul {
+        margin: 0 0 0.5rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 0 3rem;
+        color: var(--muted);
+        letter-spacing: 0.4rem;
+        font-size: 0.7rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="badge">Spec v2.4 &amp; v3.0</span>
+      <h1>ANIMA — Adaptive Neural Interface for Motion &amp; Animation</h1>
+      <p>
+        Real-time JSON control stream for avatars and vector worlds. The server orchestrates physics,
+        inference and emotion, the client renders a living experience with deterministic timing.
+      </p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Executive summary</h2>
+        <p>
+          ANIMA streams JSON instructions (~0.2–2 KB/frame) instead of video, enabling 30 FPS
+          perception with 50–100 ms end-to-end latency. Control targets both stylized avatars and
+          physics-first vector worlds; inference happens server-side, rendering happens client-side.
+        </p>
+        <ul>
+          <li>Dual product tracks: Avatar Mode (stylized face/body/effects) and Vector Worlds Mode (interactive physics scenes).</li>
+          <li>Neural parameter synthesis + procedural layer ensure smooth micro-motions (blink, breathing, sway).</li>
+          <li>Economic edge: ~$0.002/min streaming plus 100–200 concurrent users per GPU vs. video’s $0.20+ and 5–10 users.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>System architecture</h2>
+        <div class="diagram">
+          ┌───────────────────┐   WebSocket / WebRTC   ┌───────────────────┐<br />
+          │  ANIMA BACKEND    │ ───────────────────── │  CLIENT RUNTIME    │<br />
+          │  (voice/emotion,  │                      │  (JSON decode,     │<br />
+          │   inference, JSON │                      │   ANIMA SDK render)│<br />
+          └───────────────────┘                      └───────────────────┘
+        </div>
+        <p>
+          The backend consumes Hume EVI audio/emotion, context, and interaction. It runs flow-based
+          neural nets to generate parameter deltas + world ops, compresses them, and streams via
+          WebSocket. The client merges JSON deltas, drives animation/physics via the ANIMA SDK, and
+          renders WebGL2/Canvas2D without any video encoding.
+        </p>
+        <div class="grid" style="margin-top:1.5rem;">
+          <div class="panel">
+            <strong>Server</strong>
+            <p>Receives inputs, runs neural inference, emits JSON control + world ops, optional authoritative physics.</p>
+          </div>
+          <div class="panel">
+            <strong>Client</strong>
+            <p>Parses deltas, validates, interpolates, applies to scenegraph + physics, renders frames locally.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Inputs &amp; ANIMA SDK</h2>
+        <p>
+          Inputs span voice/prosody (Hume), text/context (scene intent, avatar ID, presets), tactile
+          interactions (click/touch, physics triggers, Ink tags), and gaze + attention (ANIMA-SENSE).
+        </p>
+        <pre class="diagram">
+{
+  "audio_chunk": "...",
+  "transcript": "Hello world",
+  "emotions": {"joy":0.7,"excitement":0.4},
+  "prosody": {"pitch":1.2,"energy":0.8,"tempo":1.0}
+}
+        </pre>
+        <p>The ANIMA SDK organizes:</p>
+        <ul>
+          <li>Asset pipeline: Live2D/Spine/PSD/SVG → .anima, build meshes/rigs/materials.</li>
+          <li>Animation runtime: layered state store, JSON merge/validation, interpolation + easing, profiler.</li>
+          <li>Deformation: GPU skinning, blend shapes, IK, constraints.</li>
+          <li>Optional physics: rigid bodies, soft bodies, particles tied to deterministic simulation.</li>
+          <li>Rendering: WebGL2 compositor, vector draw ops, postFX, render-to-texture.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Models, controls &amp; timeline</h2>
+        <div class="grid">
+          <div class="panel">
+            <strong>Model stack</strong>
+            <ul style="margin-top:0.6rem; padding-left:1rem; color:var(--muted);">
+              <li>ANIMA-AVATAR: 170‑dimension parameter generator (mouth, eyes, brows, body, hands, FX).</li>
+              <li>ANIMA-WORLD: world control stream (apply_force, spawn, constraints, camera moves).</li>
+              <li>ANIMA-PHYS: authoritative physics producing deterministic transforms.</li>
+              <li>ANIMA-DRAW: render compiler that handles LOD, budgets, pseudo-volume scenegraph.</li>
+              <li>ANIMA-SYNC: timeline manager buffering multi-stream inputs.</li>
+              <li>ANIMA-SENSE: gaze/IMU perception overlay that feeds back intents without mutating physics.</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <strong>Clock invariants</strong>
+            <ul style="margin-top:0.6rem; padding-left:1rem; color:var(--muted);">
+              <li>World Tick (60Hz) → physics + deterministic storage.</li>
+              <li>Render Tick (30 FPS perception) → interpolation + drawing, never blocks physics.</li>
+              <li>Sense Tick (10‑120Hz) → gaze, blink, IMU, audio, yields perception overlays.</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:1.25rem;">
+          State layers include <strong>Hard</strong> (physics), <strong>Visual</strong> (vector scenegraph + transforms), and
+          <strong>Perception</strong> (local overlays). Streams follow snapshot + delta contracts for replayability.
+        </p>
+      </section>
+
+      <section>
+        <h2>Audio layers &amp; platform use cases</h2>
+        <div class="panel">
+          <strong>Audio stack (v3.0)</strong>
+          <ul>
+            <li>Layer 1 Voice: XTTS v2, StyleTTS2, RVC voice clones, multilingual (JP/EN/RU/KO/ZH).</li>
+            <li>Layer 2 Emotion: text + prosody classifiers (BERT, Wav2Vec) drive viseme timing + micro-sounds.</li>
+            <li>Layer 3 SFX: script triggers + procedural cloth/footstep foley.</li>
+            <li>Layer 4 Ambience: scene-based atmospheres.</li>
+            <li>Layer 5 Music: adaptive score with stem mixing keyed to tension.</li>
+          </ul>
+        </div>
+        <details open>
+          <summary>Strategic use cases</summary>
+          <ul class="list">
+            <li><strong>Interactive anime:</strong> episodes mix pre-rendered sequences with live characters that react to tone, gaze, memory.</li>
+            <li><strong>Adult/NSFW companions:</strong> real-time emotional experiences combining voice + animation, high-margin subscription.</li>
+            <li><strong>AI companions:</strong> emotionally aware relationships with memory, multi-channel conversation, gaze sync.</li>
+            <li><strong>Creator tools:</strong> VTuber + persona toolkit, localization, 24/7 avatars, API for streaming + personalization.</li>
+          </ul>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      ANIMA Docs • JSON control forever • Live animation without video bandwidth
+    </footer>
+  </body>
+</html>

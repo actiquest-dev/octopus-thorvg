@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octopus Refmatch Rig</title>
+  <style>
+    html,body{margin:0;height:100%;display:grid;place-items:center;background:#0e1322}
+    #stage{width:min(94vw,820px);height:min(94vh,820px)}
+    #stage svg{width:100%;height:100%;display:block}
+  </style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+(async function(){
+  const stage = document.getElementById('stage');
+  const txt = await (await fetch('./octobuss.refmatch.rig.svg',{cache:'no-store'})).text();
+  const svg = new DOMParser().parseFromString(txt,'image/svg+xml').documentElement;
+  stage.appendChild(svg);
+
+  const tentacles = [...svg.querySelectorAll('g[id^="tentacle_"]')];
+  tentacles.forEach((g,i)=>{
+    const px = Number(g.getAttribute('data-pivot-x')||512);
+    const py = Number(g.getAttribute('data-pivot-y')||560);
+    g.style.transformBox = 'view-box';
+    g.style.transformOrigin = `${px}px ${py}px`;
+    g.style.willChange = 'transform';
+  });
+
+  const eyes = [svg.getElementById('eye_left'), svg.getElementById('eye_right')].filter(Boolean);
+  eyes.forEach(g=>{
+    const px = Number(g.getAttribute('data-pivot-x')||512);
+    const py = Number(g.getAttribute('data-pivot-y')||347);
+    g.style.transformBox = 'view-box';
+    g.style.transformOrigin = `${px}px ${py}px`;
+  });
+
+  let t = 0;
+  function frame(){
+    t += 0.06;
+    tentacles.forEach((g,i)=>{
+      const side = i < 4 ? -1 : 1;
+      const a = Math.sin(t*1.1 + i*0.52) * (4.1 + (i%2)*1.1) * side;
+      const y = Math.sin(t + i*0.25) * 0.9;
+      g.style.transform = `translateY(${y.toFixed(2)}px) rotate(${a.toFixed(2)}deg)`;
+    });
+
+    const blink = 0.78 + (Math.sin(t*0.7)+1)*0.11;
+    eyes.forEach(g => g.style.transform = `scaleY(${blink.toFixed(3)})`);
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

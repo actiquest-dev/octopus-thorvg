@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width="1024" height="1024">
+  <defs>
+    <radialGradient id="bodyG" cx="45%" cy="38%" r="65%">
+      <stop offset="0%"  stop-color="#D4A6F0"/>
+      <stop offset="55%" stop-color="#B57AE0"/>
+      <stop offset="100%" stop-color="#7A47A8"/>
+    </radialGradient>
+    <radialGradient id="bellyG" cx="50%" cy="60%" r="55%">
+      <stop offset="0%"  stop-color="#E5C4F5" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#B57AE0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tentG" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%"  stop-color="#B57AE0"/>
+      <stop offset="60%" stop-color="#9658CB"/>
+      <stop offset="100%" stop-color="#6E408B"/>
+    </linearGradient>
+    <radialGradient id="suckerG" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#F8C7D6"/>
+      <stop offset="100%" stop-color="#C97A95"/>
+    </radialGradient>
+    <radialGradient id="helmetG" cx="38%" cy="32%" r="70%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="40%"  stop-color="#C3E9F7" stop-opacity="0.30"/>
+      <stop offset="85%"  stop-color="#7EAABF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#4A7A92" stop-opacity="0.45"/>
+    </radialGradient>
+    <radialGradient id="eyeG" cx="50%" cy="55%" r="55%">
+      <stop offset="0%"  stop-color="#3A3340"/>
+      <stop offset="100%" stop-color="#15121A"/>
+    </radialGradient>
+
+    <!-- Закрученное щупальце-шаблон. Ориентация: pivot (0,0), уходит вниз и закручивается влево. -->
+    <symbol id="tentL" overflow="visible">
+      <!-- внешний контур: толстое у основания, тонкое и закрученное к кончику -->
+      <path d="M -70 0
+               C -95 90, -130 200, -120 320
+               C -110 430, -50 510, 40 520
+               C 130 525, 195 470, 205 380
+               C 212 320, 175 285, 130 295
+               C 95 305, 85 345, 110 365
+               C 95 350, 100 320, 130 320
+               C 165 322, 175 360, 158 390
+               C 138 430, 70 442, 30 410
+               C -30 360, -40 280, -25 200
+               C -10 130, 25 70, 70 0 Z"
+            fill="url(#tentG)"/>
+      <!-- тёмная грань -->
+      <path d="M -70 0
+               C -95 90, -130 200, -120 320
+               C -110 430, -50 510, 40 520
+               C 60 522, 78 520, 95 515
+               C 50 505, 10 475, -15 430
+               C -55 360, -55 270, -35 180
+               C -22 120, 5 60, 30 0 Z"
+            fill="#5C2D7A" opacity="0.35"/>
+      <!-- присоски вдоль внутренней стороны -->
+      <g fill="url(#suckerG)">
+        <ellipse cx="-30"  cy="60"  rx="14" ry="11"/>
+        <ellipse cx="-50"  cy="140" rx="14" ry="11"/>
+        <ellipse cx="-70"  cy="225" rx="13" ry="10"/>
+        <ellipse cx="-65"  cy="310" rx="12" ry="10"/>
+        <ellipse cx="-30"  cy="385" rx="11" ry="9"/>
+        <ellipse cx="25"   cy="430" rx="10" ry="8"/>
+        <ellipse cx="80"   cy="430" rx="9"  ry="7"/>
+        <ellipse cx="125"  cy="395" rx="7"  ry="6"/>
+      </g>
+    </symbol>
+
+    <!-- Зеркальная версия -->
+    <symbol id="tentR" overflow="visible">
+      <use href="#tentL" transform="scale(-1 1)"/>
+    </symbol>
+  </defs>
+
+  <!-- ============ ЗАДНИЕ ЩУПАЛЬЦА (за телом) ============ -->
+  <g id="tentacles_back">
+    <g id="tentacle_08" transform="translate(820 1140) rotate(-150) scale(0.95)" style="transform-origin:820px 1140px">
+      <use href="#tentL"/>
+    </g>
+    <g id="tentacle_07" transform="translate(900 1180) rotate(-110) scale(1.0)" style="transform-origin:900px 1180px">
+      <use href="#tentL"/>
+    </g>
+    <g id="tentacle_06" transform="translate(1148 1180) rotate(110) scale(1.0)" style="transform-origin:1148px 1180px">
+      <use href="#tentR"/>
+    </g>
+    <g id="tentacle_05" transform="translate(1228 1140) rotate(150) scale(0.95)" style="transform-origin:1228px 1140px">
+      <use href="#tentR"/>
+    </g>
+  </g>
+
+  <!-- ============ ТЕЛО (грушевидное) ============ -->
+  <g id="body" style="transform-origin:1024px 820px">
+    <path d="M 1024 320
+             C 760 320, 580 520, 580 800
+             C 580 1010, 700 1170, 880 1220
+             C 950 1238, 1098 1238, 1168 1220
+             C 1348 1170, 1468 1010, 1468 800
+             C 1468 520, 1288 320, 1024 320 Z"
+          fill="url(#bodyG)"/>
+    <!-- мягкое светлое брюшко -->
+    <ellipse cx="1024" cy="950" rx="280" ry="180" fill="url(#bellyG)"/>
+    <!-- нижняя тень под телом -->
+    <ellipse cx="1024" cy="1200" rx="320" ry="40" fill="#4A2A6A" opacity="0.35"/>
+  </g>
+
+  <!-- ============ ВОРОТНИК (тёмное кольцо шлема) ============ -->
+  <g id="collar" style="transform-origin:1024px 1200px">
+    <ellipse cx="1024" cy="1200" rx="445" ry="58" fill="#1F1B26"/>
+    <ellipse cx="1024" cy="1190" rx="445" ry="44" fill="#3A3441"/>
+    <ellipse cx="1024" cy="1184" rx="445" ry="14" fill="#5A5266" opacity="0.7"/>
+  </g>
+
+  <!-- ============ ЛИЦО ============ -->
+  <g id="face" style="transform-origin:1024px 820px">
+    <!-- Румянец -->
+    <g id="cheeks" opacity="0.85">
+      <ellipse cx="800"  cy="920" rx="62" ry="34" fill="#EE8AAE"/>
+      <ellipse cx="1248" cy="920" rx="62" ry="34" fill="#EE8AAE"/>
+    </g>
+
+    <!-- Левый глаз -->
+    <g id="eye_l" style="transform-origin:920px 820px">
+      <ellipse cx="920" cy="820" rx="78" ry="100" fill="url(#eyeG)"/>
+      <!-- большой блик -->
+      <ellipse cx="945" cy="785" rx="30" ry="38" fill="#FFFFFF"/>
+      <!-- маленький нижний блик -->
+      <circle  cx="900" cy="860" r="14" fill="#FFFFFF"/>
+      <!-- крошечный отражённый -->
+      <circle  cx="958" cy="845" r="6"  fill="#FFFFFF" opacity="0.8"/>
+    </g>
+
+    <!-- Правый глаз -->
+    <g id="eye_r" style="transform-origin:1128px 820px">
+      <ellipse cx="1128" cy="820" rx="78" ry="100" fill="url(#eyeG)"/>
+      <ellipse cx="1153" cy="785" rx="30" ry="38" fill="#FFFFFF"/>
+      <circle  cx="1108" cy="860" r="14" fill="#FFFFFF"/>
+      <circle  cx="1166" cy="845" r="6"  fill="#FFFFFF" opacity="0.8"/>
+    </g>
+
+    <!-- Рот: открытый овал с язычком -->
+    <g id="mouth" style="transform-origin:1024px 980px">
+      <path d="M 980 970
+               Q 1024 1030 1068 970
+               Q 1024 1010 980 970 Z"
+            fill="#5A1F35"/>
+      <ellipse cx="1024" cy="1000" rx="26" ry="14" fill="#E14C6F"/>
+      <!-- блик на язычке -->
+      <ellipse cx="1018" cy="996" rx="8" ry="3" fill="#FFB0C4" opacity="0.8"/>
+    </g>
+  </g>
+
+  <!-- ============ ШЛЕМ (стеклянный купол поверх лица) ============ -->
+  <g id="helmet" style="transform-origin:1024px 800px">
+    <!-- основной купол -->
+    <ellipse cx="1024" cy="800" rx="500" ry="540"
+             fill="url(#helmetG)"
+             stroke="#7EAABF" stroke-opacity="0.35" stroke-width="4"/>
+    <!-- Тонкий внутренний обвод -->
+    <ellipse cx="1024" cy="800" rx="488" ry="528"
+             fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2"/>
+
+    <!-- Верхне-левый большой блик -->
+    <path d="M 720 420
+             C 680 520, 660 640, 680 760
+             C 695 760, 720 700, 740 600
+             C 758 510, 770 460, 770 420 Z"
+          fill="#FFFFFF" opacity="0.55"/>
+    <!-- Тонкий длинный блик -->
+    <path d="M 800 380
+             C 790 450, 790 540, 805 620
+             C 815 620, 825 540, 825 460
+             C 825 420, 815 390, 800 380 Z"
+          fill="#FFFFFF" opacity="0.75"/>
+    <!-- Маленький правый блик -->
+    <ellipse cx="1280" cy="540" rx="14" ry="42"
+             fill="#FFFFFF" opacity="0.45" transform="rotate(18 1280 540)"/>
+    <!-- Нижний голубоватый отлив -->
+    <path d="M 720 1100
+             Q 1024 1240, 1328 1100
+             Q 1024 1180, 720 1100 Z"
+          fill="#7EAABF" opacity="0.20"/>
+  </g>
+
+  <!-- ============ ПЕРЕДНИЕ ЩУПАЛЬЦА (перед телом и шлемом) ============ -->
+  <g id="tentacles_front">
+    <g id="tentacle_01" transform="translate(700 1190) rotate(-70) scale(1.0)" style="transform-origin:700px 1190px">
+      <use href="#tentL"/>
+    </g>
+    <g id="tentacle_02" transform="translate(880 1210) rotate(-25) scale(1.05)" style="transform-origin:880px 1210px">
+      <use href="#tentL"/>
+    </g>
+    <g id="tentacle_03" transform="translate(1168 1210) rotate(25) scale(1.05)" style="transform-origin:1168px 1210px">
+      <use href="#tentR"/>
+    </g>
+    <g id="tentacle_04" transform="translate(1348 1190) rotate(70) scale(1.0)" style="transform-origin:1348px 1190px">
+      <use href="#tentR"/>
+    </g>
+  </g>
+</svg>

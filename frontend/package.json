@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@thorvg/webcanvas": "^1.0.6",
+    "svg2canvas": "^0.0.14"
+  }
+}

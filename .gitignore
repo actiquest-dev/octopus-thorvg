@@ -1,0 +1,20 @@
+# secrets
+.env
+credentials.json
+
+# system
+.DS_Store
+__pycache__/
+
+# large context dumps
+codex-context.txt
+context2.txt
+log.txt
+logs.txt
+1.log
+
+# build artifacts
+octopus_test
+
+# embedded repos
+generative-ai/

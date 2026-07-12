@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octobuss Pixel Rig v2</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: #d5d8dd;
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+    .stage { width: min(90vmin, 860px); aspect-ratio: 1 / 1; }
+    svg { width: 100%; height: 100%; display: block; }
+    .tentacle { will-change: transform; transform-box: fill-box; }
+    .note {
+      position: fixed;
+      left: 12px;
+      bottom: 12px;
+      font-size: 12px;
+      color: #2d3440;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 10px;
+      padding: 6px 8px;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <svg viewBox="0 0 768 768" xmlns="http://www.w3.org/2000/svg" aria-label="Octobuss pixel rig v2">
+      <defs>
+        <clipPath id="bgClip"><rect x="0" y="0" width="768" height="768"/></clipPath>
+
+        <clipPath id="t_l1"><path d="M42 314 C64 284 134 305 170 330 C198 350 222 372 236 398 C232 422 206 435 186 438 C161 440 139 429 124 409 C109 389 96 373 74 370 C53 367 39 352 42 334 Z"/></clipPath>
+        <clipPath id="t_l2"><path d="M38 427 C58 402 114 412 156 438 C192 460 228 492 238 528 C226 553 195 563 171 560 C143 556 126 540 118 521 C110 503 96 488 76 484 C52 480 36 466 38 446 Z"/></clipPath>
+        <clipPath id="t_l3"><path d="M146 534 C188 505 248 500 298 522 C318 547 317 586 300 616 C281 648 247 657 216 646 C186 635 168 606 161 577 C157 560 153 548 146 534 Z"/></clipPath>
+        <clipPath id="t_c1"><path d="M262 513 C284 498 322 498 346 514 C357 540 357 574 349 609 C341 644 321 675 292 688 C271 690 254 676 249 656 C250 630 262 607 270 583 C278 558 276 533 262 513 Z"/></clipPath>
+
+        <clipPath id="t_r1"><path d="M529 397 C545 368 573 345 606 327 C642 306 704 287 728 317 C732 337 717 353 695 357 C674 361 662 376 648 395 C633 414 614 430 588 435 C566 439 541 426 529 402 Z"/></clipPath>
+        <clipPath id="t_r2"><path d="M531 493 C542 458 579 428 616 407 C658 383 713 377 730 405 C734 427 722 446 698 451 C677 455 664 470 657 489 C649 509 632 527 603 534 C578 539 543 528 531 503 Z"/></clipPath>
+        <clipPath id="t_r3"><path d="M464 519 C513 496 573 500 617 528 C610 541 607 553 603 571 C596 601 580 631 552 644 C521 656 487 648 468 615 C451 585 449 548 464 519 Z"/></clipPath>
+        <clipPath id="t_c2"><path d="M367 512 C387 496 427 495 451 512 C438 534 436 559 445 584 C453 607 465 630 468 656 C463 676 445 691 424 689 C396 675 377 644 370 609 C362 573 359 538 367 512 Z"/></clipPath>
+
+        <clipPath id="torsoTop">
+          <circle cx="384" cy="284" r="196"/>
+          <ellipse cx="384" cy="388" rx="176" ry="56"/>
+          <path d="M176 412 C232 430 536 430 592 412 L592 540 C553 531 510 536 468 557 C441 570 413 579 384 579 C355 579 326 570 299 557 C257 536 215 531 176 540 Z"/>
+        </clipPath>
+      </defs>
+
+      <image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#bgClip)"/>
+
+      <g id="animLayers">
+        <g class="tentacle" id="tl1" style="transform-origin: 236px 398px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_l1)"/></g>
+        <g class="tentacle" id="tl2" style="transform-origin: 238px 528px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_l2)"/></g>
+        <g class="tentacle" id="tl3" style="transform-origin: 302px 540px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_l3)"/></g>
+        <g class="tentacle" id="tc1" style="transform-origin: 344px 518px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_c1)"/></g>
+
+        <g class="tentacle" id="tr1" style="transform-origin: 528px 398px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_r1)"/></g>
+        <g class="tentacle" id="tr2" style="transform-origin: 531px 503px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_r2)"/></g>
+        <g class="tentacle" id="tr3" style="transform-origin: 466px 520px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_r3)"/></g>
+        <g class="tentacle" id="tc2" style="transform-origin: 422px 518px;"><image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#t_c2)"/></g>
+      </g>
+
+      <image href="octobuss.source.png" x="0" y="0" width="768" height="768" clip-path="url(#torsoTop)"/>
+    </svg>
+  </div>
+
+  <div class="note">v2: pixel-source masks + torso overlap</div>
+
+  <script>
+    const cfg = {
+      tl1: {amp: 9, speed: 1.35, phase: 0.1, tx: 2.2, ty: 1.0},
+      tl2: {amp: 10, speed: 1.45, phase: 0.9, tx: 2.4, ty: 1.2},
+      tl3: {amp: 12, speed: 1.55, phase: 1.7, tx: 2.7, ty: 1.5},
+      tc1: {amp: 7, speed: 1.25, phase: 2.5, tx: 1.4, ty: 0.8},
+      tc2: {amp: 7, speed: 1.25, phase: 3.1, tx: 1.4, ty: 0.8},
+      tr3: {amp: 12, speed: 1.55, phase: 3.8, tx: 2.7, ty: 1.5},
+      tr2: {amp: 10, speed: 1.45, phase: 4.6, tx: 2.4, ty: 1.2},
+      tr1: {amp: 9, speed: 1.35, phase: 5.3, tx: 2.2, ty: 1.0}
+    };
+
+    const nodes = Object.fromEntries(Object.keys(cfg).map(id => [id, document.getElementById(id)]));
+    const t0 = performance.now();
+
+    function animate(now) {
+      const t = (now - t0) / 1000;
+      for (const [id, c] of Object.entries(cfg)) {
+        const n = nodes[id];
+        const a = Math.sin(t * c.speed + c.phase);
+        const b = Math.sin(t * (c.speed * 1.9) + c.phase * 1.33);
+        const rot = a * c.amp;
+        const tx = b * c.tx;
+        const ty = -Math.abs(a) * c.ty;
+        n.style.transform = `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px) rotate(${rot.toFixed(2)}deg)`;
+      }
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

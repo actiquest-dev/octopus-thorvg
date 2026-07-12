@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octobuss Skeletal v1</title>
+  <style>
+    :root {
+      --bg: #d8dade;
+      --panel: rgba(255,255,255,0.78);
+      --text: #263140;
+    }
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: radial-gradient(1200px 900px at 50% 35%, #e7eaee 0%, var(--bg) 60%);
+      font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+    }
+    .wrap {
+      width: min(92vmin, 920px);
+      aspect-ratio: 1/1;
+      position: relative;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 24px;
+    }
+    .hud {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      background: var(--panel);
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      backdrop-filter: blur(6px);
+      line-height: 1.3;
+      user-select: none;
+    }
+    .hud strong { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <canvas id="c" width="1024" height="1024"></canvas>
+    <div class="hud">
+      <strong>Skeletal rig from scratch</strong><br />
+      8 tentacles, bones+skin, pseudo-3D depth
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+
+    const W = 1024;
+    const H = 1024;
+    const center = { x: 512, y: 558 };
+
+    const palette = {
+      body: "#A66FD6",
+      bodyDark: "#7540A8",
+      bodyLight: "#C995F2",
+      cheek: "#F48FB0",
+      eyeSclera: "#F5FCFF",
+      eyeIris: "#35323E",
+      mouth: "#5A2E3D",
+      tongue: "#EA6F8E",
+      suitRing: "#5B5564",
+      suitRingHi: "#7A7287",
+      glassLine: "#85ABC0",
+      glassFill: "rgba(190,231,246,0.25)",
+      sucker: "#F9B4CF",
+      suckerStroke: "#C76C8F",
+    };
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+
+    function softCircle(x, y, r, c0, c1) {
+      const g = ctx.createRadialGradient(x - r * 0.28, y - r * 0.33, r * 0.08, x, y, r);
+      g.addColorStop(0, c0);
+      g.addColorStop(1, c1);
+      return g;
+    }
+
+    class Tentacle {
+      constructor(opts) {
+        this.side = opts.side;
+        this.baseAngle = opts.baseAngle;
+        this.baseLen = opts.baseLen;
+        this.width0 = opts.width0;
+        this.width1 = opts.width1;
+        this.anchor = opts.anchor;
+        this.phase = opts.phase;
+        this.speed = opts.speed;
+        this.stiffness = opts.stiffness;
+        this.depth = opts.depth;
+        this.bones = new Array(8).fill(0).map((_, i) => ({
+          x: 0,
+          y: 0,
+          a: 0,
+          len: this.baseLen * (1 - i * 0.065),
+        }));
+      }
+
+      update(t, breathe, lookX) {
+        const turn = (this.side === "L" ? -1 : this.side === "R" ? 1 : 0);
+        const baseSwing = Math.sin(t * this.speed + this.phase) * (0.24 + (1 - this.stiffness) * 0.18);
+        const twist = Math.sin(t * (this.speed * 1.76) + this.phase * 1.3) * (0.08 + (1 - this.stiffness) * 0.06);
+        const lookBias = lookX * 0.06 * turn;
+
+        let a = this.baseAngle + baseSwing + lookBias;
+        let x = this.anchor.x;
+        let y = this.anchor.y + breathe * 1.8;
+
+        for (let i = 0; i < this.bones.length; i++) {
+          const k = i / (this.bones.length - 1);
+          const damp = lerp(0.18, 1.0, k);
+          a += twist * damp * (0.6 + k * 0.5);
+          const b = this.bones[i];
+          b.a = a;
+          const nx = x + Math.cos(a) * b.len;
+          const ny = y + Math.sin(a) * b.len;
+          b.x = nx;
+          b.y = ny;
+          x = nx;
+          y = ny;
+        }
+      }
+
+      sampleSpine() {
+        const pts = [];
+        pts.push({ x: this.anchor.x, y: this.anchor.y });
+        for (const b of this.bones) {
+          pts.push({ x: b.x, y: b.y });
+        }
+
+        const spine = [];
+        const segs = 7;
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = pts[Math.max(0, i - 1)];
+          const p1 = pts[i];
+          const p2 = pts[i + 1];
+          const p3 = pts[Math.min(pts.length - 1, i + 2)];
+          for (let j = 0; j < segs; j++) {
+            const t = j / segs;
+            const t2 = t * t;
+            const t3 = t2 * t;
+            const x = 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2*p0.x - 5*p1.x + 4*p2.x - p3.x) * t2 + (-p0.x + 3*p1.x - 3*p2.x + p3.x) * t3);
+            const y = 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2*p0.y - 5*p1.y + 4*p2.y - p3.y) * t2 + (-p0.y + 3*p1.y - 3*p2.y + p3.y) * t3);
+            spine.push({ x, y });
+          }
+        }
+        spine.push(pts[pts.length - 1]);
+        return spine;
+      }
+
+      draw(t) {
+        const spine = this.sampleSpine();
+
+        const left = [];
+        const right = [];
+        for (let i = 0; i < spine.length; i++) {
+          const p = spine[i];
+          const prev = spine[Math.max(0, i - 1)];
+          const next = spine[Math.min(spine.length - 1, i + 1)];
+          let tx = next.x - prev.x;
+          let ty = next.y - prev.y;
+          const mag = Math.hypot(tx, ty) || 1;
+          tx /= mag;
+          ty /= mag;
+          const nx = -ty;
+          const ny = tx;
+
+          const k = i / (spine.length - 1);
+          const width = lerp(this.width0, this.width1, k * k * 1.08);
+          left.push({ x: p.x + nx * width, y: p.y + ny * width });
+          right.push({ x: p.x - nx * width, y: p.y - ny * width });
+        }
+
+        ctx.save();
+
+        const mid = spine[Math.floor(spine.length * 0.55)];
+        const grad = ctx.createLinearGradient(mid.x - 26, mid.y - 26, mid.x + 30, mid.y + 24);
+        grad.addColorStop(0, palette.bodyLight);
+        grad.addColorStop(1, palette.body);
+
+        ctx.beginPath();
+        ctx.moveTo(left[0].x, left[0].y);
+        for (let i = 1; i < left.length; i++) ctx.lineTo(left[i].x, left[i].y);
+        for (let i = right.length - 1; i >= 0; i--) ctx.lineTo(right[i].x, right[i].y);
+        ctx.closePath();
+
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = palette.bodyDark;
+        ctx.stroke();
+
+        ctx.beginPath();
+        for (let i = 4; i < spine.length - 5; i += 5) {
+          const p = spine[i];
+          const q = spine[i + 1];
+          const tx = q.x - p.x;
+          const ty = q.y - p.y;
+          const m = Math.hypot(tx, ty) || 1;
+          const nx = -ty / m;
+          const ny = tx / m;
+          const k = i / (spine.length - 1);
+          const w = lerp(this.width0 * 0.35, this.width1 * 0.2, k);
+          const hx = p.x + nx * w * (this.side === "L" ? 1 : -1);
+          const hy = p.y + ny * w;
+          if (i === 4) ctx.moveTo(hx, hy);
+          else ctx.lineTo(hx, hy);
+        }
+        ctx.strokeStyle = "rgba(231,200,255,0.75)";
+        ctx.lineWidth = 7;
+        ctx.lineCap = "round";
+        ctx.stroke();
+
+        if (this.depth > 0.35) {
+          for (let i = 6; i < spine.length - 4; i += 4) {
+            const p = spine[i];
+            const q = spine[Math.min(spine.length - 1, i + 1)];
+            const tx = q.x - p.x;
+            const ty = q.y - p.y;
+            const m = Math.hypot(tx, ty) || 1;
+            const nx = -ty / m;
+            const ny = tx / m;
+            const k = i / (spine.length - 1);
+            const r = lerp(12, 6, k);
+            const side = this.side === "L" ? 1 : -1;
+            const sx = p.x + nx * side * lerp(this.width0 * 0.62, this.width1 * 0.52, k);
+            const sy = p.y + ny * side * 0.9;
+            ctx.beginPath();
+            ctx.ellipse(sx, sy, r, r * 0.68, Math.atan2(ty, tx), 0, Math.PI * 2);
+            ctx.fillStyle = palette.sucker;
+            ctx.fill();
+            ctx.strokeStyle = palette.suckerStroke;
+            ctx.lineWidth = 2.2;
+            ctx.stroke();
+          }
+        }
+
+        ctx.restore();
+      }
+    }
+
+    const tentacles = [
+      new Tentacle({ side: "L", baseAngle: 2.92, baseLen: 28, width0: 34, width1: 19, anchor: { x: 386, y: 550 }, phase: 0.2, speed: 1.36, stiffness: 0.78, depth: 0.20 }),
+      new Tentacle({ side: "L", baseAngle: 2.58, baseLen: 31, width0: 36, width1: 20, anchor: { x: 414, y: 562 }, phase: 1.1, speed: 1.48, stiffness: 0.67, depth: 0.32 }),
+      new Tentacle({ side: "L", baseAngle: 2.20, baseLen: 34, width0: 38, width1: 22, anchor: { x: 448, y: 568 }, phase: 1.9, speed: 1.62, stiffness: 0.62, depth: 0.63 }),
+      new Tentacle({ side: "C", baseAngle: 1.74, baseLen: 36, width0: 36, width1: 20, anchor: { x: 490, y: 571 }, phase: 2.5, speed: 1.41, stiffness: 0.56, depth: 0.86 }),
+      new Tentacle({ side: "C", baseAngle: 1.40, baseLen: 36, width0: 36, width1: 20, anchor: { x: 534, y: 571 }, phase: 3.2, speed: 1.41, stiffness: 0.56, depth: 0.86 }),
+      new Tentacle({ side: "R", baseAngle: 0.94, baseLen: 34, width0: 38, width1: 22, anchor: { x: 576, y: 568 }, phase: 3.8, speed: 1.62, stiffness: 0.62, depth: 0.63 }),
+      new Tentacle({ side: "R", baseAngle: 0.56, baseLen: 31, width0: 36, width1: 20, anchor: { x: 610, y: 562 }, phase: 4.6, speed: 1.48, stiffness: 0.67, depth: 0.32 }),
+      new Tentacle({ side: "R", baseAngle: 0.22, baseLen: 28, width0: 34, width1: 19, anchor: { x: 638, y: 550 }, phase: 5.3, speed: 1.36, stiffness: 0.78, depth: 0.20 }),
+    ];
+
+    function drawHelmet() {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(512, 350, 258, 0, Math.PI * 2);
+      ctx.fillStyle = palette.glassFill;
+      ctx.fill();
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = palette.glassLine;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(363, 232, 30, 14, -0.62, 0, Math.PI * 2);
+      ctx.ellipse(661, 232, 30, 14, 0.62, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,255,255,0.62)";
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawBody(breathe) {
+      ctx.save();
+      ctx.translate(0, breathe * 1.6);
+      ctx.beginPath();
+      ctx.ellipse(512, 355, 212, 206, 0, 0, Math.PI * 2);
+      ctx.fillStyle = softCircle(512, 340, 225, "#B47DE1", palette.body);
+      ctx.fill();
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = palette.bodyDark;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(440, 276, 52, 32, 0.62, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(232,198,255,0.58)";
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(587, 258, 28, 18, 0.72, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(232,198,255,0.52)";
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(402, 394, 34, 31, 0, 0, Math.PI * 2);
+      ctx.ellipse(622, 394, 34, 31, 0, 0, Math.PI * 2);
+      ctx.fillStyle = palette.cheek;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawShoulderHide(breathe) {
+      ctx.save();
+      ctx.translate(0, breathe * 1.7);
+      ctx.beginPath();
+      ctx.moveTo(330, 560);
+      ctx.bezierCurveTo(376, 520, 648, 520, 694, 560);
+      ctx.bezierCurveTo(650, 598, 374, 598, 330, 560);
+      ctx.closePath();
+      const g = ctx.createLinearGradient(512, 520, 512, 602);
+      g.addColorStop(0, "#B584E3");
+      g.addColorStop(1, "#9B64CF");
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = palette.bodyDark;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawEyes(lookX, lookY, breathe) {
+      function eye(cx, cy) {
+        ctx.save();
+        ctx.translate(cx, cy + breathe * 1.2);
+        ctx.beginPath();
+        ctx.arc(0, 0, 52, 0, Math.PI * 2);
+        ctx.fillStyle = palette.eyeSclera;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(75,60,105,0.5)";
+        ctx.stroke();
+
+        const px = lookX * 10;
+        const py = lookY * 8 + 7;
+        ctx.beginPath();
+        ctx.arc(px, py, 29, 0, Math.PI * 2);
+        ctx.fillStyle = palette.eyeIris;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(px + 14, py - 14, 8.4, 0, Math.PI * 2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+        ctx.restore();
+      }
+      eye(442, 349);
+      eye(582, 349);
+    }
+
+    function drawMouth(breathe) {
+      ctx.save();
+      ctx.translate(0, breathe * 1.2);
+      ctx.beginPath();
+      ctx.moveTo(448, 430);
+      ctx.bezierCurveTo(468, 452, 558, 452, 576, 430);
+      ctx.bezierCurveTo(570, 470, 457, 470, 448, 430);
+      ctx.closePath();
+      ctx.fillStyle = palette.mouth;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(480, 454);
+      ctx.quadraticCurveTo(512, 478, 544, 454);
+      ctx.quadraticCurveTo(511, 447, 480, 454);
+      ctx.fillStyle = palette.tongue;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawCollar(breathe) {
+      ctx.save();
+      ctx.translate(0, breathe * 1.9);
+      ctx.beginPath();
+      ctx.ellipse(512, 525, 194, 45, 0, 0, Math.PI * 2);
+      ctx.fillStyle = palette.suitRingHi;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(512, 538, 206, 43, 0, 0, Math.PI * 2);
+      ctx.fillStyle = palette.suitRing;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawBackground() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = "#d8dade";
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function frame(nowMs) {
+      const t = nowMs * 0.001;
+      const breathe = Math.sin(t * 2.0) * 1.8;
+      const lookX = Math.sin(t * 0.42) * 0.75;
+      const lookY = Math.sin(t * 0.31 + 1.2) * 0.26;
+
+      for (const tentacle of tentacles) {
+        tentacle.update(t, breathe, lookX);
+      }
+
+      drawBackground();
+
+      const back = tentacles.filter(x => x.depth < 0.4);
+      const mid = tentacles.filter(x => x.depth >= 0.4 && x.depth < 0.8);
+      const front = tentacles.filter(x => x.depth >= 0.8);
+
+      for (const tnt of back) tnt.draw(t);
+      drawBody(breathe);
+      for (const tnt of mid) tnt.draw(t);
+      for (const tnt of front) tnt.draw(t);
+      drawShoulderHide(breathe);
+      drawCollar(breathe);
+      drawEyes(lookX, lookY, breathe);
+      drawMouth(breathe);
+      drawHelmet();
+
+      requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Octopus Tentacles Animation</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #0e1120;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    #stage {
+      width: min(92vw, 820px);
+      height: min(92vh, 820px);
+      display: grid;
+      place-items: center;
+    }
+    #stage svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 10px 36px rgba(0, 0, 0, 0.35));
+    }
+  </style>
+</head>
+<body>
+  <div id="stage" aria-label="animated-octopus"></div>
+
+  <script>
+    (async function main() {
+      const stage = document.getElementById('stage');
+      const res = await fetch('./octobuss.lottie-ready.svg', { cache: 'no-store' });
+      if (!res.ok) {
+        stage.textContent = 'Не удалось загрузить SVG: ' + res.status;
+        return;
+      }
+
+      const txt = await res.text();
+      const doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+      const svg = doc.documentElement;
+      stage.appendChild(svg);
+
+      const vb = svg.viewBox.baseVal;
+      const vbW = vb && vb.width ? vb.width : 2048;
+      const vbH = vb && vb.height ? vb.height : 2048;
+
+      const allPaths = [...svg.querySelectorAll('path')];
+
+      const tentacles = allPaths.filter((p) => {
+        try {
+          const b = p.getBBox();
+          const centerY = b.y + b.height * 0.5;
+          const largeEnough = b.width > vbW * 0.06 || b.height > vbH * 0.05;
+          return centerY > vbH * 0.58 && largeEnough;
+        } catch {
+          return false;
+        }
+      });
+
+      const selected = tentacles.length >= 8
+        ? tentacles
+        : allPaths
+            .map((p) => {
+              try {
+                return { p, b: p.getBBox() };
+              } catch {
+                return null;
+              }
+            })
+            .filter(Boolean)
+            .sort((a, b) => (b.b.y + b.b.height) - (a.b.y + a.b.height))
+            .slice(0, 16)
+            .map((x) => x.p);
+
+      selected.forEach((p) => {
+        p.style.transformBox = 'fill-box';
+        p.style.transformOrigin = '50% 0%';
+        p.style.willChange = 'transform';
+      });
+
+      let t = 0;
+      const speed = 0.085;
+      const baseAmp = 4.8;
+
+      function frame() {
+        t += speed;
+        selected.forEach((p, i) => {
+          const b = p.getBBox();
+          const cx = b.x + b.width * 0.5;
+          const side = cx < vbW * 0.5 ? -1 : 1;
+          const phase = i * 0.42;
+          const amp = baseAmp + Math.min(3.5, b.width / 140);
+          const angle = Math.sin(t + phase) * amp * side;
+          p.style.transform = `rotate(${angle.toFixed(3)}deg)`;
+        });
+        requestAnimationFrame(frame);
+      }
+
+      requestAnimationFrame(frame);
+      console.log('Tentacles animated:', selected.length);
+    })();
+  </script>
+</body>
+</html>

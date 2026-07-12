@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Octobuss rig — позы и липсинк</title>
+<style>
+body { margin:0; background:#101528; color:#cfd6ee; font:13px sans-serif;
+       display:flex; height:100vh; }
+#stage { flex:1; display:flex; align-items:center; justify-content:center; }
+#octobuss { width:min(88vh, 60vw); height:min(88vh, 60vw); }
+#panel { width:300px; padding:14px; overflow-y:auto; background:#0b0f1e; }
+h3 { margin:14px 0 6px; font-size:12px; text-transform:uppercase; opacity:.6 }
+button { margin:2px; padding:6px 10px; background:#232a45; color:#cfd6ee;
+         border:1px solid #38406b; border-radius:6px; cursor:pointer; }
+button:hover { background:#38406b }
+input[type=range] { width:100% }
+</style>
+</head>
+<body>
+<div id="stage"><div id="octobuss"></div></div>
+<div id="panel">
+  <h3>Позы (setPose)</h3>
+  <div id="poses"></div>
+  <h3>Эмоции (setEmotion)</h3>
+  <div id="emotions"></div>
+  <h3>Действия (activateAction)</h3>
+  <div id="actions"></div>
+  <h3>Виземы (рот)</h3>
+  <div id="visemes"></div>
+  <h3>Jaw (амплитуда рта)</h3>
+  <input id="jaw" type="range" min="0" max="100" value="0">
+  <h3>Липсинк-демо</h3>
+  <button onclick="lipsyncDemo()">▶ проиграть фразу (audio_sync)</button>
+  <button onclick="avatar.handleCommand({cmd:'end'})">⏹ end</button>
+  <h3>Один сустав (setTentacle)</h3>
+  <button onclick="avatar.setTentacle('tentacle_up_r',{curl:2.2},700)">up_r: согнуть</button>
+  <button onclick="avatar.setTentacle('tentacle_up_r',{straighten:1,curl:-1.2,rot:-0.5},700)">up_r: разогнуть</button>
+  <button onclick="avatar.blink()">😉 blink</button>
+</div>
+
+<script src="octobuss_avatar.js"></script>
+<script>
+const avatar = new OctobussAvatar('octobuss', 'octobuss.rigged.svg');
+window.octopusAnimator = avatar; // как в index.html
+
+// панель
+const mk = (holder, items, fn) => {
+  for (const it of items) {
+    const b = document.createElement('button');
+    b.textContent = it;
+    b.onclick = () => fn(it);
+    document.getElementById(holder).appendChild(b);
+  }
+};
+mk('poses', ['rest','wave_right','wave_left','point_right','reach_up','curl_shy',
+             'droop_sad','excited','hug_front','think','shrug','clap'],
+   p => avatar.setPose(p, {durationMs: 700}));
+mk('emotions', ['calm','happy','excited','sad','angry','curious','surprised','nervous','tender','playful'],
+   e => avatar.setEmotion(e));
+mk('actions', ['wave','point','hug','shrug','clap','sing','dance','laugh','whisper','shout'],
+   a => avatar.activateAction(a, 2500));
+mk('actions', ['sfx_spin','sfx_heart','sfx_sparkle','sfx_pop','sfx_boop','sfx_bubble','sfx_tear','sfx_sweat','photobooth'],
+   a => avatar.activateAction(a, 1400));
+mk('visemes', ['REST','A','E','I','O','U'],
+   v => { avatar.state.speaking = true; avatar.state.viseme = v; avatar.state.targetJaw = 0.9;
+          avatar.mouth.setViseme(v, 0.9); });
+
+document.getElementById('jaw').oninput = (e) => {
+  avatar.handleCommand({cmd:'mouth', value: e.target.value/100, speaking: e.target.value > 2});
+};
+
+// зрачки за курсором
+document.addEventListener('mousemove', e => {
+  avatar.setGaze((e.clientX / innerWidth - 0.5) * 2, (e.clientY / innerHeight - 0.5) * 2);
+});
+
+// демо: синтетический пакет audio_sync (как из timeline_sync.py)
+function lipsyncDemo() {
+  const jaw = [], vis = [];
+  const phrase = "privet ya octobuss kak dela";
+  for (let i = 0; i < 160; i++) {
+    const t = i / 160;
+    const syllable = Math.abs(Math.sin(t * 26));
+    jaw.push(Math.round(syllable * 90) / 100);
+  }
+  const letters = ['A','E','I','O','U','E','A','REST','O','A','I','E','A','U','REST'];
+  for (let i = 0; i < 64; i++) vis.push(letters[i % letters.length]);
+  avatar.handleCommand({
+    cmd: 'audio_sync', start_s: 0, duration_s: 3.2, speaking: true,
+    jaw: { step_ms: 20, values: jaw },
+    viseme_proxy: { step_ms: 50, values: vis },
+  });
+  setTimeout(() => avatar.handleCommand({cmd:'end'}), 3400);
+}
+
+// параметры из URL для автотестов: ?pose=X&emotion=Y&viseme=Z&jaw=0.9
+const q = new URLSearchParams(location.search);
+const applyQuery = () => {
+  if (!avatar.ready) { setTimeout(applyQuery, 60); return; }
+  if (q.get('emotion')) avatar.setEmotion(q.get('emotion'));
+  if (q.get('pose')) avatar.setPose(q.get('pose'), {durationMs: 60});
+  if (q.get('demo')) setTimeout(lipsyncDemo, 200);
+  if (q.get('action')) avatar.activateAction(q.get('action'), 4000);
+  if (q.get('gaze')) {
+    const [gx, gy] = q.get('gaze').split(',').map(Number);
+    avatar.setGaze(gx, gy);
+  }
+  if (q.get('viseme')) {
+    avatar.state.speaking = true;
+    avatar.state.viseme = q.get('viseme');
+    avatar.state.targetJaw = q.get('jaw') ? Number(q.get('jaw')) : 0.9;
+    avatar.mouth.setViseme(q.get('viseme'), avatar.state.targetJaw);
+  }
+};
+applyQuery();
+</script>
+</body>
+</html>
