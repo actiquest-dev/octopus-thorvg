@@ -348,6 +348,40 @@ class Tentacle {
 // curl в единицах «естественного завитка» (умножается на curlDir щупальца)
 const POSES = {
     rest: {},
+    // нижние щупальца — ноги с поочерёдным шагом (фазы π друг к другу)
+    walk_right: {
+        __brows: [{ op: 1, rot: -3, dy: -8 }, { op: 1, rot: 5, dy: -8 }],
+        // «ноги»: front_r и front_l шагают попеременно
+        tentacle_front_r: { rot: -0.45, straighten: 0.55, curl: -0.35,
+                            swingAmp: 0.32, swingSpeed: 3.2, swingPhase: 0 },
+        tentacle_front_l: { rot:  0.35, straighten: 0.50, curl:  0.25,
+                            swingAmp: 0.32, swingSpeed: 3.2, swingPhase: Math.PI },
+        tentacle_front_c: { rot: -0.12, straighten: 0.38,
+                            swingAmp: 0.20, swingSpeed: 3.2, swingPhase: Math.PI * 0.5 },
+        // боковые ноги
+        tentacle_far_r:   { rot: -0.38, straighten: 0.48, curl: -0.22,
+                            swingAmp: 0.22, swingSpeed: 3.2, swingPhase: 0.4 },
+        tentacle_band_l:  { rot:  0.38, straighten: 0.42,
+                            swingAmp: 0.22, swingSpeed: 3.2, swingPhase: Math.PI + 0.4 },
+        // руки — балансируют
+        tentacle_up_r: { rot: -0.22, straighten: 0.28, curl: -0.15 },
+        tentacle_up_l: { rot:  0.18, straighten: 0.20 },
+    },
+    walk_left: {
+        __brows: [{ op: 1, rot: -5, dy: -8 }, { op: 1, rot: 3, dy: -8 }],
+        tentacle_front_l: { rot:  0.45, straighten: 0.55, curl:  0.35,
+                            swingAmp: 0.32, swingSpeed: 3.2, swingPhase: 0 },
+        tentacle_front_r: { rot: -0.35, straighten: 0.50, curl: -0.25,
+                            swingAmp: 0.32, swingSpeed: 3.2, swingPhase: Math.PI },
+        tentacle_front_c: { rot:  0.12, straighten: 0.38,
+                            swingAmp: 0.20, swingSpeed: 3.2, swingPhase: Math.PI * 0.5 },
+        tentacle_band_l:  { rot: -0.38, straighten: 0.48, curl: -0.22,
+                            swingAmp: 0.22, swingSpeed: 3.2, swingPhase: 0.4 },
+        tentacle_far_r:   { rot:  0.38, straighten: 0.42,
+                            swingAmp: 0.22, swingSpeed: 3.2, swingPhase: Math.PI + 0.4 },
+        tentacle_up_l: { rot:  0.22, straighten: 0.28, curl:  0.15 },
+        tentacle_up_r: { rot: -0.18, straighten: 0.20 },
+    },
     wave_right: {
         __brows: [{ op: 1, rot: -4, dy: -12 }, { op: 1, rot: 4, dy: -12 }],
         tentacle_up_r: { rot: -0.32, straighten: 0.7, curl: -0.4, swingAmp: 0.26, swingSpeed: 5.5 },
@@ -690,7 +724,8 @@ class OctobussAvatar {
         this._poseFxTgt = { squash: 0, squint: 0 };
         this._poseFxCur = { squash: 0, squint: 0 };
         this.motion = { spinStart: -1, spinDur: 1400, bounceUntil: 0, bounceAmp: 0,
-                        bounceFreq: 5, swayUntil: 0, swayAmp: 0, boopT: -1 };
+                        bounceFreq: 5, swayUntil: 0, swayAmp: 0, boopT: -1,
+                        slideX: 0, slideTargetX: 0, slideAmt: 0, slideReturnAt: 0 };
 
         this._last = performance.now();
         this._clock = 0;
@@ -765,6 +800,7 @@ class OctobussAvatar {
             shrug: "shrug", clap: "clap", heart: "excited",
             sing: "sing", dance: "dance", laugh: "excited", shout: "shout",
             whisper: "curl_shy", photobooth: "rest",
+            walk_right: "walk_right", walk_left: "walk_left",
             sfx_wave: "wave_right", sfx_spin: "excited", sfx_heart: "excited",
         };
         const pose = map[name] || (POSES[name] ? name : null);
@@ -788,6 +824,16 @@ class OctobussAvatar {
         } else if (name === "sing") {
             this.motion.swayUntil = now + durationMs;
             this.motion.swayAmp = 2.0;
+        } else if (name === "walk_right") {
+            this.motion.slideAmt = 120;
+            this.motion.slideReturnAt = now + Math.max(500, durationMs - 500);
+            this.motion.bounceUntil = now + durationMs;
+            this.motion.bounceAmp = 12; this.motion.bounceFreq = 3.2;
+        } else if (name === "walk_left") {
+            this.motion.slideAmt = -120;
+            this.motion.slideReturnAt = now + Math.max(500, durationMs - 500);
+            this.motion.bounceUntil = now + durationMs;
+            this.motion.bounceAmp = 12; this.motion.bounceFreq = 3.2;
         }
         this.triggerFxFromAction(name);
         // брови для эффектов без позы
@@ -1050,6 +1096,13 @@ class OctobussAvatar {
                 brot = Math.sin(this._clock * Math.PI * this.motion.bounceFreq * 0.5) * this.motion.swayAmp;
             }
             if (by || brot) rootT += `translateY(${by.toFixed(1)}px) rotate(${brot.toFixed(2)}deg)`;
+            // --- слайд влево/вправо (walk)
+            this.motion.slideTargetX = ts < this.motion.slideReturnAt ? this.motion.slideAmt : 0;
+            this.motion.slideX += (this.motion.slideTargetX - this.motion.slideX) * (1 - Math.exp(-dt / 0.28));
+            if (Math.abs(this.motion.slideX) > 0.3) {
+                const lean = (this.motion.slideX / 120) * 7;
+                rootT += `translateX(${this.motion.slideX.toFixed(1)}px) rotate(${lean.toFixed(2)}deg)`;
+            }
             this.root.style.transformOrigin = "1024px 1200px";
             this.root.style.transform = rootT;
         }
