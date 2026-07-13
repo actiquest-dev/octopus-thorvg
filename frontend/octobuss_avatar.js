@@ -740,23 +740,22 @@ class OctobussAvatar {
         this.root = svg.getElementById("octobuss");
         this.bodyEl = svg.getElementById("body");
         // псевдо-3D разворот: щупальца — «карусель» вокруг вертикальной оси.
-        // az — азимут покоя (0 = к зрителю), R — радиус орбиты корня,
-        // выведен из фактического X корня: R = (rootX - 1024) / sin(az)
+        // Все корни сидят на ободе мантии (окружность RIM_RX в проекции), поэтому
+        // азимут покоя выводим из фактического X корня: az = asin(offset/RIM_RX);
+        // для щупалец из заднего слоя — зеркалим на заднюю полусферу (π - az).
+        // Так корень при обороте никогда не выходит за силуэт тела.
         this._turnLayers = {
             back: svg.getElementById("tentacles_back"),
             front: svg.getElementById("tentacles_front"),
         };
-        const ORBIT_AZ = {
-            tentacle_front_c: 0.0,  tentacle_front_l: -0.61, tentacle_front_r: 0.61,
-            tentacle_band_l: -1.13, tentacle_far_r: 2.01,
-            tentacle_up_l: -2.18,   tentacle_up_r: 2.27,
-        };
+        const RIM_RX = 450;
         this._orbit = {}; this._tentHome = {};
         for (const [id, t] of Object.entries(this.tentacles)) {
-            const az = ORBIT_AZ[id] !== undefined ? ORBIT_AZ[id] : 0;
-            const s = Math.sin(az);
-            this._orbit[id] = { az, R: Math.abs(s) > 0.05 ? (t.basePts[0][0] - 1024) / s : 320 };
             this._tentHome[id] = { parent: t.g.parentNode, next: t.g.nextSibling };
+            const off = Math.max(-1, Math.min(1, (t.basePts[0][0] - 1024) / RIM_RX));
+            let az = Math.asin(off);
+            if (this._tentHome[id].parent === this._turnLayers.back) az = Math.PI - az;
+            this._orbit[id] = { az, R: RIM_RX };
         }
         // псевдо-3D морфинг лица при развороте: каждая черта — точка на сфере
         // головы (центр 1033, R≈380); az = asin(offset/R). Во время оборота черта
@@ -1186,10 +1185,19 @@ class OctobussAvatar {
                         const dx = o.R * (sinN - sinR);
                         const dy = 34 * dd;                  // ободок мантии — эллипс: ближе=ниже, дальше=выше
                         const sy = 1 + 0.15 * dd;            // перспектива: ближе = крупнее
-                        // ракурсное сужение у кромки силуэта (проход по боку)
-                        const fw = Math.max(0.62, Math.min(1.12,
-                            1 - 0.28 * (sinN * sinN - sinR * sinR)));
-                        const sx = sy * fw;
+                        // тангенциальный ракурс: щупальце — «карточка», касательная к
+                        // цилиндру тела; горизонтальный размах ∝ cos азимута:
+                        // у кромки — ребром (сливер), на задней полусфере — зеркально.
+                        // Для корней у самого бока (|cosR|<0.35) деление вырождается —
+                        // им оставляем мягкое сужение по sin² (без зеркала).
+                        let tang;
+                        if (Math.abs(cosR) >= 0.35) {
+                            tang = Math.max(-1.15, Math.min(1.15, cosN / cosR));
+                        } else {
+                            tang = Math.max(0.62, Math.min(1.12,
+                                1 - 0.28 * (sinN * sinN - sinR * sinR)));
+                        }
+                        const sx = sy * tang;
                         // transform-origin группы уже стоит на корне щупальца (из SVG)
                         tn.g.style.transform =
                             `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) ` +
