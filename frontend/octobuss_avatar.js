@@ -355,7 +355,9 @@ class Tentacle {
 // ---------------------------------------------------------------- позы
 // curl в единицах «естественного завитка» (умножается на curlDir щупальца)
 const POSES = {
-    rest: {},
+    rest: {
+        __brows: [{ op: 1, rot: 0, dy: 0 }, { op: 1, rot: 0, dy: 0 }],
+    },
     // нижние щупальца — ноги с поочерёдным шагом (фазы π друг к другу)
     walk_right: {
         __brows: [{ op: 1, rot: -3, dy: -8 }, { op: 1, rot: 5, dy: -8 }],
@@ -743,7 +745,6 @@ class OctobussAvatar {
         this._turnLayers = {
             back: svg.getElementById("tentacles_back"),
             front: svg.getElementById("tentacles_front"),
-            face: svg.getElementById("face"),
         };
         const ORBIT_AZ = {
             tentacle_front_c: 0.0,  tentacle_front_l: -0.61, tentacle_front_r: 0.61,
@@ -754,16 +755,39 @@ class OctobussAvatar {
         for (const [id, t] of Object.entries(this.tentacles)) {
             const az = ORBIT_AZ[id] !== undefined ? ORBIT_AZ[id] : 0;
             const s = Math.sin(az);
-            this._orbit[id] = { az, R: Math.abs(s) > 0.05 ? (t.basePts[0][0] - 1024) / s : 60 };
+            this._orbit[id] = { az, R: Math.abs(s) > 0.05 ? (t.basePts[0][0] - 1024) / s : 320 };
             this._tentHome[id] = { parent: t.g.parentNode, next: t.g.nextSibling };
         }
+        // псевдо-3D морфинг лица при развороте: каждая черта — точка на сфере
+        // головы (центр 1033, R≈380); az = asin(offset/R). Во время оборота черта
+        // движется по своей широте: своя скорость, ракурсное сжатие cos, гаснет у кромки.
+        const FACE_R = 380, FACE_CX = 1033;
+        const wrapBrow = (el) => {   // brow_l/r уже носят transform от _setBrows — оборачиваем
+            const w = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            el.parentNode.insertBefore(w, el); w.appendChild(el); return w;
+        };
+        this._faceR = FACE_R;
+        this._face3d = [];
+        const feat = (el, bx, by) => {
+            if (!el) return;
+            el.style.transformOrigin = `${bx}px ${by}px`;   // якорь масштаба — центр черты
+            this._face3d.push({ el, bx, by,
+                az: Math.asin(Math.max(-1, Math.min(1, (bx - FACE_CX) / FACE_R))) });
+        };
+        feat(svg.getElementById("eye_l"), 799, 747);
+        feat(svg.getElementById("eye_r"), 1195, 765);
+        feat(svg.getElementById("cheek_l"), 730, 886);
+        feat(svg.getElementById("cheek_r"), 1259, 912);
+        feat(this.brows[0] && wrapBrow(this.brows[0]), 806, 640);
+        feat(this.brows[1] && wrapBrow(this.brows[1]), 1186, 650);
+        feat(svg.getElementById("mouth"), 986, 900);
         this.fx = new FxSystem(svg);
         this._poseFxTgt = { squash: 0, squint: 0 };
         this._poseFxCur = { squash: 0, squint: 0 };
         this.motion = { spinStart: -1, spinDur: 1400, bounceUntil: 0, bounceAmp: 0,
                         bounceFreq: 5, swayUntil: 0, swayAmp: 0, boopT: -1,
                         slideX: 0, slideTargetX: 0, slideAmt: 0, slideReturnAt: 0,
-                        turnStart: -1, turnDur: 1400 };
+                        turnStart: -1, turnDur: 1900 };
         // случайные idle-сценки; отключение: avatar.idleEnabled = false
         this.idleEnabled = this.opts.idle !== false;
         this._idleNext = performance.now() + 6000;
@@ -773,6 +797,7 @@ class OctobussAvatar {
         const loop = (ts) => { this._tick(ts); requestAnimationFrame(loop); };
         requestAnimationFrame(loop);
         this.ready = true;
+        this.setPose('rest', { durationMs: 1 });
         console.log("🐙 OctobussAvatar ready:", Object.keys(this.tentacles));
     }
 
@@ -1149,33 +1174,45 @@ class OctobussAvatar {
                         const home = this._tentHome[id];
                         if (home && tn.g.parentNode !== home.parent) home.parent.insertBefore(tn.g, home.next);
                     }
-                    if (L.face) { L.face.style.transform = ""; L.face.style.opacity = ""; }
+                    for (const f of this._face3d) { f.el.style.transform = ""; f.el.style.opacity = ""; }
                 } else {
                     const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
                     const th = e * Math.PI * 2;              // 0..2π = полный оборот
                     for (const [id, tn] of Object.entries(this.tentacles)) {
                         const o = this._orbit[id]; if (!o) continue;
-                        const cosR = Math.cos(o.az);
+                        const sinR = Math.sin(o.az), cosR = Math.cos(o.az);
                         const sinN = Math.sin(o.az + th), cosN = Math.cos(o.az + th);
                         const dd = cosN - cosR;              // изменение глубины от покоя
-                        const dx = o.R * (sinN - Math.sin(o.az));
-                        const dy = -40 * dd;                 // дальние чуть выше, ближние ниже
-                        const sc = 1 + 0.14 * dd;            // перспектива: ближе = крупнее
+                        const dx = o.R * (sinN - sinR);
+                        const dy = 34 * dd;                  // ободок мантии — эллипс: ближе=ниже, дальше=выше
+                        const sy = 1 + 0.15 * dd;            // перспектива: ближе = крупнее
+                        // ракурсное сужение у кромки силуэта (проход по боку)
+                        const fw = Math.max(0.62, Math.min(1.12,
+                            1 - 0.28 * (sinN * sinN - sinR * sinR)));
+                        const sx = sy * fw;
+                        // transform-origin группы уже стоит на корне щупальца (из SVG)
                         tn.g.style.transform =
-                            `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${sc.toFixed(3)})`;
+                            `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) ` +
+                            `scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
                         tn.g.style.filter = Math.abs(dd) > 0.15
                             ? `brightness(${(1 + 0.13 * dd).toFixed(3)})` : "";
                         // смена слоя: перед телом ↔ за телом
                         const target = cosN >= 0 ? L.front : L.back;
                         if (target && tn.g.parentNode !== target) target.appendChild(tn.g);
                     }
-                    if (L.face) {
-                        const fcos = Math.cos(th);
-                        L.face.style.transform =
-                            `translateX(${(170 * Math.sin(th)).toFixed(1)}px) ` +
-                            `scaleX(${Math.max(0.08, Math.abs(fcos)).toFixed(3)})`;
-                        L.face.style.opacity =
-                            Math.max(0, Math.min(1, (fcos + 0.12) / 0.24)).toFixed(2);
+                    // лицо: сферический морфинг — каждая черта по своей широте,
+                    // с индивидуальным сжатием cos и гашением у кромки; затылок — чистый шар
+                    for (const f of this._face3d) {
+                        const c0 = Math.cos(f.az), s0 = Math.sin(f.az);
+                        const c = Math.cos(f.az + th), s = Math.sin(f.az + th);
+                        const sx = Math.max(0.06, c / c0);   // ракурс своей широты
+                        const syf = 1 + 0.05 * (c - c0);     // лёгкая перспектива по глубине
+                        const dx = this._faceR * (s - s0);
+                        const dy = 16 * (c - c0);            // широта — эллипс при взгляде чуть сверху
+                        f.el.style.transform =
+                            `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) ` +
+                            `scale(${sx.toFixed(3)}, ${syf.toFixed(3)})`;
+                        f.el.style.opacity = Math.max(0, Math.min(1, (c - 0.04) / 0.22)).toFixed(2);
                     }
                 }
             }
